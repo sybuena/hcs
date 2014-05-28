@@ -816,7 +816,7 @@ function saveOutbox(subject, content, priority, recipients) {
 	};
 
 	window.messageList['Outbox'] = _string.unlock('Outbox');
-	console.log(window.messageList['Outbox'].length);
+	
 	if(window.messageList['Outbox'] === null || window.messageList['Outbox'].length == 0) {
 		window.messageList['Outbox'] = [];
 	}
@@ -1158,7 +1158,7 @@ var _SOAP = (function() {
 document.addEventListener('deviceready', function() {	
 	//set autocancel notification on click
    	window.plugin.notification.local.setDefaults({ autoCancel: true });
-   	
+
    	//Enables the background mode. The app will not pause while in background.
 	window.plugin.backgroundMode.enable();
 
