@@ -27,6 +27,7 @@
     <preference name="DisallowOverscroll" value="true" />
     <preference name="StatusBarOverlaysWebView" value="true" />
     <icon src="icon.png" width="144" height="144"/>
+    <gap:splash src="screen.png" />
     <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" />
     <gap:plugin name="de.appplant.cordova.plugin.local-notification" />
     <gap:plugin name="de.appplant.cordova.plugin.background-mode" />
