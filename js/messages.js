@@ -637,12 +637,9 @@ Messages.prototype = {
 				  		//date = jQuery.format.prettyDate(localDate);
 				  	}
 
-				  	
-
 				  	if(typeof messageList[i]['b:Sender'] !== 'undefined'){
 				  		fromName = messageList[i]['b:Sender']['c:Name']['d:m_firstName']+' '+messageList[i]['b:Sender']['c:Name']['d:m_lastName']
 				  	}	
-				  	
 
 				  	if(typeof messageList[i]['b:Subject'] !== 'undefined'){
 				  		subject = messageList[i]['b:Subject'];
@@ -705,7 +702,7 @@ Messages.prototype = {
 		$('.no-connection').hide();
 		//this guy is responsible for making the SUBJECT length responsive to the 
 		//DIV width
-		$(".list-title").shorten();
+		//$(".list-title").shorten();
 
 		pullDown();
 
@@ -802,7 +799,7 @@ Messages.prototype = {
 			currentGUID = messageList[i]['b:MessageGUID'];
 		}
 		
-		$(".list-title").shorten();
+		//$(".list-title").shorten();
 
 	}, 
 	send : function(subject, content, priority, recipients, guid) {
