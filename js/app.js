@@ -129,7 +129,8 @@ function bind() {
 		$('#message-list').scrollz('hidePullHeader');
 
 		//pull to refresh 		
-		pullRefresh(loginUser.token);		
+		//pullRefresh();	
+
   	}
 }
 
@@ -139,7 +140,7 @@ function bind() {
  *
  * @param string login token 
  */
-function pullRefresh(token) {
+function pullRefresh() {
 	//get the active listing
 	var type = $('ul.nav-stacked li.active a.left-navigation').attr('id');
 	var start = 10;
@@ -149,6 +150,7 @@ function pullRefresh(token) {
 	    //now make request to backend
 	    window.messages.checkInbox(type, 1);
 	});	
+	
 	window.messageList[type] = _string.unlock(type);
 
 	$(document).on('bottomreached', '#message-list', function() {
@@ -171,7 +173,12 @@ function pullRefresh(token) {
 				replace('[FROM_NAME]', 		'fromName').							//message From name
 				replace('[TO_NAME]', 		'toUser')								//message To name
 			);	*/
-		window.messages.pullDown(window.messageList[type], type, start, end)
+		window.messages.pullDown(window.messageList[type], type, start, end);
+		//On click message listing then load message detail
+		//base on Message GUID
+		onClickDetail(type);
+
+		
 	});
 }
 
@@ -207,6 +214,49 @@ function checkOutbox() {
 
 }
 
+function onClickDetail(type) {
+	$('.go-detail').unbind().click(function(e) {
+		//prevent double click
+		e.stopPropagation();
+		e.preventDefault();
+		
+		//get the GUID of the message
+		var id 		= $(this).attr('id');
+		var unread 	= $(this).attr('unread');
+
+		$('#listing').hide();
+		$('.scrollz-container').hide();
+		//check if message is unread
+		if(unread == 'true') {
+			//count the current unread message
+			var count = $('#Inbox span.badge').html();
+			//only process if there is unread message	
+				if(count != 0) {
+					//do the math
+					var plus = parseInt(count) - 1;
+					$('#Inbox span.badge').html(plus);
+					$('#folder-name').html($('#Inbox').html());
+				}
+		}
+
+		//prepare UI for detail page
+		$('#message-detail').hide();
+		$('.message-elem').hide();
+
+		//main loading
+		mainLoader('start');
+
+		//do ajax call and show detail page
+		//if message detail is already saved it 
+		//the local storage, then just get the saved
+		//local data but if not saved then make 
+		//SOAP request to get message datail and save 
+		//to local storage
+		window.messages.getDetail(id, type, unread);
+
+		return false;
+	});
+}
 /**
  * This guy will run checkInbox function every 
  * 5 secs if there is a user login
@@ -224,8 +274,8 @@ function checkInbox(loginUser) {
 			window.messages.checkInbox('Inbox', 0);
   		}	
   	
-	//}, window.interval*60000);
-	}, 5000);
+	}, window.interval*60000);
+	//}, 5000);
 }
 
 /**
@@ -1240,6 +1290,8 @@ document.addEventListener('deviceready', function() {
 		$('.notification-ajax #notification-here').html('<i class="fa fa-warning"></i> No Internet connection');
 		
 	});
+	
+	pullRefresh();	
 	
 	$(document).ready(function(){
 		

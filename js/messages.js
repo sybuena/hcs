@@ -603,69 +603,10 @@ Messages.prototype = {
 		//this guy is responsible for making the SUBJECT length responsive to the 
 		//DIV width
 		$(".list-title").shorten();
-		
-		$('.load-more').click(function() {
-			var start = parseInt($(this).attr('id'));
-			start = start +7;
-			var end = start - 7;
-			
-			$("#message-list").append(row.
-				replace('[MESSAGE_ID]',		'AssociationId'). 	//message GUID
-				replace('[MESSAGE_ID2]',	'as'). 	//message GUID
-				replace('[DATE]', 			'asd').								//date (ex. just now, 1 hour ago)
-				replace('[SUBJECT]', 		'subject').							//message subject
-				replace('[IMPORTANT]', 		'star').								//message priority (star)
-				replace('[IMPORTANT2]', 	'star').								//message priority (star)
-				replace('[FROM_NAME]', 		'fromName').							//message From name
-				replace('[TO_NAME]', 		'toUser')								//message To name
-			);	
-			//window.messages.get(type, start, end);
-		    	
-		});
 
 		//On click message listing then load message detail
 		//base on Message GUID
-		$('.go-detail').unbind().click(function(e) {
-			//prevent double click
-			e.stopPropagation();
-			e.preventDefault();
-			
-			//get the GUID of the message
-			var id 		= $(this).attr('id');
-			var unread 	= $(this).attr('unread');
-
-			$('#listing').hide();
-			$('.scrollz-container').hide();
-			//check if message is unread
-			if(unread == 'true') {
-				//count the current unread message
-				var count = $('#Inbox span.badge').html();
-				//only process if there is unread message	
- 				if(count != 0) {
- 					//do the math
- 					var plus = parseInt(count) - 1;
- 					$('#Inbox span.badge').html(plus);
- 					$('#folder-name').html($('#Inbox').html());
- 				}
-			}
-
-			//prepare UI for detail page
-			$('#message-detail').hide();
-			$('.message-elem').hide();
-
-			//main loading
-			mainLoader('start');
-
-			//do ajax call and show detail page
-			//if message detail is already saved it 
-			//the local storage, then just get the saved
-			//local data but if not saved then make 
-			//SOAP request to get message datail and save 
-			//to local storage
-			window.messages.getDetail(id, type, unread);
-
-			return false;
-		});
+		onClickDetail(type);
 
 		//first load flag
 		if(keepHide == 1) {
@@ -675,8 +616,6 @@ Messages.prototype = {
 	},
 	pullDown : function(messageList,type, start, end) {
 		
-		//messageList = window.messageList[type];
-		console.log(messageList);
 		var row = MESSAGE_ROW;
 		var currentGUID = '';
 		var i = start;
@@ -752,36 +691,11 @@ Messages.prototype = {
 					replace('[TO_NAME]', 		toUser)								//message To name
 				);	
 
- /*$("#message-list").append(row.
-				replace('[MESSAGE_ID]',		'AssociationId'). 	//message GUID
-				replace('[MESSAGE_ID2]',	'as'). 	//message GUID
-				replace('[DATE]', 			'asd').								//date (ex. just now, 1 hour ago)
-				replace('[SUBJECT]', 		'subject').							//message subject
-				replace('[IMPORTANT]', 		'star').								//message priority (star)
-				replace('[IMPORTANT2]', 	'star').								//message priority (star)
-				replace('[FROM_NAME]', 		'fromName').							//message From name
-				replace('[TO_NAME]', 		'toUser')								//message To name
-			);*/
-
-				end++;	
 			}
 			//get the current GUID (prevent duplicate)
 			currentGUID = messageList[i]['b:MessageGUID'];
 		}
 
-//				}
-			//}
-			
-
-		//show the refresh to pull
-		//$('.scrollz-container').show();
-		//hide request to pull header
-		//$('#message-list').scrollz('hidePullHeader');
-		//hide no connection image
-		//$('.no-connection').hide();
-		//this guy is responsible for making the SUBJECT length responsive to the 
-		//DIV width
-		//$(".list-title").shorten();
 
 	}, 
 	send : function(subject, content, priority, recipients, guid) {
