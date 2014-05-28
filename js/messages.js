@@ -48,8 +48,11 @@ Messages.prototype = {
 		$('#delete-message').hide();
 
 		$('#folder-name').html($('a#'+type).html());
+		//console.log(window.messageList[type]);
 		//get json data
-		window.messageList[type] = _string.unlock(type);
+		if(typeof window.messageList[type] === 'undefined') {
+			window.messageList[type] = _string.unlock(type);
+		}
 		
 		//if empty or null
 		if(window.messageList[type] == null || window.messageList[type] == '' || force == 1) { 
@@ -61,6 +64,7 @@ Messages.prototype = {
 		} else { 
 			//just show the listing
 			this.displayMessage(window.messageList[type], type, start, end, 1);
+
 		}
 
 		//this will only work if no ajax call happen
@@ -259,6 +263,94 @@ Messages.prototype = {
 			});		        
 		});
 	},
+	loadAll : function() {
+		console.log('here');
+		
+
+		//refresh token 
+		window.user.getToken(window.username, window.password, function(soapResponse){
+			var listing = new Array();
+			listing.push('Sent');
+			listing.push('Draft');
+			listing.push('Deleted');
+			listing.push('Outbox');
+
+			
+			console.log(listing.length);
+			for(i = 0; i < listing.length; i++) {		
+				var type = listing[i];
+				
+				var results 	= soapResponse.toString();	
+		        var json 		= $.xml2json(results);
+			 	var response 	= json['s:Envelope']['s:Body']['LoginCaregiverPortalResponse']['LoginCaregiverPortalResult'];
+			 	var token 		= response['a:Token'];
+				var startDate 	= '1950-04-01T09:00:00';
+				var endDate 	= $.format.date(new Date().getTime(), "yyyy-MM-ddThh:mm:ss");
+				var xml 		=
+			        ['<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:heal="http://schemas.datacontract.org/2004/07/HealthCareAssistant" xmlns:hsim="http://schemas.datacontract.org/2004/07/HSIMessageExchange">',
+			            '<soapenv:Header/>',
+			            '<soapenv:Body>',
+			                '<RetrieveMessages>',
+			                    '<caregiverId>'+token+'</caregiverId>',
+			                    '<messageFolder>',
+			                        '<heal:m_IsDirty>false</heal:m_IsDirty>',
+			                        '<heal:m_DefaultValue></heal:m_DefaultValue>',
+			                        '<heal:m_FilterSet>false</heal:m_FilterSet>',
+			                        '<heal:m_Key>'+type+'</heal:m_Key>',
+			                        '<heal:m_SerializeList></heal:m_SerializeList>',
+			                    '</messageFolder>',
+			                    '<dateRange>',
+			                        '<heal:m_IsDirty>false</heal:m_IsDirty>',
+			                        '<heal:m_EndDate>',
+			                            '<heal:m_IsDirty>false</heal:m_IsDirty>',
+			                            '<heal:DateName></heal:DateName>',
+			                            '<heal:DateStringFormat>YYYY-MM-DDThh:mm:ss</heal:DateStringFormat>',
+			                            '<heal:InnerDate>'+endDate+'</heal:InnerDate>',
+			                        '</heal:m_EndDate>',
+			                        '<heal:m_StartDate>',
+			                            '<heal:m_IsDirty>false</heal:m_IsDirty>',
+			                            '<heal:DateName></heal:DateName>',
+			                            '<heal:DateStringFormat>YYYY-MM-DDThh:mm:ss</heal:DateStringFormat>',
+			                            '<heal:InnerDate>'+startDate+'</heal:InnerDate>',
+			                        '</heal:m_StartDate>',
+			                    '</dateRange>',
+			                    '<unreadOnly>false</unreadOnly>',
+			                '</RetrieveMessages>',
+			            '</soapenv:Body>',
+			        '</soapenv:Envelope>'];
+			    
+			    //do ajax SOAP call    
+				_SOAP.post('RetrieveMessages', xml, function(soapResponse) { 
+					results = soapResponse.toString(); 
+		            json 	= $.xml2json(results);
+
+		            //if has error
+		            if(json['s:Envelope']['s:Body']['RetrieveMessagesResponse']['RetrieveMessagesResult']['a:HasError'] == 'true') {
+		            	$('.notification-ajax').show();
+						$('.notification-ajax #notification-here').html('<i class="fa fa-warning"></i>'+json['s:Envelope']['s:Body']['RetrieveMessagesResponse']['RetrieveMessagesResult']['a:Error']);
+						
+		            }
+
+		            var data 	= json['s:Envelope']['s:Body']['RetrieveMessagesResponse']['RetrieveMessagesResult']['a:MessagesResult']['b:MessageLabel'];
+	         		var raw = [];
+	         		
+	         		if(typeof data === 'object' && typeof data[0] === 'undefined') { 
+	         			raw.push(data)
+	         		} else {
+	         			raw = data;
+	         		}	
+	         		
+	         		if(typeof raw !== 'undefined') {
+	         			//lock and save
+	         			_string.lock(raw, type);
+	         			window.messageList[type] = raw;
+	         			console.log(type);
+	         		}	
+
+				});
+			}    
+		});
+	},
 	load : function(type, start, end) {
 		this.animateList('start', type);
 		
@@ -328,6 +420,7 @@ Messages.prototype = {
          		if(typeof raw !== 'undefined') {
          			//lock and save
          			_string.lock(raw, type);
+         			window.messageList[type] = raw;
          		}	
 
 	            //now display it
@@ -485,6 +578,7 @@ Messages.prototype = {
 		window.start = true;
 		//HTML template for read messages
 		var row = MESSAGE_ROW;
+		var list = '';
 		//empty everything
 		$('#message-list').html('');
 		
@@ -565,9 +659,8 @@ Messages.prototype = {
 				
 					//prevent duplicate listing
 					if(currentGUID != messageList[i]['b:MessageGUID'] || type == 'Outbox') {
-						//this guys will append everything he gets from loop 
-						//and show it to the message list
-						$("#message-list").append(row.
+						//build DOM first, 
+						list += row.
 							replace('[MESSAGE_ID]',		messageList[i]['b:MessageGUID']). 	//message GUID
 							replace('[MESSAGE_ID2]',	messageList[i]['b:MessageGUID']). 	//message GUID
 							replace('[DATE]', 			date).								//date (ex. just now, 1 hour ago)
@@ -575,15 +668,15 @@ Messages.prototype = {
 							replace('[IMPORTANT]', 		star).								//message priority (star)
 							replace('[IMPORTANT2]', 	star).								//message priority (star)
 							replace('[FROM_NAME]', 		fromName).							//message From name
-							replace('[TO_NAME]', 		toUser)								//message To name
-						);
+							replace('[TO_NAME]', 		toUser);								//message To name
+
 					}
 					//get the current GUID (prevent duplicate)
 					currentGUID = messageList[i]['b:MessageGUID'];
 				//}
-
+				
 				}
-
+				$("#message-list").html(list);
 			}
 			
 
@@ -597,7 +690,7 @@ Messages.prototype = {
 		$('.no-connection').hide();
 		//this guy is responsible for making the SUBJECT length responsive to the 
 		//DIV width
-		$(".list-title").shorten();
+		//$(".list-title").shorten();
 
 		pullDown();
 
@@ -613,10 +706,11 @@ Messages.prototype = {
 	},
 	pullDown : function(messageList,type, start, end) {
 		
-		var row = MESSAGE_ROW;
+		var row 		= MESSAGE_ROW;
+		var i 			= start;
 		var currentGUID = '';
-		var i = start;
-		
+		var list 		= '';
+
 		if(messageList[i] !== null) {
 			//use unread HTML template if only in INBOX
 			if(type == 'Inbox') {
@@ -692,7 +786,7 @@ Messages.prototype = {
 			//get the current GUID (prevent duplicate)
 			currentGUID = messageList[i]['b:MessageGUID'];
 		}
-
+		
 		//$(".list-title").shorten();
 
 	}, 

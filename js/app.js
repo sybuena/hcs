@@ -111,8 +111,8 @@ function bind() {
 
   		//count unread message in inbox
 		window.messages.countFolder('Inbox');
-
-  		//get INBOX
+		$('#message-list').scrollz('hidePullHeader');
+		//get INBOX
   		window.messages.get('Inbox', 10, 0);
 		
   		//show main page
@@ -129,7 +129,7 @@ function bind() {
 		$('#message-list').scrollz('hidePullHeader');
 
 		//pull to refresh 		
-		//pullRefresh();	
+		pullRefresh();	
 
 
   	}
@@ -162,7 +162,7 @@ function pullDown() {
 	var start = 10;
 	var count = 11;
 	
-	window.messageList[type] = _string.unlock(type);
+	//window.messageList[type] = _string.unlock(type);
 	
 	$(document).on('bottomreached', '#message-list', function() {
 
@@ -765,7 +765,6 @@ function mainPage(snapper, loginUser) {
 			//get message list according on what
 			//user clicked on the LI left panel
 	  		window.messages.get(type, 10, 1);
-	  		//pullDown();
   		}	
 
 		return false;
@@ -948,12 +947,6 @@ function backEvent() {
 	
 	//stop the main loader
 	mainLoader('stop');
-
-	//setters from pull refresh
-	//this thing is a pain 
-	//$('#message-list').scrollz('hidePullHeader');
-	//$('.scrollz-pull-header').show();
-	//$('.scrollz-container').show();
 	
 	$('.no-connection').hide();
 
@@ -978,10 +971,6 @@ function backEvent() {
 				return false;
 			}
 
-			//make some loading screen
-			//$(this).attr('disabled', 'disabled');
-			//$(this).html('Saving...');
-			
 			//prepare variables
 			var recipients 	= [];
 			var subject 	= $('#compose-subject').val();
@@ -1015,17 +1004,17 @@ function backEvent() {
 			$('#process-send').hide();	
 			
 			//go back to the previous listing
-			$('#message-detail').hide();
-			$('.message-elem').hide();
-	 		$('#message-list').show();
+			//$('#message-detail').hide();
+			//$('.message-elem').hide();
+	 		//$('#message-list').show();
 	 		$('.scrollz-container').show();
-			//window.messages.get(parentPage, 10, 1);
+			window.messages.get(parentPage, 10, 1);
 			$('#message-list').scrollz('hidePullHeader');
 
-			$('#back-top').hide();
+			/*$('#back-top').hide();
 			$('#sidebar-top').show();
 			$('#delete-message').hide();
-			$('#undelete-message').hide();
+			$('#undelete-message').hide();*/
 	 		
 		});
 
@@ -1057,16 +1046,16 @@ function backEvent() {
  		
  		//checkConnection();
  		//go back to the parent listing 
- 		$('#message-detail').hide();
- 		$('#message-list').show();
+ 		//$('#message-detail').hide();
+ 		//$('#message-list').show();
  		$('.scrollz-container').show();
- 		//window.messages.get(parentPage, 10, 1);
+ 		window.messages.get(parentPage, 10, 1);
  		$('#message-list').scrollz('hidePullHeader');
 
-		$('#back-top').hide();
+		/*$('#back-top').hide();
 		$('#sidebar-top').show();
 		$('#delete-message').hide();
-		$('#undelete-message').hide();
+		$('#undelete-message').hide();*/
 
  		//window.messages.get(parentPage, 5, 1);
  		
@@ -1294,12 +1283,8 @@ document.addEventListener('deviceready', function() {
 		
 	});
 	
-	pullRefresh();	
-	
 	$(document).ready(function(){
 		
-		//pullDown();
-
 		//for login UI
 		init();
 		//start application
