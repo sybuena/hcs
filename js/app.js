@@ -131,6 +131,7 @@ function bind() {
 		//pull to refresh 		
 		//pullRefresh();	
 
+
   	}
 }
 
@@ -757,13 +758,14 @@ function mainPage(snapper, loginUser) {
 			//get outbox from localstorage
 			window.messages.
 	  			getOutbox(loginUser);
-	  		
+	  		//pullDown();
+
 	  	//else it is common page loading
 		} else {
-
 			//get message list according on what
 			//user clicked on the LI left panel
 	  		window.messages.get(type, 10, 1);
+	  		//pullDown();
   		}	
 
 		return false;
@@ -1296,7 +1298,7 @@ document.addEventListener('deviceready', function() {
 	
 	$(document).ready(function(){
 		
-		pullDown();
+		//pullDown();
 
 		//for login UI
 		init();

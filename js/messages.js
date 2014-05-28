@@ -59,7 +59,6 @@ Messages.prototype = {
 	    	this.load(type, start, end);
 		//else there is temporary saved data
 		} else { 
-			
 			//just show the listing
 			this.displayMessage(window.messageList[type], type, start, end, 1);
 		}
@@ -484,7 +483,6 @@ Messages.prototype = {
 	displayMessage : function (messageList, type, start, end, keepHide) {
 
 		window.start = true;
-		
 		//HTML template for read messages
 		var row = MESSAGE_ROW;
 		//empty everything
@@ -501,9 +499,10 @@ Messages.prototype = {
 			
 			var currentGUID = '';
 
-			for(i in messageList) { 
+			//for(i in messageList) { 
+			for(i = 0; i < start; i++) {	
 				
-				if(i ==  end && start > i) {
+				//if(i ==  end && start > i) {
 				//if(end < start) {
 				//continue here if object value is not null
 				//otherwise this will cause wrong message list 
@@ -526,7 +525,7 @@ Messages.prototype = {
 					var fromName 	= '';
 					var subject 	= messageList[i]['b:Subject'];
 					var fromName 	= messageList[i]['b:Sender']['c:Name']['d:m_firstName']+' '+messageList[i]['b:Sender']['c:Name']['d:m_lastName']
-					var localDate 	= _local.date(messageList[i]['b:DateSent']['c:m_When']);
+					var localDate 	= '';//_local.date(messageList[i]['b:DateSent']['c:m_When']);
 
 					//dont show datetime if in Draft and Outbox listing
 					if(type == 'Draft' || type == 'Outbox') {
@@ -577,20 +576,16 @@ Messages.prototype = {
 							replace('[IMPORTANT2]', 	star).								//message priority (star)
 							replace('[FROM_NAME]', 		fromName).							//message From name
 							replace('[TO_NAME]', 		toUser)								//message To name
-						);	
-
-						end++;	
+						);
 					}
 					//get the current GUID (prevent duplicate)
 					currentGUID = messageList[i]['b:MessageGUID'];
-				}
+				//}
 
 				}
+
 			}
 			
-			if(messageList.length > 7 && messageList.length != lister) {
-				//$('#message-list').append('<button id="'+start+'" data-theme="d" class="load-more btn btn-custom-lighten btn-100">Load More...</button>')
-			}
 
 		}
 
@@ -603,6 +598,8 @@ Messages.prototype = {
 		//this guy is responsible for making the SUBJECT length responsive to the 
 		//DIV width
 		$(".list-title").shorten();
+
+		pullDown();
 
 		//On click message listing then load message detail
 		//base on Message GUID
@@ -696,6 +693,7 @@ Messages.prototype = {
 			currentGUID = messageList[i]['b:MessageGUID'];
 		}
 
+		//$(".list-title").shorten();
 
 	}, 
 	send : function(subject, content, priority, recipients, guid) {
