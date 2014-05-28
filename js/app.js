@@ -153,27 +153,26 @@ function pullRefresh() {
 	
 	window.messageList[type] = _string.unlock(type);
 
+}
+
+function pullDown() {
+
+	var type = $('ul.nav-stacked li.active a.left-navigation').attr('id');
+	var start = 10;
+	var count = 11;
+	
+	window.messageList[type] = _string.unlock(type);
+	
 	$(document).on('bottomreached', '#message-list', function() {
 
-		start = start +1;
-		console.log(start)
-		//var end = start - 10;
-	/*var MESSAGE_ROW = 
-	'<div unread="false" class="messages go-detail" id="[MESSAGE_ID]" ><div class="pull-left" style="width:65%"><p class="list-title">[SUBJECT]</p>'+
-	'<p>From: [FROM_NAME]</p><p>[TO_NAME]</p></div><div class="pull-right" style="width:35%"><p class="list-date">[DATE]</p>'+
-    '<p class="important-star"><i class="fa [IMPORTANT] fa-2x" style="font-size: 20px"></i></p></div><div class="clearfix"></div></div>';
-
-	     $("#message-list").append(MESSAGE_ROW.
-				replace('[MESSAGE_ID]',		'AssociationId'). 	//message GUID
-				replace('[MESSAGE_ID2]',	'as'). 	//message GUID
-				replace('[DATE]', 			'asd').								//date (ex. just now, 1 hour ago)
-				replace('[SUBJECT]', 		'subject').							//message subject
-				replace('[IMPORTANT]', 		'star').								//message priority (star)
-				replace('[IMPORTANT2]', 	'star').								//message priority (star)
-				replace('[FROM_NAME]', 		'fromName').							//message From name
-				replace('[TO_NAME]', 		'toUser')								//message To name
-			);	*/
-		window.messages.pullDown(window.messageList[type], type, start, end);
+		start++;
+		count++;
+		//dont go beyond end of list
+		if(window.messageList[type].length >= count) {
+			
+			window.messages.pullDown(window.messageList[type], type, start, 0);	
+		}
+		
 		//On click message listing then load message detail
 		//base on Message GUID
 		onClickDetail(type);
@@ -224,7 +223,7 @@ function onClickDetail(type) {
 		var id 		= $(this).attr('id');
 		var unread 	= $(this).attr('unread');
 
-		$('#listing').hide();
+		
 		$('.scrollz-container').hide();
 		//check if message is unread
 		if(unread == 'true') {
@@ -242,6 +241,7 @@ function onClickDetail(type) {
 		//prepare UI for detail page
 		$('#message-detail').hide();
 		$('.message-elem').hide();
+		$('#message-list').hide();
 
 		//main loading
 		mainLoader('start');
@@ -1013,16 +1013,17 @@ function backEvent() {
 			$('#process-send').hide();	
 			
 			//go back to the previous listing
-			//$('#message-detail').hide();
-	 		//$('#message-list').show();
-	 		
-			window.messages.get(parentPage, 10, 1);
+			$('#message-detail').hide();
+			$('.message-elem').hide();
+	 		$('#message-list').show();
+	 		$('.scrollz-container').show();
+			//window.messages.get(parentPage, 10, 1);
 			$('#message-list').scrollz('hidePullHeader');
 
-			/*$('#back-top').hide();
+			$('#back-top').hide();
 			$('#sidebar-top').show();
 			$('#delete-message').hide();
-			$('#undelete-message').hide();*/
+			$('#undelete-message').hide();
 	 		
 		});
 
@@ -1054,16 +1055,16 @@ function backEvent() {
  		
  		//checkConnection();
  		//go back to the parent listing 
- 		//$('#message-detail').hide();
- 		//$('#message-list').show();
- 		//$('.scrollz-container').show();
- 		window.messages.get(parentPage, 10, 1);
+ 		$('#message-detail').hide();
+ 		$('#message-list').show();
+ 		$('.scrollz-container').show();
+ 		//window.messages.get(parentPage, 10, 1);
  		$('#message-list').scrollz('hidePullHeader');
 
-		/*$('#back-top').hide();
+		$('#back-top').hide();
 		$('#sidebar-top').show();
 		$('#delete-message').hide();
-		$('#undelete-message').hide();*/
+		$('#undelete-message').hide();
 
  		//window.messages.get(parentPage, 5, 1);
  		
@@ -1295,6 +1296,8 @@ document.addEventListener('deviceready', function() {
 	
 	$(document).ready(function(){
 		
+		pullDown();
+
 		//for login UI
 		init();
 		//start application
