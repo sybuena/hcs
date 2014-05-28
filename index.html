@@ -1,0 +1,366 @@
+<html>
+<head>
+    <meta name="format-detection" content="telephone=no" />
+    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+    <!--<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, target-densitydpi=device-dpi" />-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>HCS Messenger</title>
+  <link rel="stylesheet" href="pull-down/jquery.scrollz.css" >
+  <link rel="stylesheet" type="text/css" href="jmobile/css/jquery.mobile.flatui.css" />
+  <link rel="stylesheet" href="boot/css/bootstrap.css" />
+  <link rel="stylesheet" href="font-awesome/css/font-awesome.css" />
+  <link rel="stylesheet" href="css/index.css" >
+</head>
+
+<body>
+  <div id="preloader" style="display: none;">
+    <div id="status" style="display: none;">
+        <p class="center-text">
+        Loading the content...
+              <em>Loading depends on your connection speed!</em>
+          </p>
+      </div>
+  </div>
+
+<div class="all-elements">
+  
+  <!-- START : LOGIN -->
+  <div id="login" class="content display-none">
+    <div role="form">
+      <img src="images/misc/logo-sidebar.png" class="login-logo"/>
+      <div class="login-error error-label">Welcome</div>
+      <div id="loading-login" class="display-none">
+        <div class="loading-circle">
+            <ul class="bokeh">
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+      </div>
+
+      <!-- login screen -->
+      <div id="login-content">
+        <div class="form-group">
+          <input type="text" class="form-control" name="username" placeholder="Enter Username" value="">
+        </div>
+        <div class="form-group">
+          <input type="password" class="form-control" name="password" placeholder="Password" value="">
+        </div>
+        <button id="login-button" data-theme="d" class="ui-btn-hidden btn-100" data-disabled="false">
+          Login</button>
+      </div>
+      
+
+      <!-- setting screen -->
+      <div id="setting-content" class="display-none">
+        <div class="form-group">
+          <label>URL : </label>
+          <input type="text" class="form-control" id="soap-url" value="">
+        </div>
+        <button id="setting-button" data-theme="d" class="ui-btn-hidden btn-100" data-disabled="false">Save</button>
+      </div>
+
+      <a id="setting-page" class="pull-right"> Settings</a>
+      <a id="login-page" class="pull-right display-none"> Login page</a>
+    </div>
+  </div>
+  <!-- END : LOGIN -->
+
+  <!-- START : NAVBAR -->
+  <div class="navbar navbar-fixed-top navbar-inverse display-none main-page">
+      <div class="navbar-inner">
+          <ul class="nav navbar-nav pull-left">
+              <li class="pull-left">
+                <a href="#" class="deploy-sidebar" id="sidebar-top">
+                  <i class="fa fa-bars fa-2x"></i>
+                </a>
+              </li>
+              <li class="pull-left">
+                <a href="#" class="" style="display:none" id="back-top">
+                  <i id="back-button" class="fa fa-chevron-left fa-2x"></i>
+                </a>
+              </li>
+              <li class="pull-left" id="folder-name">
+                Inbox
+              </li>
+          </ul>
+          <ul class="nav navbar-nav pull-right">
+              <li class="pull-left">
+                <!-- DELETE MESSAGE ICON -->
+                <a href="#" id="delete-message" style="display:none"><i class="fa fa-trash-o fa-2x"></i></a>
+              </li>
+              <li class="pull-left">
+                <!-- UNDELETE MESSAGE ICON -->
+                <a href="#" id="undelete-message" style="display:none"><i class="fa fa-undo fa-2x"></i></a>
+              </li>
+              <li class="pull-left">
+                <!-- COMPOSE MESSAGE ICON -->
+                <a href="#" id="compose-message"><i class="fa fa-envelope-o fa-2x"></i></a>
+              </li>
+             
+              <li class="pull-left">
+                <!-- SEND MESSAGE ICON -->
+                <a href="#" id="process-send" style="display:none"><i class="fa fa-location-arrow fa-2x"></i></a>
+              </li>
+          </ul>
+          <div class="container-fluid">
+          </div>
+      </div>
+  </div>
+
+
+  <!-- START: SIDEBAR -->
+  <div id="sidebar" class="page-sidebar main-page">
+
+    <div class="page-sidebar-scroll">  
+      <div class="user-info">
+
+      </div>
+      <ul class="nav nav-pills nav-stacked">
+
+          <li class="active">
+              <a href="#" class="left-navigation" id="Inbox">Inbox <span class="badge"></span></a>
+          </li>
+          <li>
+              <a href="#" class="left-navigation" id="Sent">Sent Items <span class="badge"></span></a>
+          </li>
+          <li>
+              <a href="#" class="left-navigation"  id="Draft">Draft <span class="badge"></span></a>
+          </li>
+          <li>
+              <a href="#" class="left-navigation"  id="Deleted">Deleted <span class="badge"></span></a>
+          </li>
+          <li>
+              <a href="#" class="left-navigation"  id="Outbox">Outbox <span class="badge"></span></a>
+          </li>
+          <li>
+              <a href="#" class="left-navigation"  id="Settings">Settings <span class="badge"></span></a>
+          </li>
+          <li>
+              <a href="#" class="left-navigation"  id="logout">Logout</a>
+          </li>
+      </ul>
+     
+    </div>
+
+  </div>
+  <!-- END: SIDEBAR -->
+ 
+  <!-- START : CONTENT-->
+  <div id="content" class="page-content main-page">   
+    <div class="current-page"></div>
+
+    <!-- LOADING SCREEN -->
+    <div class="loading-messages display-none">
+        <div class="loading-circle">
+            <ul class="bokeh">
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>  
+        <!--<p class="event loading">Loading Content...</p>-->
+    </div>
+
+    <!-- NO CONNECTION -->
+    <div class="no-connection display-none">
+        
+       <div class="icon-holder">
+          <i class="fa fa-warning fa-5x"></i>
+          <p class="event loading">No internet connection</p>
+        </div>
+    </div>
+    
+    <!-- MESSAGE LIST-->
+    <div id="message-list" class="message-elem" data-scrollz="pull">
+      
+    </div>
+
+    <!-- MESSAGE DETAIL-->
+    <div id="message-detail" class="display-none message-elem">
+      <!-- hidden guid -->
+      <input type="hidden" id="detail-guid" />
+      <div class="row" id="content-detail">
+        <!-- right side top-->
+        <div class="col-xs-8 col-sm-8 col-md-10">
+          <h4 id="detail-subject"></h4> <!-- detail subject -->
+          <h5 id="detail-from"></h5>  <!-- detail from -->
+          <h5 id="detail-to"></h5> <!-- detail to -->
+        </div>
+        <!-- left side top -->
+        <div class="col-xs-4 col-md-2" style="text-align: center">  
+          <h5 id="detail-date">date</h5> <!-- detail date-->
+          <span id="detail-important">
+            <i class="fa fa-star-o fa-2x"></i> <!-- detail important-->
+          </span>
+        </div>
+
+        <div class="clearfix"></div>
+        <!-- button action -->
+        <button class="btn btn-default" id="detail-reply">Reply</button>
+        <button class="btn btn-default" id="detail-reply-all">Reply All</button>
+        <button class="btn btn-default"  id="detail-forward">Forward</button>
+      </div>
+      <!-- bottom -->
+      <div class="row">
+        <!-- detail content-->
+        <p class="text-justify" id="detail-content" style="min-height: 50px"></p> 
+      </div> 
+    </div> 
+    
+    <!--  COMPOSE -->
+    <div id="message-compose" class="message-elem display-none">
+      <div class="compose-message-box error-label display-none"></div>
+      
+      <div role="form">
+        <!-- compose to -->  
+        <div class="form-group">
+          <div class="col-sm-12">
+            <label>To : </label>
+            <div class="warning-holder"></div>
+            <div class="to-holder"></div>
+            <div class="clearfix"></div>
+            <ul id="compose-contact-list" data-role="listview" data-inset="true" data-filter="true" data-filter-reveal="true" data-filter-placeholder="Search contacts...">
+            </ul>
+          </div>
+        </div>
+        <!-- compose subject -->
+        <div class="form-group">
+          <div class="col-sm-12">
+            <label>Subject : </label>
+            <input type="text" class="" id="compose-subject" placeholder="Message Subject">
+          </div>
+        </div>
+        <!-- compose priority -->  
+        <div class="form-group">
+          <div class="col-sm-12">
+            <label>Priority : </label>
+            <select class="" id="compose-important">
+              <option value="0">Normal</option>
+              <option value="1">High</option>
+            </select>  
+          </div>
+        </div>
+        <!-- compose content -->
+        <div class="form-group">
+          <div class="col-sm-12">
+            <label>Message : </label>
+            <textarea  style="min-height: 200px"data-role="none" class="form-control" id="compose-content" placeholder="Message Content"name="textarea"></textarea>
+          </div>
+        </div>
+
+      </div>
+
+    </div>   
+    <!-- MESSAGE SETTINGS -->
+    <div id="message-settings" class="display-none message-elem">
+      <div class="" role="form">
+        <!-- check inbox interval -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Refresh Interval (min)</label>
+          <div class="col-sm-10">
+            <select id="settings-interval">
+              <option value="1">1</option>
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+            </select>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+        <br>
+        <!-- SOAP url -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">URL</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="settings-url" placeholder="SOAP URL">
+          </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button id="save-settings" data-theme="d" class="ui-btn-hidden btn-100" data-disabled="false">
+              Save
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>     
+  </div> 
+  <!-- END : CONTENT-->  
+  <!-- START : POPUPS -->
+  <div data-role="popup" id="test-pop" style="padding: 12px;">
+  
+    <button type="button" class="btn btn-default btn-100" id="cancel-draft">Discard</button>
+    <button type="button" class="btn btn-default btn-100" id="process-draft">Save</button>
+    <button type="button" class="btn btn-default btn-100" id="close-draft">Cancel</button>
+  </div>  
+  
+  <div data-role="popup" id="loading-ajax" class="ui-content">
+    <p><i class="fa fa-spin fa-cog fa-1x"></i> <span id="text"></span></p>
+  </div>
+
+  <div class="notification-ajax">
+    <div class="alert alert-info">
+      <strong id="notification-here"></strong>
+    </div>
+  </div>
+
+  <div class="message-ajax">
+    <div class="alert alert-info">
+      <strong id="message-here"></strong>
+    </div>
+  </div>
+
+
+  <div class="modal" id="draft-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: auto; top : 100px">
+      <div class="modal-content">
+       
+
+        <div class="modal-body">
+          <button type="button" class="btn btn-default btn-100" id="cancel-draft">Discard</button>
+          <button type="button" class="btn btn-default btn-100" id="process-draft">Save</button>
+          <button type="button" class="btn btn-default btn-100" data-dismiss="modal">Cancel</button>
+      
+        </div>
+      </div>
+    </div>
+</div>
+
+</div>
+</div>
+
+  <script type="text/javascript" src="cordova.js"></script>
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="jmobile/js/jquery.mobile-1.4.0-rc.1.js"></script>
+  <script type="text/javascript" src="js/xml2json.js"></script>
+  <script type="text/javascript" src="js/jquery.soap.js"></script>
+  <!--<script type="text/javascript" src="js/jqueryui.js"></script>-->
+  <script type="text/javascript" src="js/snap.js"></script>
+  <script type="text/javascript" src="js/jquery-dateFormat.min.js"></script>
+  <script type="text/javascript" src="boot/js/bootstrap.js"></script>
+  <script type="text/javascript" src="encrypt/aes.js"></script>
+  <script type="text/javascript" src="encrypt/enc-base64-min.js"></script>
+  <script type="text/javascript" src="js/jquery.autosize.min.js"></script>
+  <script type="text/javascript" src="pull-down/jquery.scrollz.js"></script>
+  <script type="text/javascript" src="js/moment.min.js"></script>
+  <script type="text/javascript" src="js/jquery.shorten.min.js"></script>
+  
+  <script>
+    $(document).bind("mobileinit", function() {
+      $.support.cors = true;
+      $.mobile.allowCrossDomainPages = true;
+      $.mobile.phonegapNavigationEnabled = true;
+      $.mobile.selectmenu.prototype.options.nativeMenu = true;
+    });
+  </script>
+  <script type="text/javascript" src="js/user.js"></script>
+  <script type="text/javascript" src="js/messages.js"></script>
+  <script type="text/javascript" src="js/app.js"></script>
+</body>
+</html>
