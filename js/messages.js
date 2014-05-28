@@ -1894,6 +1894,7 @@ Messages.prototype = {
 										message : '"'+data[i]['b:Subject']+'"',
 										//message 	: '',
 										title 		: 'New message received',
+										autoCancel: true
 									});
 
 		         					notification('New message recieve');
@@ -1953,6 +1954,7 @@ Messages.prototype = {
 	         					window.plugin.notification.local.add({ 
 									message : '"'+data['b:Subject']+'"',
 									title 		: 'New message received',
+									autoCancel: true
 								});
 
 								notification('New message recieve');	

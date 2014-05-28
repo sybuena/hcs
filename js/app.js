@@ -1170,12 +1170,21 @@ var _string = (function() {
 		lock : function(object, key) {
 			//convert object to string format
 			var string = JSON.stringify(object);
-			//now encrypt it
-			var encrypted = CryptoJS.AES.encrypt(string, SECRET);
-			//save to local storage together with KEY
-			localStorage.setItem(key, encrypted.toString());
-
-			return encrypted.toString();
+			
+			if(key != 'Inbox' && key != 'Sent' && key != 'Draft' && key != 'Deleted' && key != 'Outbox') {
+				
+				//now encrypt it
+				var encrypted = CryptoJS.AES.encrypt(string, SECRET);
+				
+				//save to local storage together with KEY
+				localStorage.setItem(key, encrypted.toString());
+				return encrypted.toString();
+			} else {
+				localStorage.setItem(key, string);
+				return string;
+			}
+			
+			
 		},
 		unlock : function(key) {
 			
@@ -1186,9 +1195,13 @@ var _string = (function() {
 				//just return it, do nothing
 				return string;
 			}
-
-			var decrypted = CryptoJS.AES.decrypt(string, SECRET);
-			var json = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
+			
+			if(key != 'Inbox' && key != 'Sent' && key != 'Draft' && key != 'Deleted' && key != 'Outbox') { 
+				var decrypted = CryptoJS.AES.decrypt(string, SECRET);
+				var json = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
+			} else { console.log('here');
+				var json = JSON.parse(string);
+			}
 
 			return json;
 		}
@@ -1226,7 +1239,7 @@ var _SOAP = (function() {
 
 document.addEventListener('deviceready', function() {	
 	//set autocancel notification on click
-   	window.plugin.notification.local.setDefaults({ autoCancel: true });
+   	//window.plugin.notification.local.setDefaults({ autoCancel: true });
 
    	//Enables the background mode. The app will not pause while in background.
 	window.plugin.backgroundMode.enable();
