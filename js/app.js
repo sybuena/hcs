@@ -231,19 +231,21 @@ function onClickDetail(type) {
 			//count the current unread message
 			var count = $('#Inbox span.badge').html();
 			//only process if there is unread message	
-				if(count != 0) {
-					//do the math
-					var plus = parseInt(count) - 1;
-					$('#Inbox span.badge').html(plus);
-					$('#folder-name').html($('#Inbox').html());
-				}
+			if(count != 0) {
+				//do the math
+				var plus = parseInt(count) - 1;
+				$('#Inbox span.badge').html(plus);
+				$('#folder-name').html($('#Inbox').html());
+			}
+
+			$(this).css('background-color', '#E4E4E4');
+			$(this).css('font-weight', 'none');
 		}
 
 		//prepare UI for detail page
 		$('#message-detail').hide();
 		$('.message-elem').hide();
-		$('#message-list').hide();
-
+		
 		//main loading
 		mainLoader('start');
 
@@ -275,8 +277,8 @@ function checkInbox(loginUser) {
 			window.messages.checkInbox('Inbox', 0);
   		}	
   	
-	}, window.interval*60000);
-	//}, 5000);
+	//}, window.interval*60000);
+	}, 5000);
 }
 
 /**
@@ -1049,6 +1051,7 @@ function backEvent() {
  		//$('#message-detail').hide();
  		//$('#message-list').show();
  		$('.scrollz-container').show();
+ 		
  		window.messages.get(parentPage, 10, 1);
  		$('#message-list').scrollz('hidePullHeader');
 

@@ -50,9 +50,9 @@ Messages.prototype = {
 		$('#folder-name').html($('a#'+type).html());
 		//console.log(window.messageList[type]);
 		//get json data
-		if(typeof window.messageList[type] === 'undefined') {
+		//if(typeof window.messageList[type] === 'undefined') {
 			window.messageList[type] = _string.unlock(type);
-		}
+		//}
 		
 		//if empty or null
 		if(window.messageList[type] == null || window.messageList[type] == '' || force == 1) { 
@@ -64,7 +64,6 @@ Messages.prototype = {
 		} else { 
 			//just show the listing
 			this.displayMessage(window.messageList[type], type, start, end, 1);
-
 		}
 
 		//this will only work if no ajax call happen
@@ -525,6 +524,9 @@ Messages.prototype = {
 	 		
 	 		//put back together to the local storage
 	 		_string.lock(newData, type);
+	 		console.log(type);
+
+	 		window.messageList[type] = _string.unlock(type);
 		}
 
  		//reply all button
@@ -601,7 +603,7 @@ Messages.prototype = {
 				//continue here if object value is not null
 				//otherwise this will cause wrong message list 
 				//count to unread messages
-				if(messageList[i] !== null) {
+				if(messageList[i] !== null && typeof messageList[i] !== 'undefined') {
 					//use unread HTML template if only in INBOX
 					if(type == 'Inbox') {
 						//check if message is unread
@@ -617,9 +619,13 @@ Messages.prototype = {
 					var star 		= 'fa-star-o';
 					var toUser 		= '';
 					var fromName 	= '';
-					var subject 	= messageList[i]['b:Subject'];
-					var fromName 	= messageList[i]['b:Sender']['c:Name']['d:m_firstName']+' '+messageList[i]['b:Sender']['c:Name']['d:m_lastName']
-					var localDate 	= '';//_local.date(messageList[i]['b:DateSent']['c:m_When']);
+					var subject 	= '';
+					var fromName 	= '';
+					var localDate 	= '';
+
+					if(typeof messageList[i]['b:DateSent'] !== 'undefined'){
+				  		localDate 	= _local.date(messageList[i]['b:DateSent']['c:m_When']);
+				  	}
 
 					//dont show datetime if in Draft and Outbox listing
 					if(type == 'Draft' || type == 'Outbox') {
@@ -630,6 +636,17 @@ Messages.prototype = {
 				  		date = moment(localDate).fromNow();
 				  		//date = jQuery.format.prettyDate(localDate);
 				  	}
+
+				  	
+
+				  	if(typeof messageList[i]['b:Sender'] !== 'undefined'){
+				  		fromName = messageList[i]['b:Sender']['c:Name']['d:m_firstName']+' '+messageList[i]['b:Sender']['c:Name']['d:m_lastName']
+				  	}	
+				  	
+
+				  	if(typeof messageList[i]['b:Subject'] !== 'undefined'){
+				  		subject = messageList[i]['b:Subject'];
+				  	}	
 
 					//prevent error on Priority
 					if(typeof messageList[i]['b:Priority'] !== 'undefined'){
@@ -678,8 +695,6 @@ Messages.prototype = {
 				}
 				$("#message-list").html(list);
 			}
-			
-
 		}
 
 		//show the refresh to pull
@@ -690,7 +705,7 @@ Messages.prototype = {
 		$('.no-connection').hide();
 		//this guy is responsible for making the SUBJECT length responsive to the 
 		//DIV width
-		//$(".list-title").shorten();
+		$(".list-title").shorten();
 
 		pullDown();
 
@@ -787,7 +802,7 @@ Messages.prototype = {
 			currentGUID = messageList[i]['b:MessageGUID'];
 		}
 		
-		//$(".list-title").shorten();
+		$(".list-title").shorten();
 
 	}, 
 	send : function(subject, content, priority, recipients, guid) {
@@ -1867,6 +1882,14 @@ Messages.prototype = {
 				 					$('#folder-name').html($('#'+type).html());
 				 				}
 
+				 				//lock and save
+				 				_string.lock(window.messageList[type], type);
+				 				
+				 				if(page == 'Inbox' && currentPage == 'home') {
+			     					
+				         			window.messages.displayMessage(window.messageList[type], type, 10, 1);
+				         		}
+
 				 				//show only notification count if inside Inbox
 		         				if(type == 'Inbox') {
 		         					
@@ -1880,15 +1903,6 @@ Messages.prototype = {
 			         				
 		         					
 		         				}
-
-		         				//lock and save
-				 				_string.lock(window.messageList[type], type);
-
-				 				if(page == 'Inbox' && currentPage == 'home') {
-			     					console.log('display');
-				         			window.messages.displayMessage(window.messageList[type], type, 7, 0);
-				         		}
-
 		         			}
 		         		}	
 		         			
@@ -1928,7 +1942,15 @@ Messages.prototype = {
 			 					$('#folder-name').html($('#'+type).html());
 			 				}
 			 				
-			 				//show only notification count if inside Inbox
+			 				//lock and save
+			 				_string.lock(window.messageList[type], type);
+			 				
+			 				if(page == 'Inbox' && currentPage == 'home') {
+		     					
+			         			window.messages.displayMessage(window.messageList[type], type, 10, 1);
+			         		}
+
+			         		//show only notification count if inside Inbox
 			 				if(type == 'Inbox') {
 	         					
 	         					window.plugin.notification.local.add({ 
@@ -1939,14 +1961,6 @@ Messages.prototype = {
 								notification('New message recieve');	
 		         				
 	         				}
-
-			 				//lock and save
-			 				_string.lock(window.messageList[type], type);
-
-			 				if(page == 'Inbox' && currentPage == 'home') {
-		     					
-			         			window.messages.displayMessage(window.messageList[type], type, 7, 0);
-			         		}
 	         			}
          			}
 
