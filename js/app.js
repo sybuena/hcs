@@ -1223,10 +1223,10 @@ var _SOAP = (function() {
 
 document.addEventListener('deviceready', function() {	
 	//set autocancel notification on click
-   	//window.plugin.notification.local.setDefaults({ autoCancel: true });
+   	window.plugin.notification.local.setDefaults({ autoCancel: true });
 
    	//Enables the background mode. The app will not pause while in background.
-	//window.plugin.backgroundMode.enable();
+	window.plugin.backgroundMode.enable();
 
     //check internet on load
 	window.connection = window.navigator.onLine;
