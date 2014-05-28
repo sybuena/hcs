@@ -149,11 +149,14 @@ function pullRefresh(token) {
 	    //now make request to backend
 	    window.messages.checkInbox(type, 1);
 	});	
+	window.messageList[type] = _string.unlock(type);
 
 	$(document).on('bottomreached', '#message-list', function() {
-		start = start +10;
-		var end = start - 10;
-/*		var MESSAGE_ROW = 
+
+		start = start +1;
+		console.log(start)
+		//var end = start - 10;
+	/*var MESSAGE_ROW = 
 	'<div unread="false" class="messages go-detail" id="[MESSAGE_ID]" ><div class="pull-left" style="width:65%"><p class="list-title">[SUBJECT]</p>'+
 	'<p>From: [FROM_NAME]</p><p>[TO_NAME]</p></div><div class="pull-right" style="width:35%"><p class="list-date">[DATE]</p>'+
     '<p class="important-star"><i class="fa [IMPORTANT] fa-2x" style="font-size: 20px"></i></p></div><div class="clearfix"></div></div>';
@@ -168,7 +171,7 @@ function pullRefresh(token) {
 				replace('[FROM_NAME]', 		'fromName').							//message From name
 				replace('[TO_NAME]', 		'toUser')								//message To name
 			);	*/
-		window.messages.pullDown(type, start, end)
+		window.messages.pullDown(window.messageList[type], type, start, end)
 	});
 }
 
