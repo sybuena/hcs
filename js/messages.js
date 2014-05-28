@@ -886,7 +886,7 @@ Messages.prototype = {
 					$('.warning-holder').html('');
 					//unsent sent item so it can load again
 					localStorage.setItem('Sent', '');
-					window.messages.get('Inbox', 7, 0);
+					window.messages.get('Inbox', 10, 0);
 					$('#message-list').scrollz('hidePullHeader');
 
          		} else {
@@ -1080,7 +1080,7 @@ Messages.prototype = {
 					localStorage.setItem('Draft', '');	
 
 					//go back to Inbox
-					window.messages.get('Inbox', 5, 1);
+					window.messages.get('Inbox', 10, 1);
 
          		} else {
          			notification('Message not save in draft');
@@ -1593,7 +1593,7 @@ Messages.prototype = {
          		_string.lock(newData, type);
 
 	            //now display it
-	            window.messages.get(type,7,1);
+	            window.messages.get(type,10,1);
 
 	            localStorage.setItem('Deleted', '');
 			});
@@ -1650,7 +1650,7 @@ Messages.prototype = {
          		_string.lock(newData, type)
 
          		//put it back
-	            window.messages.get(type,7,1);
+	            window.messages.get(type,10,1);
 	            //unset all
 	            localStorage.setItem('Inbox', '');
 	            localStorage.setItem('Draft', '');
@@ -1792,6 +1792,11 @@ Messages.prototype = {
 		         				//lock and save
 				 				_string.lock(window.messageList[type], type);
 
+				 				if(page == 'Inbox' && currentPage == 'home') {
+			     					console.log('display');
+				         			window.messages.displayMessage(window.messageList[type], type, 7, 0);
+				         		}
+
 		         			}
 		         		}	
 		         			
@@ -1845,13 +1850,15 @@ Messages.prototype = {
 
 			 				//lock and save
 			 				_string.lock(window.messageList[type], type);
+
+			 				if(page == 'Inbox' && currentPage == 'home') {
+		     					
+			         			window.messages.displayMessage(window.messageList[type], type, 7, 0);
+			         		}
 	         			}
          			}
 
-     				if(page == 'Inbox' && currentPage == 'home') {
-     					console.log('display');
-	         			window.messages.displayMessage(window.messageList[type], type, 7, 0);
-	         		}
+     				
          		}
 	        });
 		});

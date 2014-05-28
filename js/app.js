@@ -763,7 +763,7 @@ function mainPage(snapper, loginUser) {
 
 			//get message list according on what
 			//user clicked on the LI left panel
-	  		window.messages.get(type, 7, 1);
+	  		window.messages.get(type, 10, 1);
   		}	
 
 		return false;
@@ -1016,7 +1016,7 @@ function backEvent() {
 			//$('#message-detail').hide();
 	 		//$('#message-list').show();
 	 		
-			window.messages.get(parentPage, 5, 1);
+			window.messages.get(parentPage, 10, 1);
 			$('#message-list').scrollz('hidePullHeader');
 
 			/*$('#back-top').hide();
@@ -1044,7 +1044,7 @@ function backEvent() {
 
 		//checkConnection();
 		//go back to Inbox
-		window.messages.get('Inbox', 5, 1);
+		window.messages.get('Inbox', 10, 1);
 		$('#message-list').scrollz('hidePullHeader');
 
 		return false;
@@ -1057,7 +1057,7 @@ function backEvent() {
  		//$('#message-detail').hide();
  		//$('#message-list').show();
  		//$('.scrollz-container').show();
- 		window.messages.get(parentPage, 5, 1);
+ 		window.messages.get(parentPage, 10, 1);
  		$('#message-list').scrollz('hidePullHeader');
 
 		/*$('#back-top').hide();
