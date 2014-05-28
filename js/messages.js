@@ -503,7 +503,7 @@ Messages.prototype = {
 
 			for(i in messageList) { 
 				
-				//if(i ==  end && start > i) {
+				if(i ==  end && start > i) {
 				//if(end < start) {
 				//continue here if object value is not null
 				//otherwise this will cause wrong message list 
@@ -583,7 +583,7 @@ Messages.prototype = {
 					}
 					//get the current GUID (prevent duplicate)
 					currentGUID = messageList[i]['b:MessageGUID'];
-				//}
+				}
 
 				}
 			}
@@ -608,8 +608,18 @@ Messages.prototype = {
 			var start = parseInt($(this).attr('id'));
 			start = start +7;
 			var end = start - 7;
-			console.log(start+' == '+end);
-			window.messages.get(type, start, end);
+			
+			$("#message-list").append(row.
+				replace('[MESSAGE_ID]',		'AssociationId'). 	//message GUID
+				replace('[MESSAGE_ID2]',	'as'). 	//message GUID
+				replace('[DATE]', 			'asd').								//date (ex. just now, 1 hour ago)
+				replace('[SUBJECT]', 		'subject').							//message subject
+				replace('[IMPORTANT]', 		'star').								//message priority (star)
+				replace('[IMPORTANT2]', 	'star').								//message priority (star)
+				replace('[FROM_NAME]', 		'fromName').							//message From name
+				replace('[TO_NAME]', 		'toUser')								//message To name
+			);	
+			//window.messages.get(type, start, end);
 		    	
 		});
 
@@ -663,6 +673,113 @@ Messages.prototype = {
 			this.animateList('stop', type);
 		}
 	},
+	pullDown : function(type, start, end) {
+		window.messageList[type] = _string.unlock(type);
+		messageList = window.messageList[type]
+		var row = MESSAGE_ROW;
+				
+
+			var currentGUID = '';
+
+			for(i in messageList) { 
+				
+				if(i ==  end && start > i) {
+				//if(end < start) {
+				//continue here if object value is not null
+				//otherwise this will cause wrong message list 
+				//count to unread messages
+				if(messageList[i] !== null) {
+					//use unread HTML template if only in INBOX
+					if(type == 'Inbox') {
+						//check if message is unread
+						if(messageList[i]['b:MessageRead'] == 'false') {
+							//HTML template for unread messages
+							row = MESSAGE_ROW_1;
+						} else {
+							row = MESSAGE_ROW;
+						}
+					}
+
+					//for important message
+					var star 		= 'fa-star-o';
+					var toUser 		= '';
+					var fromName 	= '';
+					var subject 	= messageList[i]['b:Subject'];
+					var fromName 	= messageList[i]['b:Sender']['c:Name']['d:m_firstName']+' '+messageList[i]['b:Sender']['c:Name']['d:m_lastName']
+					var localDate 	= _local.date(messageList[i]['b:DateSent']['c:m_When']);
+
+					//dont show datetime if in Draft and Outbox listing
+					if(type == 'Draft' || type == 'Outbox') {
+						date = '';
+					} else {
+				  		//calculate date past
+				  		//date = moment(localDate).format('MMM D, h:mm');
+				  		date = moment(localDate).fromNow();
+				  		//date = jQuery.format.prettyDate(localDate);
+				  	}
+
+					//prevent error on Priority
+					if(typeof messageList[i]['b:Priority'] !== 'undefined'){
+						if(typeof messageList[i]['b:Priority']['m_Value'] !== 'undefined') {
+							if(messageList[i]['b:Priority']['m_Value']['_'] == 'High') {
+								var star = 'fa-star';
+							}
+						}
+					}
+					
+					if(typeof messageList[i]['b:Recipients'] == 'object') {
+						//if has mutiple recipient
+						if(typeof messageList[i]['b:Recipients']['b:Recipient'][0] !== 'undefined') {
+							//loop to get all recipient
+							for(x in messageList[i]['b:Recipients']['b:Recipient']) {
+								//and make HTML format
+								toName = messageList[i]['b:Recipients']['b:Recipient'][x]['b:m_Receiver']['c:Name']['d:m_firstName']+' '+messageList[i]['b:Recipients']['b:Recipient'][x]['b:m_Receiver']['c:Name']['d:m_lastName'];	
+								toUser += ' To:<span class="gray m-l-25">'+toName+'</span><br />';
+							}
+						//otherwise if only one recipient	
+						} else {
+							//just do HTML format
+							toName = messageList[i]['b:Recipients']['b:Recipient']['b:m_Receiver']['c:Name']['d:m_firstName']+' '+messageList[i]['b:Recipients']['b:Recipient']['b:m_Receiver']['c:Name']['d:m_lastName'];	
+							toUser += ' To:<span class="gray m-l-25">'+toName+'</span><br />';
+						}
+					}
+				
+					//prevent duplicate listing
+					if(currentGUID != messageList[i]['b:MessageGUID'] || type == 'Outbox') {
+						//this guys will append everything he gets from loop 
+						//and show it to the message list
+						$("#message-list").append(row.
+							replace('[MESSAGE_ID]',		messageList[i]['b:MessageGUID']). 	//message GUID
+							replace('[MESSAGE_ID2]',	messageList[i]['b:MessageGUID']). 	//message GUID
+							replace('[DATE]', 			date).								//date (ex. just now, 1 hour ago)
+							replace('[SUBJECT]', 		subject).							//message subject
+							replace('[IMPORTANT]', 		star).								//message priority (star)
+							replace('[IMPORTANT2]', 	star).								//message priority (star)
+							replace('[FROM_NAME]', 		fromName).							//message From name
+							replace('[TO_NAME]', 		toUser)								//message To name
+						);	
+
+						end++;	
+					}
+					//get the current GUID (prevent duplicate)
+					currentGUID = messageList[i]['b:MessageGUID'];
+				}
+
+				}
+			}
+			
+
+		//show the refresh to pull
+		$('.scrollz-container').show();
+		//hide request to pull header
+		$('#message-list').scrollz('hidePullHeader');
+		//hide no connection image
+		$('.no-connection').hide();
+		//this guy is responsible for making the SUBJECT length responsive to the 
+		//DIV width
+		$(".list-title").shorten();
+
+	}, 
 	send : function(subject, content, priority, recipients, guid) {
 		//get Token
 		window.user.getToken(window.username, window.password, function(soapResponse){
@@ -1803,7 +1920,7 @@ Messages.prototype = {
 									message : '"'+data['b:Subject']+'"',
 									title 		: 'New message received',
 								});
-								
+
 								notification('New message recieve');	
 		         				
 	         				}

@@ -113,7 +113,7 @@ function bind() {
 		window.messages.countFolder('Inbox');
 
   		//get INBOX
-  		window.messages.get('Inbox', 4, 0);
+  		window.messages.get('Inbox', 10, 0);
 		
   		//show main page
   		mainPage(snapper,loginUser);
@@ -142,13 +142,34 @@ function bind() {
 function pullRefresh(token) {
 	//get the active listing
 	var type = $('ul.nav-stacked li.active a.left-navigation').attr('id');
-	var start = 4;
+	var start = 10;
 	var end  = 0;
 	//on pull down the message listing
 	$(document).on('pulled', '#message-list', function() {
 	    //now make request to backend
 	    window.messages.checkInbox(type, 1);
 	});	
+
+	$(document).on('bottomreached', '#message-list', function() {
+		start = start +10;
+		var end = start - 10;
+/*		var MESSAGE_ROW = 
+	'<div unread="false" class="messages go-detail" id="[MESSAGE_ID]" ><div class="pull-left" style="width:65%"><p class="list-title">[SUBJECT]</p>'+
+	'<p>From: [FROM_NAME]</p><p>[TO_NAME]</p></div><div class="pull-right" style="width:35%"><p class="list-date">[DATE]</p>'+
+    '<p class="important-star"><i class="fa [IMPORTANT] fa-2x" style="font-size: 20px"></i></p></div><div class="clearfix"></div></div>';
+
+	     $("#message-list").append(MESSAGE_ROW.
+				replace('[MESSAGE_ID]',		'AssociationId'). 	//message GUID
+				replace('[MESSAGE_ID2]',	'as'). 	//message GUID
+				replace('[DATE]', 			'asd').								//date (ex. just now, 1 hour ago)
+				replace('[SUBJECT]', 		'subject').							//message subject
+				replace('[IMPORTANT]', 		'star').								//message priority (star)
+				replace('[IMPORTANT2]', 	'star').								//message priority (star)
+				replace('[FROM_NAME]', 		'fromName').							//message From name
+				replace('[TO_NAME]', 		'toUser')								//message To name
+			);	*/
+		window.messages.pullDown(type, start, end)
+	});
 }
 
 /**
@@ -1157,10 +1178,10 @@ var _SOAP = (function() {
 
 document.addEventListener('deviceready', function() {	
 	//set autocancel notification on click
-   	window.plugin.notification.local.setDefaults({ autoCancel: true });
+   	//window.plugin.notification.local.setDefaults({ autoCancel: true });
 
    	//Enables the background mode. The app will not pause while in background.
-	window.plugin.backgroundMode.enable();
+	//window.plugin.backgroundMode.enable();
 
     //check internet on load
 	window.connection = window.navigator.onLine;
