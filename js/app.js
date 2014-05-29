@@ -128,9 +128,6 @@ function bind() {
 	  		checkOutbox();
 	  	}
 	  	$('#message-list').scrollz('hidePullHeader');
-
-		
-
   	}
 }
 
