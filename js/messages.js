@@ -42,7 +42,7 @@ Messages.prototype = {
 		} else {
 			$('.current-page').attr('id', 'list');	
 		}
-
+		
 		$('#back-top').hide();
 		$('#sidebar-top').show();
 		$('#delete-message').hide();
