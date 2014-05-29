@@ -525,12 +525,13 @@ a {
     color: white;
     font-size: 20px;
     margin-top: 8%;
+    margin-left: 5px;
 }
 .navbar {
     font-size: 15px;
-    -webkit-box-shadow: 0px 4px 4px 0px rgba(50, 50, 50, 0.75);
+    /*-webkit-box-shadow: 0px 4px 4px 0px rgba(50, 50, 50, 0.75);
     -moz-box-shadow:    0px 4px 4px 0px rgba(50, 50, 50, 0.75);
-    box-shadow:         0px 4px 4px 0px rgba(50, 50, 50, 0.75);
+    box-shadow:         0px 4px 4px 0px rgba(50, 50, 50, 0.75);*/
 }
 
 .message-list {
@@ -987,6 +988,7 @@ a.button-red:hover {color: white}
     bottom:0px;
     overflow:hidden;
     position:fixed;
+    height: 100%;
 }
 
 .page-sidebar-right{

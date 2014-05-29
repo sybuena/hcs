@@ -252,12 +252,12 @@
                     utils.events.addEvent(settings.element, utils.eventType('move'), action.drag.dragging);
                     utils.events.addEvent(settings.element, utils.eventType('up'), action.drag.endDrag);
                 },
-                stopListening: function() {
+                stopListening: function() { 
                     utils.events.removeEvent(settings.element, utils.eventType('down'), action.drag.startDrag);
                     utils.events.removeEvent(settings.element, utils.eventType('move'), action.drag.dragging);
                     utils.events.removeEvent(settings.element, utils.eventType('up'), action.drag.endDrag);
                 },
-                startDrag: function(e) {
+                startDrag: function(e) { console.log('dragging'); 
                     // No drag on ignored elements
                     var target = e.target ? e.target : e.srcElement,
                         ignoreParent = utils.parentUntil(target, 'data-snap-ignore');
@@ -373,7 +373,7 @@
                         }
                         if (openingLeft) {
 
-                            $('.coat-black').show();
+                            
                             // Pulling too far to the right
                             if (settings.maxPosition < absoluteTranslation) {
                                 diff = (absoluteTranslation - settings.maxPosition) * settings.resistance;
@@ -417,7 +417,7 @@
                         action.translate.x(translateTo + translated);
                     }
                 },
-                endDrag: function(e) {
+                endDrag: function(e) { console.log('stop')
                     if (cache.isDragging) {
                         utils.dispatchEvent('end');
                         var translated = action.translate.get.matrix(4);
@@ -429,7 +429,6 @@
                             action.translate.easeTo(0);
                             cache.isDragging = false;
                             cache.startDragX = 0; 
-                            $('.coat-black').hide()
                             
                             return;
                         }

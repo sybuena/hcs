@@ -101,7 +101,8 @@ function bind() {
   		window.user.login();
   	//else if there is a user	
   	} else {
-  		
+		//$('#message-list').scrollz(); 
+
   		//get contact list
   		window.contactList = window.users = _string.unlock('contactList');
 
@@ -111,10 +112,11 @@ function bind() {
 
   		//count unread message in inbox
 		window.messages.countFolder('Inbox');
-		$('#message-list').scrollz('hidePullHeader');
+		
 		//get INBOX
   		window.messages.get('Inbox', 10, 0);
-		
+  		
+		//$('#message-list').scrollz('hidePullHeader');
   		//show main page
   		mainPage(snapper,loginUser);
 
@@ -126,11 +128,7 @@ function bind() {
 	  		checkOutbox();
 	  	}
 
-		$('#message-list').scrollz('hidePullHeader');
-
-		//pull to refresh 		
-		pullRefresh();	
-
+		
 
   	}
 }
@@ -142,6 +140,9 @@ function bind() {
  * @param string login token 
  */
 function pullRefresh() {
+	
+	$('#message-list').scrollz({pull:true});  	
+	
 	//get the active listing
 	var type = $('ul.nav-stacked li.active a.left-navigation').attr('id');
 	var start = 10;
@@ -277,8 +278,8 @@ function checkInbox(loginUser) {
 			window.messages.checkInbox('Inbox', 0);
   		}	
   	
-	//}, window.interval*60000);
-	}, 5000);
+	}, window.interval*60000);
+	//}, 5000);
 }
 
 /**
@@ -954,7 +955,40 @@ function backEvent() {
 
 	//if in compose then hit back button
 	if(currentPage == 'compose') {
+		//prepare variables
+		var recipients 	= [];
+		var subject 	= $('#compose-subject').val();
+		var content 	= $('#compose-content').val();
+		var priority 	= $('#compose-important option:selected').html();
+		var guid 		= $('#detail-guid').val();
+		var empty 		= true;
+		//if no GUID found
+		if($.isEmptyObject(guid)) {
+			guid = 0;
+		}
+		
+		//get list of recipients
+		$('.to-holder div').each(function() {
+			recipients.push(window.contactList[this.id]);
+		});
 
+		
+		if(subject.length > 0 || content.length > 0 || recipients.length > 0) {
+			empty = false;
+		}
+		//if everything is empty, then dont show modal
+		if(empty) {
+			$('#draft-modal').modal('hide');
+			$('#process-send').hide();	
+			
+			//go back to the previous listing
+			$('.scrollz-container').show();
+			window.messages.get(parentPage, 10, 1);
+			$('#message-list').scrollz('hidePullHeader');
+
+			return false;
+		}
+		
 		$('.scrollz-container').hide();
 		//show dialog
 		$('#draft-modal').modal('show');
@@ -972,23 +1006,6 @@ function backEvent() {
 				$('.notification-ajax #notification-here').html('<i class="fa fa-warning"></i> No Internet connection');
 				return false;
 			}
-
-			//prepare variables
-			var recipients 	= [];
-			var subject 	= $('#compose-subject').val();
-			var content 	= $('#compose-content').val();
-			var priority 	= $('#compose-important option:selected').html();
-			var guid 		= $('#detail-guid').val();
-			
-			//if no GUID found
-			if($.isEmptyObject(guid)) {
-				guid = 0;
-			}
-			
-			//get list of recipients
-			$('.to-holder div').each(function() {
-				recipients.push(window.contactList[this.id]);
-			});
 			
 			$('#loading-ajax #text').html('saving message')
 			$('#loading-ajax').popup('open');
@@ -1001,22 +1018,14 @@ function backEvent() {
 	
 		//on click Discard
 		$('#cancel-draft').click(function() {
-			//$('#test-pop').popup('close');
+			
 			$('#draft-modal').modal('hide');
 			$('#process-send').hide();	
 			
 			//go back to the previous listing
-			//$('#message-detail').hide();
-			//$('.message-elem').hide();
-	 		//$('#message-list').show();
-	 		$('.scrollz-container').show();
+			$('.scrollz-container').show();
 			window.messages.get(parentPage, 10, 1);
 			$('#message-list').scrollz('hidePullHeader');
-
-			/*$('#back-top').hide();
-			$('#sidebar-top').show();
-			$('#delete-message').hide();
-			$('#undelete-message').hide();*/
 	 		
 		});
 
@@ -1045,22 +1054,10 @@ function backEvent() {
 
  	//else it is not in Inbox listing	
  	} else {
- 		
- 		//checkConnection();
- 		//go back to the parent listing 
- 		//$('#message-detail').hide();
- 		//$('#message-list').show();
  		$('.scrollz-container').show();
  		
  		window.messages.get(parentPage, 10, 1);
  		$('#message-list').scrollz('hidePullHeader');
-
-		/*$('#back-top').hide();
-		$('#sidebar-top').show();
-		$('#delete-message').hide();
-		$('#undelete-message').hide();*/
-
- 		//window.messages.get(parentPage, 5, 1);
  		
  	}  
 }
@@ -1199,7 +1196,7 @@ var _string = (function() {
 			if(key != 'Inbox' && key != 'Sent' && key != 'Draft' && key != 'Deleted' && key != 'Outbox') { 
 				var decrypted = CryptoJS.AES.decrypt(string, SECRET);
 				var json = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
-			} else { console.log('here');
+			} else { 
 				var json = JSON.parse(string);
 			}
 
@@ -1236,13 +1233,12 @@ var _SOAP = (function() {
 }());
 
 
-
 document.addEventListener('deviceready', function() {	
 	//set autocancel notification on click
    	//window.plugin.notification.local.setDefaults({ autoCancel: true });
 
    	//Enables the background mode. The app will not pause while in background.
-	window.plugin.backgroundMode.enable();
+	//window.plugin.backgroundMode.enable();
 
     //check internet on load
 	window.connection = window.navigator.onLine;
@@ -1299,12 +1295,17 @@ document.addEventListener('deviceready', function() {
 		
 	});
 	
+	
 	$(document).ready(function(){
 		
 		//for login UI
 		init();
 		//start application
 		bind();
+		
+		//pull to refresh 		
+		pullRefresh();	
+	
 	});
 
 }, false);

@@ -263,9 +263,7 @@ Messages.prototype = {
 		});
 	},
 	loadAll : function() {
-		console.log('here');
-		
-
+	
 		//refresh token 
 		window.user.getToken(window.username, window.password, function(soapResponse){
 			var listing = new Array();
@@ -1185,6 +1183,7 @@ Messages.prototype = {
 
 					//go back to Inbox
 					window.messages.get('Inbox', 10, 1);
+					$('#message-list').scrollz('hidePullHeader');
 
          		} else {
          			notification('Message not save in draft');
@@ -1700,6 +1699,7 @@ Messages.prototype = {
 	            window.messages.get(type,10,1);
 
 	            localStorage.setItem('Deleted', '');
+	            $('#message-list').scrollz('hidePullHeader');
 			});
 		});
 
@@ -1759,6 +1759,7 @@ Messages.prototype = {
 	            localStorage.setItem('Inbox', '');
 	            localStorage.setItem('Draft', '');
 	            localStorage.setItem('Sent', '');
+	            $('#message-list').scrollz('hidePullHeader');
 			});
 			
 		});
