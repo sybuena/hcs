@@ -208,6 +208,19 @@ User.prototype = {
 			  		//push, push, push
 			  		contactList.push(contact);
 			  	}
+			  	
+			  	//sort by name
+			  	contactList.sort(function(a, b){
+				 	var nameA = a.name.toLowerCase();
+				 	var	nameB = b.name.toLowerCase();
+				 	
+				 	if (nameA < nameB) //sort string ascending
+				  		return -1 
+				 	
+				 	if (nameA > nameB)
+				  		return 1
+				 	return 0 //default return value (no sorting)
+				})
 
 			  	//lock and save data to local storage
 			  	_string.lock(contactList, 'contactList');

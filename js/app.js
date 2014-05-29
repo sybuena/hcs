@@ -1236,7 +1236,7 @@ document.addEventListener('deviceready', function() {
    	//window.plugin.notification.local.setDefaults({ autoCancel: true });
 
    	//Enables the background mode. The app will not pause while in background.
-	//window.plugin.backgroundMode.enable();
+	window.plugin.backgroundMode.enable();
 
     //check internet on load
 	window.connection = window.navigator.onLine;
@@ -1292,7 +1292,6 @@ document.addEventListener('deviceready', function() {
 		$('.notification-ajax #notification-here').html('<i class="fa fa-warning"></i> No Internet connection');
 		
 	});
-	
 	
 	$(document).ready(function(){
 		
