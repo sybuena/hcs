@@ -127,7 +127,11 @@ function bind() {
 	  		//on first load, check Outbox
 	  		checkOutbox();
 	  	}
+
 	  	$('#message-list').scrollz('hidePullHeader');
+
+		//pull to refresh 		
+		pullRefresh();	
   	}
 }
 
@@ -138,8 +142,6 @@ function bind() {
  * @param string login token 
  */
 function pullRefresh() {
-	
-	//$('#message-list').scrollz({pull:true});  	
 	
 	//get the active listing
 	var type = $('ul.nav-stacked li.active a.left-navigation').attr('id');
@@ -1236,7 +1238,7 @@ document.addEventListener('deviceready', function() {
    	//window.plugin.notification.local.setDefaults({ autoCancel: true });
 
    	//Enables the background mode. The app will not pause while in background.
-	window.plugin.backgroundMode.enable();
+	//window.plugin.backgroundMode.enable();
 
     //check internet on load
 	window.connection = window.navigator.onLine;
@@ -1299,9 +1301,6 @@ document.addEventListener('deviceready', function() {
 		init();
 		//start application
 		bind();
-		
-		//pull to refresh 		
-		pullRefresh();	
 	
 	});
 
