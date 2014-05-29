@@ -258,9 +258,9 @@
                     utils.events.removeEvent(settings.element, utils.eventType('up'), action.drag.endDrag);
                 },
                 startDrag: function(e) { console.log('dragging'); 
-                    $('.scrollz-content-wrapper').css('position', 'absolute');
+                    /*$('.scrollz-content-wrapper').css('position', 'absolute');
                     $('.scrollz-content-wrapper').css('width', '100%');
-                    $('.scrollz-content-wrapper').css('margin-top', '0px');
+                    $('.scrollz-content-wrapper').css('margin-top', '0px');*/
                     
                     // No drag on ignored elements
                     var target = e.target ? e.target : e.srcElement,
@@ -422,9 +422,9 @@
                     }
                 },
                 endDrag: function(e) { console.log('stop')
-                $('.scrollz-content-wrapper').css('position', 'intial');
+                    /*$('.scrollz-content-wrapper').css('position', 'intial');
                     $('.scrollz-content-wrapper').css('width', '100%');
-                    $('.scrollz-content-wrapper').css('margin-top', '50px');
+                    $('.scrollz-content-wrapper').css('margin-top', '50px');*/
                     
                     if (cache.isDragging) {
                         utils.dispatchEvent('end');
