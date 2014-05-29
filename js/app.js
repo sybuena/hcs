@@ -115,8 +115,8 @@ function bind() {
 		
 		//get INBOX
   		window.messages.get('Inbox', 10, 0);
-  		
-		//$('#message-list').scrollz('hidePullHeader');
+
+		$('#message-list').scrollz('hidePullHeader');
   		//show main page
   		mainPage(snapper,loginUser);
 
@@ -127,6 +127,7 @@ function bind() {
 	  		//on first load, check Outbox
 	  		checkOutbox();
 	  	}
+	  	$('#message-list').scrollz('hidePullHeader');
 
 		
 
@@ -141,7 +142,7 @@ function bind() {
  */
 function pullRefresh() {
 	
-	$('#message-list').scrollz({pull:true});  	
+	//$('#message-list').scrollz({pull:true});  	
 	
 	//get the active listing
 	var type = $('ul.nav-stacked li.active a.left-navigation').attr('id');
