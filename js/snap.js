@@ -219,7 +219,7 @@
                            settings.element.style[cache.vendor+'Transform'] = '';
                        }
                 },
-                x: function(n) {
+                x: function(n) { 
                     if( (settings.disable==='left' && n>0) ||
                         (settings.disable==='right' && n<0)
                     ){ return; }
@@ -377,8 +377,16 @@
                         }
                         if (openingLeft) {
                             console.log('dragging'); 
+                            
+   
+                                    
+                            //$('#message-list').draggable({ disabled: true });
+                             //$('.scrollz-container').css("top",Math.max(0,250-$(this).scrollTop()));
+                          // $('.scrollz-container').scrollToFixed({ marginTop: 10 });
                             $('#message-list').scrollz('hidePullHeader');
-                    
+                        //$('.scrollz-container').css('height', '100%');  
+                       // $('.scrollz-container').css('position', 'fixed'); 
+                        
                             
                             // Pulling too far to the right
                             if (settings.maxPosition < absoluteTranslation) {

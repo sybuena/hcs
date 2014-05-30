@@ -117,7 +117,7 @@
              
              // Add touch start listener
              container.bind(_getTouchEventName($this, 'touchstart'), function(event) {
-              console.log(event)
+              //console.log(event.originalEvent);
               // Handle
               _handleTouchStartEvent(event, $this);
             });

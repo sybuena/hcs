@@ -142,7 +142,7 @@ function bind() {
 	  	  
 		//pull to refresh 		
 		pullRefresh();	
-		
+
 		$('.page-sidebar').css('background-color','white');
 		$('.page-sidebar').css('height','100%');
   	}
@@ -180,7 +180,7 @@ function pullDown() {
 	
 	$(document).on('bottomreached', '#message-list', function() {
 
-		start++;
+		start = start = 20;
 		count++;
 		//dont go beyond end of list
 		if(window.messageList[type].length >= count) {
@@ -191,7 +191,7 @@ function pullDown() {
 		//On click message listing then load message detail
 		//base on Message GUID
 		onClickDetail(type);
-
+		//$(".list-title").shorten();
 		
 	});
 }
@@ -1077,6 +1077,18 @@ function backEvent() {
  	}  
 }
 
+function short(length) {
+    var s = document.getElementsByClassName("list-title");
+    var len = s.length;
+    for(var i = 0; i < len; i++) {
+       var g = s[i].innerHTML;
+       var x = ". . .";
+       var leng = length-5;
+       var html = g.substring(0, leng)+"";
+       var allHTML = html+x;
+       s[i].innerHTML = allHTML;
+    }
+}
 /* --------------------------------------------
 			Protected Function
    -------------------------------------------- */
@@ -1252,7 +1264,7 @@ document.addEventListener('deviceready', function() {
 	
 
 	//Enables the background mode. The app will not pause while in background.
-	window.plugin.backgroundMode.enable();
+	//window.plugin.backgroundMode.enable();
 	
 	var params = [];
 	

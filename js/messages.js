@@ -341,7 +341,6 @@ Messages.prototype = {
 	         			//lock and save
 	         			_string.lock(raw, type);
 	         			window.messageList[type] = raw;
-	         			console.log(type);
 	         		}	
 
 				});
@@ -454,7 +453,7 @@ Messages.prototype = {
 
 		//for important message
 		var star 		= 'fa-star-o';
-		var fromName 	= 'from : '+data['b:Label']['b:Sender']['c:Name']['d:m_firstName']+' '+data['b:Label']['b:Sender']['c:Name']['d:m_lastName'];
+		var fromName 	= 'From : '+data['b:Label']['b:Sender']['c:Name']['d:m_firstName']+' '+data['b:Label']['b:Sender']['c:Name']['d:m_lastName'];
      	var toUser 		= '';
      	//now convert the date email sent to current date to get the
 		//date AGO when recieve the email
@@ -668,7 +667,11 @@ Messages.prototype = {
 							toUser += ' To:<span class="gray m-l-25">'+toName+'</span><br />';
 						}
 					}
-				
+					
+					if(subject.length > 20) {
+						subject = subject.substr(0,20)+'..';	
+					}
+					
 					//prevent duplicate listing
 					if(currentGUID != messageList[i]['b:MessageGUID'] || type == 'Outbox') {
 						//build DOM first, 
@@ -700,7 +703,10 @@ Messages.prototype = {
 		$('.no-connection').hide();
 		//this guy is responsible for making the SUBJECT length responsive to the 
 		//DIV width
-		//$(".list-title").shorten();
+		$(".list-title").shorten();
+		
+		
+
 
 		pullDown();
 
@@ -717,9 +723,11 @@ Messages.prototype = {
 	pullDown : function(messageList,type, start, end) {
 		
 		var row 		= MESSAGE_ROW;
-		var i 			= start;
+		//var i 			= start;
 		var currentGUID = '';
 		var list 		= '';
+
+		for(i = 0; i < start; i++) {	
 
 		if(messageList[i] !== null) {
 			//use unread HTML template if only in INBOX
@@ -760,6 +768,10 @@ Messages.prototype = {
 				}
 			}
 			
+			if(subject.length > 20) {
+				subject = subject.substr(0,20)+'..';	
+			}
+
 			if(typeof messageList[i]['b:Recipients'] == 'object') {
 				//if has mutiple recipient
 				if(typeof messageList[i]['b:Recipients']['b:Recipient'][0] !== 'undefined') {
@@ -796,8 +808,9 @@ Messages.prototype = {
 			//get the current GUID (prevent duplicate)
 			currentGUID = messageList[i]['b:MessageGUID'];
 		}
+		}
 		
-		//$(".list-title").shorten();
+		
 
 	}, 
 	send : function(subject, content, priority, recipients, guid) {
