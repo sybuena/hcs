@@ -180,7 +180,7 @@ function pullDown() {
 	
 	$(document).on('bottomreached', '#message-list', function() {
 
-		start = start = 20;
+		start = start = 10;
 		count++;
 		//dont go beyond end of list
 		if(window.messageList[type].length >= count) {
