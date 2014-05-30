@@ -91,13 +91,17 @@
                 }
             },
             transitionCallback: function(){
+                
                 return (cache.vendor==='Moz' || cache.vendor==='ms') ? 'transitionend' : cache.vendor+'TransitionEnd';
             },
             canTransform: function(){
+                
                 return typeof settings.element.style[cache.vendor+'Transform'] !== 'undefined';
             },
             deepExtend: function(destination, source) {
+                
                 var property;
+
                 for (property in source) {
                     if (source[property] && source[property].constructor && source[property].constructor === Object) {
                         destination[property] = destination[property] || {};
