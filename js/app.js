@@ -101,8 +101,13 @@ function bind() {
   		window.user.login();
   	//else if there is a user	
   	} else {
-		//$('#message-list').scrollz(); 
-
+  	
+		$('.navbar-inverse .navbar-nav li a').on("mousedown", function() {
+		   $(this).css('background-color', '#006687');
+		}).on("mouseup", function(e) {
+		    $(this).css('background-color', '#324a61');
+		});
+		
   		//get contact list
   		window.contactList = window.users = _string.unlock('contactList');
 
@@ -1234,11 +1239,8 @@ var _SOAP = (function() {
 
 
 document.addEventListener('deviceready', function() {	
-	//set autocancel notification on click
-   	//window.plugin.notification.local.setDefaults({ autoCancel: true });
-
-   	//Enables the background mode. The app will not pause while in background.
-	//window.plugin.backgroundMode.enable();
+	//Enables the background mode. The app will not pause while in background.
+	window.plugin.backgroundMode.enable();
 
     //check internet on load
 	window.connection = window.navigator.onLine;
