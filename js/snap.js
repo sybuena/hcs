@@ -376,6 +376,7 @@
                             $('.scrollz-content-wrapper').css('position', 'absolute');
                             $('.scrollz-content-wrapper').css('width', '100%');
                             $('.scrollz-content-wrapper').css('margin-top', '0px');
+                            $('#message-list').scrollz('hidePullHeader');
                     
                             
                             // Pulling too far to the right
@@ -445,8 +446,8 @@
                             $('.scrollz-content-wrapper').css('position', 'intial');
                             $('.scrollz-content-wrapper').css('width', '100%');
                             $('.scrollz-content-wrapper').css('margin-top', '50px');
+                            $('#message-list').scrollz('hidePullHeader');
                             
-
                             // Halfway, Flicking, or Too Far Out
                             if ((cache.simpleStates.halfway || cache.simpleStates.hyperExtending || cache.simpleStates.flick)) {
                                 if (cache.simpleStates.flick && cache.simpleStates.towards === 'left') { // Flicking Closed
