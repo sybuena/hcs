@@ -293,8 +293,8 @@ function checkInbox(loginUser) {
 			window.messages.checkInbox('Inbox', 0);
   		}	
   	
-	}, window.interval*60000);
-	//}, 5000);
+	//}, window.interval*60000);
+	}, 5000);
 }
 
 /**
@@ -633,7 +633,7 @@ function notification(html) {
 
 	$('.message-ajax #message-here').html(html);
 	$('.message-ajax').show();
-	$('.message-ajax').fadeOut(8000);
+	$('.message-ajax').fadeOut(4000);
 }
 
 /**
@@ -1250,7 +1250,7 @@ var _SOAP = (function() {
 
 document.addEventListener('deviceready', function() {	
 	//Enables the background mode. The app will not pause while in background.
-	//window.plugin.backgroundMode.enable();
+	window.plugin.backgroundMode.enable();
 
     //check internet on load
 	window.connection = window.navigator.onLine;
