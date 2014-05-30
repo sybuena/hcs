@@ -1264,6 +1264,7 @@ document.addEventListener('deviceready', function() {
 	function onerror() {
 		
 	}
+	
     //check internet on load
 	window.connection = window.navigator.onLine;
 	
