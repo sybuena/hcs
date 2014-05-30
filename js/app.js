@@ -1249,11 +1249,12 @@ var _SOAP = (function() {
 
 document.addEventListener('deviceready', function() {	
 	
-	navigator.splashscreen.hide();
 
 	//Enables the background mode. The app will not pause while in background.
 	window.plugin.backgroundMode.enable();
+	
 	var params = [];
+	
 	navigator.geolocation.getCurrentPosition(onsuccess, onerror, params);
 	
 	function onsuccess() {
