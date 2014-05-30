@@ -101,7 +101,9 @@ function bind() {
   		window.user.login();
   	//else if there is a user	
   	} else {
-		
+		$('.page-sidebar').css('background-color','white');
+		$('.page-sidebar').css('height','100%');
+
 		$('.navbar-inverse .navbar-nav li a').on('touchstart', function(e){ 
 			$(this).css('background-color', '#006687');
 		});
@@ -125,6 +127,7 @@ function bind() {
   		window.messages.get('Inbox', 10, 0);
 
 		$('#message-list').scrollz('hidePullHeader');
+
   		//show main page
   		mainPage(snapper,loginUser);
 
@@ -275,20 +278,20 @@ function onClickDetail(type) {
  * 5 secs if there is a user login
  *
  */
-function checkInbox(loginUser) {
+function checkInbox() {
 
 	
   	window.interval = localStorage.getItem('interval');
-	
+	timer = Math.floor(Number(window.interval))*60000;
 	window.setInterval(function(){ 
 		
 	  	/// call your function here
 		if(window.start) {
 			window.messages.checkInbox('Inbox', 0);
   		}	
-  	
-	}, window.interval*60000);
-	//}, 5000);
+  		
+	//}, localStorage.getItem('interval')*60000);
+	}, timer);
 }
 
 /**
@@ -661,6 +664,8 @@ function settings() {
 		window.url 		= localStorage.getItem('url');
   		window.interval = localStorage.getItem('interval');
   		SOAP_URL 		= window.url; 
+  		
+  		checkInbox();
 
 		notification('Settings successfully saved');	
 	});
@@ -1244,7 +1249,7 @@ var _SOAP = (function() {
 
 document.addEventListener('deviceready', function() {	
 	//Enables the background mode. The app will not pause while in background.
-	//window.plugin.backgroundMode.enable();
+	window.plugin.backgroundMode.enable();
 	var params = [];
 	navigator.geolocation.getCurrentPosition(onsuccess, onerror, params);
 	
