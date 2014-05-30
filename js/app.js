@@ -1251,7 +1251,7 @@ document.addEventListener('deviceready', function() {
 	
 
 	//Enables the background mode. The app will not pause while in background.
-	//window.plugin.backgroundMode.enable();
+	window.plugin.backgroundMode.enable();
 	
 	var params = [];
 	
