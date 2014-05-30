@@ -257,11 +257,7 @@
                     utils.events.removeEvent(settings.element, utils.eventType('move'), action.drag.dragging);
                     utils.events.removeEvent(settings.element, utils.eventType('up'), action.drag.endDrag);
                 },
-                startDrag: function(e) { console.log('dragging'); 
-                    /*$('.scrollz-content-wrapper').css('position', 'absolute');
-                    $('.scrollz-content-wrapper').css('width', '100%');
-                    $('.scrollz-content-wrapper').css('margin-top', '0px');*/
-                    
+                startDrag: function(e) { 
                     // No drag on ignored elements
                     var target = e.target ? e.target : e.srcElement,
                         ignoreParent = utils.parentUntil(target, 'data-snap-ignore');
@@ -376,7 +372,11 @@
                             cache.dragWatchers.last = thePageX;
                         }
                         if (openingLeft) {
-
+                            console.log('dragging'); 
+                            $('.scrollz-content-wrapper').css('position', 'absolute');
+                            $('.scrollz-content-wrapper').css('width', '100%');
+                            $('.scrollz-content-wrapper').css('margin-top', '0px');
+                    
                             
                             // Pulling too far to the right
                             if (settings.maxPosition < absoluteTranslation) {
@@ -421,11 +421,8 @@
                         action.translate.x(translateTo + translated);
                     }
                 },
-                endDrag: function(e) { console.log('stop')
-                    /*$('.scrollz-content-wrapper').css('position', 'intial');
-                    $('.scrollz-content-wrapper').css('width', '100%');
-                    $('.scrollz-content-wrapper').css('margin-top', '50px');*/
-                    
+                endDrag: function(e) { 
+
                     if (cache.isDragging) {
                         utils.dispatchEvent('end');
                         var translated = action.translate.get.matrix(4);
@@ -443,6 +440,13 @@
 
                         // Revealing Left
                         if (cache.simpleStates.opening === 'left') {
+
+                            console.log('stop')
+                            $('.scrollz-content-wrapper').css('position', 'intial');
+                            $('.scrollz-content-wrapper').css('width', '100%');
+                            $('.scrollz-content-wrapper').css('margin-top', '50px');
+                            
+
                             // Halfway, Flicking, or Too Far Out
                             if ((cache.simpleStates.halfway || cache.simpleStates.hyperExtending || cache.simpleStates.flick)) {
                                 if (cache.simpleStates.flick && cache.simpleStates.towards === 'left') { // Flicking Closed
