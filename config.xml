@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.fusionplus.hcs" version="3.1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+    <name>HCS Messenger</name>
+    <name>HCS Messenger</name>
+    <description>
+        HealthCare Synergy Messenger
+    </description>
+    <author email="sy@fusionpl.us" href="http://fusionpl.us">
+        Symon Buenavista
+    </author>
+    <feature name="http://api.phonegap.com/1.0/device" />
+    <preference name="permissions" value="none" />
+    <preference name="orientation" value="default" />
+    <preference name="target-device" value="universal" />
+    <preference name="fullscreen" value="false" />
+    <preference name="webviewbounce" value="false" />
+    <preference name="prerendered-icon" value="true" />
+    <preference name="stay-in-webview" value="false" />
+    <preference name="ios-statusbarstyle" value="black-opaque" />
+    <preference name="detect-data-types" value="true" />
+    <preference name="exit-on-suspend" value="false" />
+    <preference name="show-splash-screen-spinner" value="true" />
+    <preference name="auto-hide-splash-screen" value="true" />
+    <preference name="disable-cursor" value="false" />
+    <preference name="android-minSdkVersion" value="7" />
+    <preference name="android-installLocation" value="auto" />
+    <preference name="DisallowOverscroll" value="true" />
+    <preference name="StatusBarOverlaysWebView" value="true" />
+    <!-- Plugin -->
+    <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" />
+    <gap:plugin name="de.appplant.cordova.plugin.local-notification" />
+    <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.5.0" />
+    <gap:plugin name="Geolocation" value="org.apache.cordova.GeoBroker" />
+    <gap:plugin name="org.apache.cordova.splashscreen" />
+    <!-- Icon -->
+    <icon src="icon.png" width="144" height="144"/>
+    <icon src="res/icon.png"   gap:platform="android"    gap:qualifier="ldpi" />
+    <icon src="res/icon.png"   gap:platform="android"    gap:qualifier="mdpi" />
+    <icon src="res/icon.png"   gap:platform="android"    gap:qualifier="hdpi" />
+    <icon src="res/icon.png"  gap:platform="android"    gap:qualifier="xhdpi" />
+    <icon src="res/icon/ios/icon-72.png"            gap:platform="ios"        width="57" height="57" />
+    <icon src="res/icon/ios/icon-76.png"            gap:platform="ios"        width="72" height="72" />
+    <icon src="res/icon/ios/icon-120.png"         gap:platform="ios"        width="114" height="114" />
+    <icon src="res/icon/ios/icon-152.png"         gap:platform="ios"        width="144" height="144" />
+
+    <!-- Splash screen -->
+    <gap:splash src="res/screen.png" gap:platform="android" gap:qualifier="port-ldpi" />
+    <gap:splash src="res/screen.png" gap:platform="android" gap:qualifier="port-mdpi" />
+    <gap:splash src="res/screen.png" gap:platform="android" gap:qualifier="port-hdpi" />
+    <gap:splash src="res/screen.png" gap:platform="android" gap:qualifier="port-xhdpi" />
+
+    <gap:splash src="res/screen.png" gap:platform="ios" width="320" height="480" />
+    <gap:splash src="res/screen.png" gap:platform="ios" width="640" height="960" />
+    <gap:splash src="res/screen.png" gap:platform="ios" width="640" height="1136" />
+    <gap:splash src="res/screen.png" gap:platform="ios" width="768" height="1024" />
+    <gap:splash src="res/screen.png" gap:platform="ios" width="1024" height="768" />
+  
+    <access origin="*" />
+    <content src="index.html" />
+</widget>
