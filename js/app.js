@@ -101,8 +101,6 @@ function bind() {
   		window.user.login();
   	//else if there is a user	
   	} else {
-		$('.page-sidebar').css('background-color','white');
-		$('.page-sidebar').css('height','100%');
 
 		$('.navbar-inverse .navbar-nav li a').on('touchstart', function(e){ 
 			$(this).css('background-color', '#006687');
@@ -144,6 +142,9 @@ function bind() {
 	  	  
 		//pull to refresh 		
 		pullRefresh();	
+		
+		$('.page-sidebar').css('background-color','white');
+		$('.page-sidebar').css('height','100%');
   	}
 }
 
