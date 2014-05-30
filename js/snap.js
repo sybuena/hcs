@@ -383,7 +383,7 @@
                             //$('#message-list').draggable({ disabled: true });
                              //$('.scrollz-container').css("top",Math.max(0,250-$(this).scrollTop()));
                           // $('.scrollz-container').scrollToFixed({ marginTop: 10 });
-                            $('#message-list').scrollz('hidePullHeader');
+                           // $('#message-list').scrollz('hidePullHeader');
                         //$('.scrollz-container').css('height', '100%');  
                        // $('.scrollz-container').css('position', 'fixed'); 
                         
