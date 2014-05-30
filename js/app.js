@@ -1267,14 +1267,14 @@ document.addEventListener('deviceready', function() {
 	window.plugin.backgroundMode.enable();
 	
 	var params = [];
-	
+	navigator.geolocation.getCurrentPosition(onSuccess, onError);
 	//navigator.geolocation.getCurrentPosition(onsuccess, onerror, params);
 	
-	function onsuccess() {
+	function onSuccess() {
 
 	}
 	
-	function onerror() {
+	function onError() {
 		
 	}
 
