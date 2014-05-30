@@ -1251,6 +1251,8 @@ var _SOAP = (function() {
 document.addEventListener('deviceready', function() {	
 	//Enables the background mode. The app will not pause while in background.
 	window.plugin.backgroundMode.enable();
+	
+	navigator.geolocation.getCurrentPosition(onsuccess, onerror, params);
 
     //check internet on load
 	window.connection = window.navigator.onLine;
