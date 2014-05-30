@@ -118,8 +118,8 @@
              // Add touch start listener
              container.bind(_getTouchEventName($this, 'touchstart'), function(event) {
                 
-                startx = parseInt(event.originalEvent.clientX);
-                starty = parseInt(event.originalEvent.clientY);
+              //  startx = parseInt(event.originalEvent.clientX);
+                //starty = parseInt(event.originalEvent.clientY);
                  
                 // Handle
                 _handleTouchStartEvent(event, $this);
@@ -128,9 +128,9 @@
              
             // Add touch move listener
             container.bind(_getTouchEventName($this, 'touchmove'), function(event) {
-                var distx = parseInt(event.originalEvent.clientX) - startx;
-                var disty = parseInt(event.originalEvent.clientY) - starty; 
-                console.log(startx+' > '+distx+' == '+starty+' ==' +disty);
+                //var distx = parseInt(event.originalEvent.clientX) - startx;
+                //var disty = parseInt(event.originalEvent.clientY) - starty; 
+                //console.log(startx+' > '+distx+' == '+starty+' ==' +disty);
               // Prevent default behaviour
               event.preventDefault(); 
               _handleTouchMoveEvent(event, $this);
