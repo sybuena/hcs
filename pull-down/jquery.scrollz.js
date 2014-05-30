@@ -111,40 +111,45 @@
              _createMarkup($this);
              
              var container = _getMarkupCache($this, 'container');
-             
+              
              // Store container initial position
              _putTrackingData($this, 'initialScrollPosition', container.scrollTop());
              
              // Add touch start listener
              container.bind(_getTouchEventName($this, 'touchstart'), function(event) {
-              var X = event.originalEvent.clientX;
-              var Y = event.originalEvent.clientY;
-              console.log(X+' == '+Y);
-              if(X > Y) {
+                
+                startx = parseInt(event.originalEvent.clientX);
+                starty = parseInt(event.originalEvent.clientY);
+                 
                 // Handle
                 _handleTouchStartEvent(event, $this);
-              }
+              
             });
              
             // Add touch move listener
             container.bind(_getTouchEventName($this, 'touchmove'), function(event) {
+                var distx = parseInt(event.originalEvent.clientX) - startx;
+                var disty = parseInt(event.originalEvent.clientY) - starty; 
+                console.log(startx+' > '+distx+' == '+starty+' ==' +disty);
               // Prevent default behaviour
               event.preventDefault(); 
-              // Handle
               _handleTouchMoveEvent(event, $this);
+              
             });
             
             // Add touch end listener
             container.bind(_getTouchEventName($this, 'touchend'), function(event) {
+
               // Prevent default behaviour
               // Handle
-              _handleTouchEndEvent(event, $this);
+             _handleTouchEndEvent(event, $this);
             });
             
             // Add touch end listener when outside container (in case the last touch is outside the container)
             $('*').not(container).bind(_getTouchEventName($this, 'touchend'), function(event) {
               // Handle
               _handleTouchEndEvent(event, $this);
+              
             });
             
             // Add mousewheel listener

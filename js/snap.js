@@ -376,7 +376,7 @@
                             cache.dragWatchers.last = thePageX;
                         }
                         if (openingLeft) {
-                            console.log('dragging'); 
+                          
                             
    
                                     
