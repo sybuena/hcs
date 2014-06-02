@@ -375,19 +375,12 @@
                             }
                             cache.dragWatchers.last = thePageX;
                         }
+
                         if (openingLeft) {
-                            console.log('dragging'); 
-                            
-   
-                                    
-                            //$('#message-list').draggable({ disabled: true });
-                             //$('.scrollz-container').css("top",Math.max(0,250-$(this).scrollTop()));
-                          // $('.scrollz-container').scrollToFixed({ marginTop: 10 });
-                            $('#message-list').scrollz('hidePullHeader');
-                        //$('.scrollz-container').css('height', '100%');  
-                       // $('.scrollz-container').css('position', 'fixed'); 
+                            console.log('open'); 
+
+                           $('#backdrop').show();
                         
-                            
                             // Pulling too far to the right
                             if (settings.maxPosition < absoluteTranslation) {
                                 diff = (absoluteTranslation - settings.maxPosition) * settings.resistance;
@@ -407,7 +400,7 @@
                                 }
                             };
                         } else {
-
+                            console.log('closing drag')
                             
                             // Pulling too far to the left
                             if (settings.minPosition > absoluteTranslation) {
@@ -444,15 +437,12 @@
                             action.translate.easeTo(0);
                             cache.isDragging = false;
                             cache.startDragX = 0; 
-                            
+                            $('#backdrop').hide();
                             return;
                         }
 
                         // Revealing Left
                         if (cache.simpleStates.opening === 'left') {
-
-                            console.log('stop')
-                            $('#message-list').scrollz('hidePullHeader');
 
                             // Halfway, Flicking, or Too Far Out
                             if ((cache.simpleStates.halfway || cache.simpleStates.hyperExtending || cache.simpleStates.flick)) {
@@ -499,7 +489,8 @@
         /*
          * Public
          */
-        this.open = function(side) {
+        this.open = function(side) { 
+            $('#backdrop').show();
             utils.dispatchEvent('open');
             utils.klass.remove(doc.body, 'snapjs-expand-left');
             utils.klass.remove(doc.body, 'snapjs-expand-right');
@@ -519,10 +510,11 @@
             }
         };
         this.close = function() {
+            $('#backdrop').hide();
             utils.dispatchEvent('close');
             action.translate.easeTo(0);
         };
-        this.expand = function(side){
+        this.expand = function(side){  console.log('tap')
             var to = win.innerWidth || doc.documentElement.clientWidth;
 
             if(side==='left'){

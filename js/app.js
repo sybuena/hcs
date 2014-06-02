@@ -43,6 +43,7 @@ window.start 			= false;
 window.username 		= localStorage.getItem('username');
 window.password 		= localStorage.getItem('password');
 
+/*
 var myScroll,
 	pullDownEl, pullDownOffset,
 	pullUpEl, pullUpOffset,
@@ -50,14 +51,7 @@ var myScroll,
 
 function pullDownAction () {
 	setTimeout(function () {	// <-- Simulate network congestion, remove setTimeout from production!
-		/*var el, li, i;
-		el = document.getElementById('message-list');
-
-		for (i=0; i<3; i++) {
-			li = document.createElement('li');
-			li.innerText = 'Generated row ' + (++generatedCount);
-			el.insertBefore(li, el.childNodes[0]);
-		}*/
+		
 		var type = $('ul.nav-stacked li.active a.left-navigation').attr('id');
 		var start = 10;
 		var end  = 0;
@@ -75,14 +69,7 @@ function pullDownAction () {
 
 function pullUpAction () {
 	setTimeout(function () {	// <-- Simulate network congestion, remove setTimeout from production!
-		/*var el, li, i;
-		el = document.getElementById('message-list');
-
-		for (i=0; i<3; i++) {
-			li = document.createElement('li');
-			li.innerText = 'Generated row ' + (++generatedCount);
-			el.appendChild(li, el.childNodes[0]);
-		}*/
+		
 		var type = $('ul.nav-stacked li.active a.left-navigation').attr('id');
 				var start = 10;
 				var count = 11;
@@ -171,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 2
 
 
 
-
+*/
 
 
 
@@ -284,7 +271,7 @@ function bind() {
 
 	  	
 		//pull to refresh 		
-		//pullRefresh();	
+		pullRefresh();	
 
 		$('.page-sidebar').css('background-color','white');
 		$('.page-sidebar').css('height','100%');
