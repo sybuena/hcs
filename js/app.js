@@ -1347,14 +1347,15 @@ document.addEventListener('deviceready', function() {
 		bind();
 		
 		var preventBehavior = function(e) {
-  e.preventDefault();
-};
- 
-// Enable fixed positioning
-document.addEventListener("touchmove", preventBehavior, false);
- 
-// Disable fixed positioning
-document.removeEventListener("touchmove", preventBehavior, false);
+		  e.preventDefault();
+		  return false;
+		};
+		 
+		// Enable fixed positioning
+		document.addEventListener("touchmove", preventBehavior, false);
+		 
+		// Disable fixed positioning
+		document.removeEventListener("touchmove", preventBehavior, false);
 
 	});
 

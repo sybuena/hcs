@@ -5130,6 +5130,8 @@ button.close {
   filter: alpha(opacity=80);
   opacity: 0.8;
   position: fixed;
+  overflow:hidden;
+  -webkit-overflow-scrolling:touch;
   top: 0;
   right: 0;
   bottom: 0;

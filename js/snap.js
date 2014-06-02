@@ -312,6 +312,8 @@
                     };
                 },
                 dragging: function(e) {  
+                    
+                    utils.events.prevent(e);
 
                     if (cache.isDragging && settings.touchToDrag) {
 
@@ -379,12 +381,14 @@
 
                         if (openingLeft) {
                            $('#backdrop').show();
+                           
 
                             // Pulling too far to the right
                             if (settings.maxPosition < absoluteTranslation) {
                                 diff = (absoluteTranslation - settings.maxPosition) * settings.resistance;
                                 translateTo = whileDragX - diff;
-                            }
+                                
+                            } 
                             cache.simpleStates = {
                                 opening: 'left',
                                 towards: cache.dragWatchers.state,
@@ -446,8 +450,9 @@
                             
                             // Halfway, Flicking, or Too Far Out
                             if ((cache.simpleStates.halfway || cache.simpleStates.hyperExtending || cache.simpleStates.flick)) {
-                                
+                                    
                                 if (cache.simpleStates.flick && cache.simpleStates.towards === 'left') { // Flicking Closed
+                                    $('#backdrop').hide();
                                     action.translate.easeTo(0);
                                 } else if (
                                     (cache.simpleStates.flick && cache.simpleStates.towards === 'right') || // Flicking Open OR
@@ -456,12 +461,13 @@
                                     action.translate.easeTo(settings.maxPosition); // Open Left
                                 }
                             } else {
-                                $('#backdrop').hide();
+                                
                                 action.translate.easeTo(0); // Close Left
 
                             }
                             // Revealing Right
                         } else if (cache.simpleStates.opening === 'right') {
+
                             // Halfway, Flicking, or Too Far Out
                             if ((cache.simpleStates.halfway || cache.simpleStates.hyperExtending || cache.simpleStates.flick)) {
                                 if (cache.simpleStates.flick && cache.simpleStates.towards === 'right') { // Flicking Closed
@@ -478,7 +484,7 @@
                         }
                         cache.isDragging = false;
                         cache.startDragX = utils.page('X', e);
-                    }
+                    } 
                 }
             }
         },
