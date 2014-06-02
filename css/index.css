@@ -713,6 +713,8 @@ button.ui-btn, .ui-controlgroup-controls button.ui-btn-icon-notext {width: initi
     position: fixed;
     color: white;
     text-align: center;
+    opacity: 0.8;
+    filter: alpha(opacity=80);
 }
 
 .error-label{
