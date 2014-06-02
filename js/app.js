@@ -15,7 +15,7 @@ if(window.url == null || window.url == '') {
 //if empty or null
 if(window.interval == null || window.interval == '') { 
 	//default value of refresh Inbox
-	window.interval = '5';
+	window.interval = '1';
 
 	localStorage.setItem('interval', window.interval);
 }
@@ -283,7 +283,9 @@ function checkInbox() {
 
 	
   	window.interval = localStorage.getItem('interval');
+	
 	timer = Math.floor(Number(window.interval))*60000;
+
 	window.setInterval(function(){ 
 		
 	  	/// call your function here
