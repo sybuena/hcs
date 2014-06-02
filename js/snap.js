@@ -443,7 +443,8 @@
 
                         // Revealing Left
                         if (cache.simpleStates.opening === 'left') {
-
+                            $('#backdrop').hide();
+                            
                             // Halfway, Flicking, or Too Far Out
                             if ((cache.simpleStates.halfway || cache.simpleStates.hyperExtending || cache.simpleStates.flick)) {
                                 if (cache.simpleStates.flick && cache.simpleStates.towards === 'left') { // Flicking Closed
@@ -456,6 +457,7 @@
                                 }
                             } else {
                                 action.translate.easeTo(0); // Close Left
+
                             }
                             // Revealing Right
                         } else if (cache.simpleStates.opening === 'right') {
