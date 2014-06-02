@@ -120,7 +120,7 @@
                 
               //  startx = parseInt(event.originalEvent.clientX);
                 //starty = parseInt(event.originalEvent.clientY);
-                 
+
                 // Handle
                 _handleTouchStartEvent(event, $this);
               
@@ -132,6 +132,7 @@
                 //var disty = parseInt(event.originalEvent.clientY) - starty; 
                 //console.log(startx+' > '+distx+' == '+starty+' ==' +disty);
               // Prevent default behaviour
+              
               event.preventDefault(); 
               _handleTouchMoveEvent(event, $this);
               

@@ -1336,14 +1336,26 @@ document.addEventListener('deviceready', function() {
 		$('.notification-ajax #notification-here').html('<i class="fa fa-warning"></i> No Internet connection');
 		
 	});
-	
+
+
 	$(document).ready(function(){
 		
+
 		//for login UI
 		init();
 		//start application
 		bind();
-	
+		
+		var preventBehavior = function(e) {
+  e.preventDefault();
+};
+ 
+// Enable fixed positioning
+document.addEventListener("touchmove", preventBehavior, false);
+ 
+// Disable fixed positioning
+document.removeEventListener("touchmove", preventBehavior, false);
+
 	});
 
 }, false);

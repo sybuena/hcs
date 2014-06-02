@@ -261,7 +261,7 @@
                     utils.events.removeEvent(settings.element, utils.eventType('move'), action.drag.dragging);
                     utils.events.removeEvent(settings.element, utils.eventType('up'), action.drag.endDrag);
                 },
-                startDrag: function(e) { 
+                startDrag: function(e) {  
                     // No drag on ignored elements
                     var target = e.target ? e.target : e.srcElement,
                         ignoreParent = utils.parentUntil(target, 'data-snap-ignore');
@@ -311,7 +311,8 @@
                         }
                     };
                 },
-                dragging: function(e) { 
+                dragging: function(e) {  
+
                     if (cache.isDragging && settings.touchToDrag) {
 
                         var thePageX = utils.page('X', e),
@@ -377,10 +378,8 @@
                         }
 
                         if (openingLeft) {
-                            console.log('open'); 
-
                            $('#backdrop').show();
-                        
+
                             // Pulling too far to the right
                             if (settings.maxPosition < absoluteTranslation) {
                                 diff = (absoluteTranslation - settings.maxPosition) * settings.resistance;
@@ -399,8 +398,8 @@
                                     percentage: (absoluteTranslation/settings.maxPosition)*100
                                 }
                             };
+
                         } else {
-                            console.log('closing drag')
                             
                             // Pulling too far to the left
                             if (settings.minPosition > absoluteTranslation) {
@@ -447,6 +446,7 @@
                             
                             // Halfway, Flicking, or Too Far Out
                             if ((cache.simpleStates.halfway || cache.simpleStates.hyperExtending || cache.simpleStates.flick)) {
+                                
                                 if (cache.simpleStates.flick && cache.simpleStates.towards === 'left') { // Flicking Closed
                                     action.translate.easeTo(0);
                                 } else if (
