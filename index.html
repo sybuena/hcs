@@ -173,14 +173,33 @@
           <p class="event loading">No internet connection</p>
         </div>
     </div>
-    <div data-role="content" class="jqm-content">
-    <!-- MESSAGE LIST-->
-    <div id="message-list" class="message-elem" data-scrollz="pull">
-      
     
-      
+
+
+    <!-- MESSAGE LIST-->
+    <!--<div id="message-list" class="message-elem" data-scrollz="pull">-->
+    <!--<div id="message-list" class="message-elem">
+    </div>-->
+    
+    <div id="wrapper" style="margin-top: 50px;">
+    <div id="scroller">  
+    <div id="pullDown" class="">
+      <span class="pullDownIcon"></span><span class="pullDownLabel">Pull down to refresh...</span>
+    </div>
+    <ul id="message-list">
+    </ul>
+    <div id="pullUp" class="">
+      <span class="pullUpIcon"></span><span class="pullUpLabel">Pull up to load more...</span>
+    </div>
+
     </div>
     </div>
+
+
+
+
+
+
 
     <!-- MESSAGE DETAIL-->
     <div id="message-detail" class="display-none message-elem">
@@ -355,6 +374,11 @@ margin-right: auto;">
   <script type="text/javascript" src="pull-down/jquery.scrollz.js"></script>
   <script type="text/javascript" src="js/moment.min.js"></script>
   <script type="text/javascript" src="js/jquery.shorten.min.js"></script>
+  <script type="text/javascript" src="iscroll/iscroll-infinite.js"></script>
+  <script type="text/javascript" src="iscroll/iscroll-lite.js"></script>
+  <script type="text/javascript" src="iscroll/iscroll-probe.js"></script>
+  <script type="text/javascript" src="iscroll/iscroll-zoom.js"></script>
+  <script type="text/javascript" src="iscroll/iscroll.js"></script>
   
   <script>
     $(document).bind("mobileinit", function() {

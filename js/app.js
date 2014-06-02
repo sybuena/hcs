@@ -43,6 +43,148 @@ window.start 			= false;
 window.username 		= localStorage.getItem('username');
 window.password 		= localStorage.getItem('password');
 
+var myScroll,
+	pullDownEl, pullDownOffset,
+	pullUpEl, pullUpOffset,
+	generatedCount = 0;
+
+function pullDownAction () {
+	setTimeout(function () {	// <-- Simulate network congestion, remove setTimeout from production!
+		/*var el, li, i;
+		el = document.getElementById('message-list');
+
+		for (i=0; i<3; i++) {
+			li = document.createElement('li');
+			li.innerText = 'Generated row ' + (++generatedCount);
+			el.insertBefore(li, el.childNodes[0]);
+		}*/
+		var type = $('ul.nav-stacked li.active a.left-navigation').attr('id');
+		var start = 10;
+		var end  = 0;
+		//on pull down the message listing
+	
+	    //now make request to backend
+	    window.messages.checkInbox(type, 1);
+		
+		
+		window.messageList[type] = _string.unlock(type);
+		
+		myScroll.refresh();		// Remember to refresh when contents are loaded (ie: on ajax completion)
+	}, 1000);	// <-- Simulate network congestion, remove setTimeout from production!
+}
+
+function pullUpAction () {
+	setTimeout(function () {	// <-- Simulate network congestion, remove setTimeout from production!
+		/*var el, li, i;
+		el = document.getElementById('message-list');
+
+		for (i=0; i<3; i++) {
+			li = document.createElement('li');
+			li.innerText = 'Generated row ' + (++generatedCount);
+			el.appendChild(li, el.childNodes[0]);
+		}*/
+		var type = $('ul.nav-stacked li.active a.left-navigation').attr('id');
+				var start = 10;
+				var count = 11;
+
+				start = start = 10;
+				count++;
+				//dont go beyond end of list
+				if(window.messageList[type].length >= count) {
+					
+					window.messages.pullDown(window.messageList[type], type, start, 0);	
+				}
+				
+				//On click message listing then load message detail
+				//base on Message GUID
+				onClickDetail(type);
+				//$(".list-title").shorten();
+		
+		myScroll.refresh();		// Remember to refresh when contents are loaded (ie: on ajax completion)
+	}, 1000);	// <-- Simulate network congestion, remove setTimeout from production!
+}
+
+function loaded() {
+	pullDownEl = document.getElementById('pullDown');
+	pullDownOffset = pullDownEl.offsetHeight;
+	pullUpEl = document.getElementById('pullUp');	
+	pullUpOffset = pullUpEl.offsetHeight;
+	
+	myScroll = new iScroll('wrapper', {
+		useTransition: true,
+		topOffset: pullDownOffset,
+		onRefresh: function () { 
+			if (pullDownEl.className.match('loading')) {
+				pullDownEl.className = '';
+				pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Pull down to refresh...';
+			} else if (pullUpEl.className.match('loading')) {
+				pullUpEl.className = '';
+				pullUpEl.querySelector('.pullUpLabel').innerHTML = 'Pull up to load more...';
+			}
+		},
+		onScrollMove: function () { 
+
+			if (this.y > 5 && !pullDownEl.className.match('flip')) {
+				pullDownEl.className = 'flip';
+				pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Release to refresh...';
+				this.minScrollY = 0;
+			} else if (this.y < 5 && pullDownEl.className.match('flip')) {
+				pullDownEl.className = '';
+				pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Pull down to refresh...';
+				this.minScrollY = -pullDownOffset;
+			} else if (this.y < (this.maxScrollY - 5) && !pullUpEl.className.match('flip')) {
+				console.log('onScrollMove');
+				//pullUpAction();
+				pullUpEl.className = 'flip';
+				pullUpEl.querySelector('.pullUpLabel').innerHTML = 'Release to refresh...';
+				this.maxScrollY = this.maxScrollY;
+				//pullUpAction();
+			} else if (this.y > (this.maxScrollY + 5) && pullUpEl.className.match('flip')) {
+				pullUpEl.className = '';
+				pullUpEl.querySelector('.pullUpLabel').innerHTML = 'Pull up to load more...';
+				this.maxScrollY = pullUpOffset;
+				//pullUpAction();
+			}
+		},
+		onScrollEnd: function () {
+			if (pullDownEl.className.match('flip')) {
+				pullDownEl.className = 'loading';
+				pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Loading...';				
+				pullDownAction();	// Execute custom function (ajax call?)
+			} else if (pullUpEl.className.match('flip')) {
+				pullUpEl.className = 'loading';
+				pullUpEl.querySelector('.pullUpLabel').innerHTML = 'Loading...';				
+				pullUpAction();	// Execute custom function (ajax call?)
+					
+			}
+		}
+	});
+	
+	setTimeout(function () { document.getElementById('wrapper').style.left = '0'; }, 800);
+}
+
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+
+document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 200); }, false);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function init() {
 	/* -----------------------------------------
@@ -90,6 +232,7 @@ function init() {
 
 }
 
+
 function bind() { 
 	
 	//get the login user data
@@ -101,7 +244,7 @@ function bind() {
   		window.user.login();
   	//else if there is a user	
   	} else {
-
+  		
 		$('.navbar-inverse .navbar-nav li a').on('touchstart', function(e){ 
 			$(this).css('background-color', '#006687');
 		});
@@ -139,9 +282,9 @@ function bind() {
 
 	  	$('#message-list').scrollz('hidePullHeader');
 
-	  	  
+	  	
 		//pull to refresh 		
-		pullRefresh();	
+		//pullRefresh();	
 
 		$('.page-sidebar').css('background-color','white');
 		$('.page-sidebar').css('height','100%');
@@ -1266,7 +1409,7 @@ document.addEventListener('deviceready', function() {
 	
 
 	//Enables the background mode. The app will not pause while in background.
-	window.plugin.backgroundMode.enable();
+	//window.plugin.backgroundMode.enable();
 	
 	var params = [];
 	
