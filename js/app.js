@@ -1347,7 +1347,6 @@ document.addEventListener('deviceready', function() {
 		bind();
 		
 		
-		});
 	});
 
 }, false);
