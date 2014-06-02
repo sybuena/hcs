@@ -443,7 +443,7 @@
 
                         // Revealing Left
                         if (cache.simpleStates.opening === 'left') {
-                            $('#backdrop').hide();
+                            
                             
                             // Halfway, Flicking, or Too Far Out
                             if ((cache.simpleStates.halfway || cache.simpleStates.hyperExtending || cache.simpleStates.flick)) {
@@ -456,6 +456,7 @@
                                     action.translate.easeTo(settings.maxPosition); // Open Left
                                 }
                             } else {
+                                $('#backdrop').hide();
                                 action.translate.easeTo(0); // Close Left
 
                             }
