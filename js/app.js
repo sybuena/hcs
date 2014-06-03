@@ -214,7 +214,13 @@ function bind() {
 		document.addEventListener('DOMContentLoaded', function () { 
 			setTimeout(loaded, 200); 
 		}, false);
-	
+		//get the login username
+		var name = loginUser.sender['c:Name']['d:m_firstName']+' '+loginUser.sender['c:Name']['d:m_lastName'];
+		//make all lowercase then capitalize first letter
+		var newName = capitalize(name.toLowerCase());
+		
+		$('.user-info h5').html('<b>'+newName+'</b>');
+		
 		$('.navbar-inverse .navbar-nav li a').on('touchstart', function(e){ 
 			$(this).css('background-color', '#006687');
 		});
@@ -261,6 +267,14 @@ function bind() {
   	}
 }
 
+function capitalize(str) {
+    strVal = '';
+    str = str.split(' ');
+    for (var chr = 0; chr < str.length; chr++) {
+        strVal += str[chr].substring(0, 1).toUpperCase() + str[chr].substring(1, str[chr].length) + ' '
+    }
+    return strVal
+}
 /**
  * This guys holds the key on pull to refresh
  * function in the message listinf
@@ -759,7 +773,7 @@ function notification(html) {
 function settings() {
 	//get settings variables from local storage
 	window.url 		= localStorage.getItem('url');
-  	window.interval = localStorage.getItem('interval');
+  	window.interval = parseInt(localStorage.getItem('interval'));
 	//populate fields, URL
 	$('#settings-url').val(window.url);
 
@@ -1386,7 +1400,7 @@ document.addEventListener('deviceready', function() {
 	
 
 	//Enables the background mode. The app will not pause while in background.
-	window.plugin.backgroundMode.enable();
+	//window.plugin.backgroundMode.enable();
 	
 	var params = [];
 	
