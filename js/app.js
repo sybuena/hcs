@@ -15,7 +15,7 @@ if(window.url == null || window.url == '') {
 //if empty or null
 if(window.interval == null || window.interval == '') { 
 	//default value of refresh Inbox
-	window.interval = '1';
+	window.interval = '5';
 
 	localStorage.setItem('interval', window.interval);
 }
@@ -42,101 +42,103 @@ window.online  			= true;
 window.start 			= false;
 window.username 		= localStorage.getItem('username');
 window.password 		= localStorage.getItem('password');
-
-var myScroll,
-	pullDownEl, pullDownOffset,
-	pullUpEl, pullUpOffset,
-	generatedCount = 0;
-
+window.startCount		= 10;			
+window.iscroll;
 
 function pullDownAction () {
 	
 	//get the active listing
 	var type 	= $('ul.nav-stacked li.active a.left-navigation').attr('id');
-	var start 	= 10;
-	var end  	= 0;
-    
+	
     //now make request to backend
     window.messages.checkInbox(type, 1);
 	
 	window.messageList[type] = _string.unlock(type);		
-	
-	//Remember to refresh when contents are loaded (ie: on ajax completion)
-	myScroll.refresh();		
 	
 }
 
 function pullUpAction () {
 	
 	var type = $('ul.nav-stacked li.active a.left-navigation').attr('id');
-	var start = 10;
-	var count = 11;
-
-	start = start = 10;
-	count++;
-		
-	window.messages.pullDown(window.messageList[type], type, start, 0);	
 	
+	window.startCount = window.startCount + 10;
+	
+	window.messages.pullDown(window.messageList[type], type, window.startCount, 0);	
+	
+	//Remember to refresh when contents are loaded (ie: on ajax completion)
+	window.iscroll.refresh();		
+
 	//On click message listing then load message detail
 	//base on Message GUID
 	onClickDetail(type);
-
-	myScroll.refresh();		// Remember to refresh when contents are loaded (ie: on ajax completion)
 	
 }
 
+/**
+ * Core method on pulling message listing
+ * lets go navite javascript
+ *
+ */
 function loaded() {
-	pullDownEl 		= document.getElementById('pullDown');
-	pullDownOffset 	= pullDownEl.offsetHeight;
-	pullUpEl 		= document.getElementById('pullUp');	
-	pullUpOffset 	= pullUpEl.offsetHeight;
-	myScroll 		= new iScroll('wrapper', {
-		useTransition 	: true,
-		topOffset 		: pullDownOffset,
-		onRefresh 		: function () {
-			if (pullDownEl.className.match('loading')) {
-				pullDownEl.className = '';
-				pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Pull down to refresh...';
-			} else if (pullUpEl.className.match('loading')) {
-				pullUpEl.className = '';
-				pullUpEl.querySelector('.pullUpLabel').innerHTML = 'Pull up to load more...';
-			}
-		},
-		onScrollMove 	: function () {
-			if (this.y > 5 && !pullDownEl.className.match('flip')) {
-				pullDownEl.className = 'flip';
-				pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Release to refresh...';
-				this.minScrollY = 0;
-			} else if (this.y < 5 && pullDownEl.className.match('flip')) {
-				pullDownEl.className = '';
-				pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Pull down to refresh...';
-				this.minScrollY = -pullDownOffset;
-			} else if (this.y < (this.maxScrollY - 5) && !pullUpEl.className.match('flip')) {
-				pullUpEl.className = 'flip';
-				pullUpEl.querySelector('.pullUpLabel').innerHTML = 'Release to refresh...';
-				this.maxScrollY = this.maxScrollY;
-			} else if (this.y > (this.maxScrollY + 5) && pullUpEl.className.match('flip')) {
-				pullUpEl.className = '';
-				pullUpEl.querySelector('.pullUpLabel').innerHTML = 'Pull up to load more...';
-				this.maxScrollY = pullUpOffset;
-			}
-		},
-		onScrollEnd 	: function () {
-			if (pullDownEl.className.match('flip')) {
-				pullDownEl.className = 'loading';
-				pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Loading...';				
-				pullDownAction();	// Execute custom function (ajax call?)
-			} else if (pullUpEl.className.match('flip')) {
-				pullUpEl.className = 'loading';
-				pullUpEl.querySelector('.pullUpLabel').innerHTML = 'Loading...';				
-				pullUpAction();	// Execute custom function (ajax call?)
+	
+	if($.isEmptyObject(window.iscroll) || typeof window.iScroll === 'undefined') {
+		
+		var pullDownEl 		= document.getElementById('pullDown');
+		var pullDownOffset 	= pullDownEl.offsetHeight;
+		var pullUpEl 		= document.getElementById('pullUp');	
+		var pullUpOffset 	= pullUpEl.offsetHeight;
+		var option 			= {
+			useTransition 	: true,
+			topOffset 		: pullDownOffset,
+			onRefresh 		: function () {
+				if (pullDownEl.className.match('loading')) {
+					pullDownEl.className = '';
+					pullDownEl.querySelector('.pullDownLabel').innerHTML = '';
+				} else if (pullUpEl.className.match('loading')) {
+					pullUpEl.className = '';
+					pullUpEl.querySelector('.pullUpLabel').innerHTML = '';
+				}
+			},
+			onScrollMove 	: function () {
+				if (this.y > 5 && !pullDownEl.className.match('flip')) {
+					pullDownEl.className = 'flip';
+					pullDownEl.querySelector('.pullDownLabel').innerHTML = '';
+					this.minScrollY = 0;
+				} else if (this.y < 5 && pullDownEl.className.match('flip')) {
+					pullDownEl.className = '';
+					pullDownEl.querySelector('.pullDownLabel').innerHTML = '';
+					this.minScrollY = -pullDownOffset;
+				} else if (this.y < (this.maxScrollY - 5) && !pullUpEl.className.match('flip')) {
+					pullUpEl.className = 'flip';
+					pullUpEl.querySelector('.pullUpLabel').innerHTML = '';
+					this.maxScrollY = this.maxScrollY;
+					
+				} else if (this.y > (this.maxScrollY + 5) && pullUpEl.className.match('flip')) {
+					
+					pullUpEl.className = '';
+					pullUpEl.querySelector('.pullUpLabel').innerHTML = '';
+					this.maxScrollY = pullUpOffset;
+				
+				}
+			},
+			onScrollEnd 	: function () {
+				if (pullDownEl.className.match('flip')) {
+					pullDownEl.className = 'loading';
+					pullDownEl.querySelector('.pullDownLabel').innerHTML = '';				
+					//check messages on pull down
+					pullDownAction();	
+				} else if (pullUpEl.className.match('flip')) {
+					
+					pullUpEl.className = 'loading';
+					pullUpEl.querySelector('.pullUpLabel').innerHTML = '';				
+					pullUpAction();	
+				}
 			}
 		}
-	});
-	
-	setTimeout(function () { 
-		document.getElementById('wrapper').style.left = '0'; 
-	}, 800);
+		
+		//execute message listing
+		window.iscroll = new iScroll('wrapper', option);
+	}
 }
 
 
@@ -148,13 +150,6 @@ document.addEventListener('touchmove', function (e) {
 	e.preventDefault(); 
 }, false);
 
-/**
- * If all DOM files are loaded
- *
- */
-document.addEventListener('DOMContentLoaded', function () { 
-	setTimeout(loaded, 200); 
-}, false);
 
 function init() {
 	/* -----------------------------------------
@@ -215,6 +210,11 @@ function bind() {
   	//else if there is a user	
   	} else {
   		
+  		//only add event listener to DOM if user is login
+		document.addEventListener('DOMContentLoaded', function () { 
+			setTimeout(loaded, 200); 
+		}, false);
+	
 		$('.navbar-inverse .navbar-nav li a').on('touchstart', function(e){ 
 			$(this).css('background-color', '#006687');
 		});
@@ -237,7 +237,7 @@ function bind() {
 		//get INBOX
   		window.messages.get('Inbox', 10, 0);
 
-		$('#message-list').scrollz('hidePullHeader');
+		//$('#message-list').scrollz('hidePullHeader');
 
   		//show main page
   		mainPage(snapper,loginUser);
@@ -250,7 +250,7 @@ function bind() {
 	  		checkOutbox();
 	  	}
 
-	  	$('#message-list').scrollz('hidePullHeader');
+	  	//$('#message-list').scrollz('hidePullHeader');
 
 	  	
 		//pull to refresh 		
@@ -828,7 +828,7 @@ function mainPage(snapper, loginUser) {
 	$('.left-navigation').click(function() {
 		//close left panel
 		snapper.close();
-
+		
 		$('.no-connection').hide();
 		//hide send message icon
 		$('#process-send').hide();
@@ -868,6 +868,7 @@ function mainPage(snapper, loginUser) {
 		   ------------------------------------ */
 		} else if(type == 'Settings') {
 			//flag currrent page as LIST
+			$('.message-elem').hide();
 			$('.current-page').attr('id', 'list');	
 			$('#folder-name').html('Settings');
 			$('.loading-messages').hide();
@@ -895,9 +896,12 @@ function mainPage(snapper, loginUser) {
 
 	  	//else it is common page loading
 		} else {
+			window.startCount = 10;
+ 			console.log(window.startCount);
 			//get message list according on what
 			//user clicked on the LI left panel
 	  		window.messages.get(type, 10, 1);
+
   		}	
 
 		return false;
@@ -1184,10 +1188,13 @@ function backEvent() {
 
  	//else it is not in Inbox listing	
  	} else {
- 		$('.scrollz-container').show();
- 		
+
+ 		//$('.scrollz-container').show();
+ 		//unset scrolling count when hitting new message list
+ 		window.startCount = 10;
+ 		console.log(window.startCount);
  		window.messages.get(parentPage, 10, 1);
- 		$('#message-list').scrollz('hidePullHeader');
+ 		//$('#message-list').scrollz('hidePullHeader');
  		
  	}  
 }
@@ -1379,7 +1386,7 @@ document.addEventListener('deviceready', function() {
 	
 
 	//Enables the background mode. The app will not pause while in background.
-	//window.plugin.backgroundMode.enable();
+	window.plugin.backgroundMode.enable();
 	
 	var params = [];
 	
@@ -1451,15 +1458,16 @@ document.addEventListener('deviceready', function() {
 
 	
 
+	//setTimeout(loaded, 200); 
 
 	$(document).ready(function(){
-		
 
 		//for login UI
 		init();
 		//start application
 		bind();
-		
+
+
 		
 	});
 

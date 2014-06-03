@@ -503,8 +503,12 @@ a {
 .user-info {
     width: 100%;
     height: 70px;
+    width: 100%;
+height: 70px;
+background-image: url(/img/pattern.png);
+background-size: 112%;
 }
-
+.gray {color: #333;}
 .seach-box-contact {
     width: 100%;
     height: 70px;
@@ -568,15 +572,16 @@ a {
 
 .icon-holder {
     width: auto;    
+    margin-top: 50%;
     margin-left: auto;
     margin-right: auto;
 }
 .empty-messages {
     width: 50%;
-    height: 50%;
+    height: 100%;
     overflow: auto;
     margin: auto;
-    position: absolute;
+    /*position: absolute;*/
     top: 0; left: 0; bottom: 0; right: 0;
     display: block;
     text-align: center;
@@ -589,7 +594,7 @@ a {
  *
  */
 #pullDown, #pullUp {
-    background:#fff;
+    /*background:#fff;*/
     height:40px;
     line-height:40px;
     margin:5px 10px;
@@ -600,12 +605,16 @@ a {
 }
 
 #pullDown .pullDownIcon, #pullUp .pullUpIcon  {
-    display:block; float:left;
-    width:40px; height:40px;
+    display:block; 
+    /*float:left;*/
+    width:40px; 
+    height:40px;
     background:url(../scroll/iscroll-pull-icon@2x.png) 0 0 no-repeat;
     -webkit-background-size:40px 80px; background-size:40px 80px;
     -webkit-transition-property:-webkit-transform;
     -webkit-transition-duration:250ms;  
+    margin-left: auto;
+    margin-right: auto;
 }
 #pullDown .pullDownIcon {
     -webkit-transform:rotate(0deg) translateZ(0);
@@ -1005,14 +1014,22 @@ a.button-red:hover {color: white}
     position:fixed;
 }
 
+.user-info h5 {
+    padding-top: 21px;
+    font-size: 17px;
+    margin-left: 16px;
+}
+.border-bottom {border-top: 1px solid #ccc}
+.b-white { background-color: white;}
 .page-sidebar-scroll{
     z-index:2;
     width:100%;
     overflow-y: hidden;
     overflow-x: hidden;
-   /* -webkit-overflow-scrolling: touch;*/
+    -webkit-overflow-scrolling: touch;
     height:100%;
-    background-color: white;
+    background-color: #F7F7F7;
+    margin-top: 50px;
 }
 
 

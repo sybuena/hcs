@@ -425,7 +425,7 @@ Messages.prototype = {
 		});
 	},
 	displayDetail : function(data, type, guid, unread) { 
-		
+
 		$('.no-connection').hide();
 
 		$('.current-page').attr('id', 'page');
@@ -671,7 +671,7 @@ Messages.prototype = {
 					if(subject.length > 20) {
 						subject = subject.substr(0,20)+'..';	
 					}
-					
+
 					//prevent duplicate listing
 					if(currentGUID != messageList[i]['b:MessageGUID'] || type == 'Outbox') {
 						//build DOM first, 
@@ -705,20 +705,29 @@ Messages.prototype = {
 		//DIV width
 		$(".list-title").shorten();
 		
-		
-
-
-		pullDown();
-
 		//On click message listing then load message detail
 		//base on Message GUID
 		onClickDetail(type);
+		if(messageList.length < 10) {
+			$('#pullUp').hide();
+		} else {
+			$('#pullUp').show();	
+		}
+
+		if(typeof window.iscroll !== 'undefined') {
+			window.iscroll.refresh();
+	  		window.iscroll.scrollTo(0, 0);
+		}
 
 		//first load flag
 		if(keepHide == 1) {
 			//show animation/ prepare html
 			this.animateList('stop', type);
 		}
+
+		$('#wrapper').show();
+
+		setTimeout(loaded, 200); 
 	},
 	pullDown : function(messageList,type, start, end) {
 		
@@ -726,89 +735,93 @@ Messages.prototype = {
 		//var i 			= start;
 		var currentGUID = '';
 		var list 		= '';
-
+		console.log(start)
+		if(messageList.length < start) {
+			return false;
+		}
 		for(i = 0; i < start; i++) {	
-
-		if(messageList[i] !== null) {
-			//use unread HTML template if only in INBOX
-			if(type == 'Inbox') {
-				//check if message is unread
-				if(messageList[i]['b:MessageRead'] == 'false') {
-					//HTML template for unread messages
-					row = MESSAGE_ROW_1;
-				} else {
-					row = MESSAGE_ROW;
-				}
-			}
-
-			//for important message
-			var star 		= 'fa-star-o';
-			var toUser 		= '';
-			var fromName 	= '';
-			var subject 	= messageList[i]['b:Subject'];
-			var fromName 	= messageList[i]['b:Sender']['c:Name']['d:m_firstName']+' '+messageList[i]['b:Sender']['c:Name']['d:m_lastName']
-			var localDate 	= _local.date(messageList[i]['b:DateSent']['c:m_When']);
-
-			//dont show datetime if in Draft and Outbox listing
-			if(type == 'Draft' || type == 'Outbox') {
-				date = '';
-			} else {
-		  		//calculate date past
-		  		//date = moment(localDate).format('MMM D, h:mm');
-		  		date = moment(localDate).fromNow();
-		  		//date = jQuery.format.prettyDate(localDate);
-		  	}
-
-			//prevent error on Priority
-			if(typeof messageList[i]['b:Priority'] !== 'undefined'){
-				if(typeof messageList[i]['b:Priority']['m_Value'] !== 'undefined') {
-					if(messageList[i]['b:Priority']['m_Value']['_'] == 'High') {
-						var star = 'fa-star';
+			if(messageList[i] !== null) {
+				//use unread HTML template if only in INBOX
+				if(type == 'Inbox') {
+					//check if message is unread
+					if(messageList[i]['b:MessageRead'] == 'false') {
+						//HTML template for unread messages
+						row = MESSAGE_ROW_1;
+					} else {
+						row = MESSAGE_ROW;
 					}
 				}
-			}
-			
-			if(subject.length > 20) {
-				subject = subject.substr(0,20)+'..';	
-			}
 
-			if(typeof messageList[i]['b:Recipients'] == 'object') {
-				//if has mutiple recipient
-				if(typeof messageList[i]['b:Recipients']['b:Recipient'][0] !== 'undefined') {
-					//loop to get all recipient
-					for(x in messageList[i]['b:Recipients']['b:Recipient']) {
-						//and make HTML format
-						toName = messageList[i]['b:Recipients']['b:Recipient'][x]['b:m_Receiver']['c:Name']['d:m_firstName']+' '+messageList[i]['b:Recipients']['b:Recipient'][x]['b:m_Receiver']['c:Name']['d:m_lastName'];	
+				//for important message
+				var star 		= 'fa-star-o';
+				var toUser 		= '';
+				var fromName 	= '';
+				var subject 	= messageList[i]['b:Subject'];
+				var fromName 	= messageList[i]['b:Sender']['c:Name']['d:m_firstName']+' '+messageList[i]['b:Sender']['c:Name']['d:m_lastName']
+				var localDate 	= _local.date(messageList[i]['b:DateSent']['c:m_When']);
+
+				//dont show datetime if in Draft and Outbox listing
+				if(type == 'Draft' || type == 'Outbox') {
+					date = '';
+				} else {
+			  		//calculate date past
+			  		//date = moment(localDate).format('MMM D, h:mm');
+			  		date = moment(localDate).fromNow();
+			  		//date = jQuery.format.prettyDate(localDate);
+			  	}
+
+				//prevent error on Priority
+				if(typeof messageList[i]['b:Priority'] !== 'undefined'){
+					if(typeof messageList[i]['b:Priority']['m_Value'] !== 'undefined') {
+						if(messageList[i]['b:Priority']['m_Value']['_'] == 'High') {
+							var star = 'fa-star';
+						}
+					}
+				}
+				
+				if(subject.length > 20) {
+					subject = subject.substr(0,20)+'..';	
+				}
+
+				if(typeof messageList[i]['b:Recipients'] == 'object') {
+					//if has mutiple recipient
+					if(typeof messageList[i]['b:Recipients']['b:Recipient'][0] !== 'undefined') {
+						//loop to get all recipient
+						for(x in messageList[i]['b:Recipients']['b:Recipient']) {
+							//and make HTML format
+							toName = messageList[i]['b:Recipients']['b:Recipient'][x]['b:m_Receiver']['c:Name']['d:m_firstName']+' '+messageList[i]['b:Recipients']['b:Recipient'][x]['b:m_Receiver']['c:Name']['d:m_lastName'];	
+							toUser += ' To:<span class="gray m-l-25">'+toName+'</span><br />';
+						}
+					//otherwise if only one recipient	
+					} else {
+						//just do HTML format
+						toName = messageList[i]['b:Recipients']['b:Recipient']['b:m_Receiver']['c:Name']['d:m_firstName']+' '+messageList[i]['b:Recipients']['b:Recipient']['b:m_Receiver']['c:Name']['d:m_lastName'];	
 						toUser += ' To:<span class="gray m-l-25">'+toName+'</span><br />';
 					}
-				//otherwise if only one recipient	
-				} else {
-					//just do HTML format
-					toName = messageList[i]['b:Recipients']['b:Recipient']['b:m_Receiver']['c:Name']['d:m_firstName']+' '+messageList[i]['b:Recipients']['b:Recipient']['b:m_Receiver']['c:Name']['d:m_lastName'];	
-					toUser += ' To:<span class="gray m-l-25">'+toName+'</span><br />';
 				}
-			}
-		
-			//prevent duplicate listing
-			if(currentGUID != messageList[i]['b:MessageGUID'] || type == 'Outbox') {
-				//this guys will append everything he gets from loop 
-				//and show it to the message list
-				$("#message-list").append(row.
-					replace('[MESSAGE_ID]',		messageList[i]['b:MessageGUID']). 	//message GUID
-					replace('[MESSAGE_ID2]',	messageList[i]['b:MessageGUID']). 	//message GUID
-					replace('[DATE]', 			date).								//date (ex. just now, 1 hour ago)
-					replace('[SUBJECT]', 		subject).							//message subject
-					replace('[IMPORTANT]', 		star).								//message priority (star)
-					replace('[IMPORTANT2]', 	star).								//message priority (star)
-					replace('[FROM_NAME]', 		fromName).							//message From name
-					replace('[TO_NAME]', 		toUser)								//message To name
-				);	
+			
+				//prevent duplicate listing
+				if(currentGUID != messageList[i]['b:MessageGUID'] || type == 'Outbox') {
+					//this guys will append everything he gets from loop 
+					//and show it to the message list
+					$("#message-list").append(row.
+						replace('[MESSAGE_ID]',		messageList[i]['b:MessageGUID']). 	//message GUID
+						replace('[MESSAGE_ID2]',	messageList[i]['b:MessageGUID']). 	//message GUID
+						replace('[DATE]', 			date).								//date (ex. just now, 1 hour ago)
+						replace('[SUBJECT]', 		subject).							//message subject
+						replace('[IMPORTANT]', 		star).								//message priority (star)
+						replace('[IMPORTANT2]', 	star).								//message priority (star)
+						replace('[FROM_NAME]', 		fromName).							//message From name
+						replace('[TO_NAME]', 		toUser)								//message To name
+					);	
 
+				}
+				//get the current GUID (prevent duplicate)
+				currentGUID = messageList[i]['b:MessageGUID'];
 			}
-			//get the current GUID (prevent duplicate)
-			currentGUID = messageList[i]['b:MessageGUID'];
 		}
-		}
+
+		$('#wrapper').show();
 		
 		
 
@@ -1976,9 +1989,12 @@ Messages.prototype = {
 	         				}
 	         			}
          			}
-
-     				
          		}
+
+     			if(typeof window.iscroll !== 'undefined') {
+					//Remember to refresh when contents are loaded (ie: on ajax completion)
+					window.iscroll.refresh();		
+     			}
 	        });
 		});
 	},
@@ -1994,7 +2010,8 @@ Messages.prototype = {
 		//hide everything 1st
 		$('.message-elem').hide();
 		//then show specific page
-		$('#message-list').show();
+		//$('#message-list').show();
+		
 		//icon set to the navbar
 		$('#delete-message').hide();
 		$('#compose-message').show();
