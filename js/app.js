@@ -42,7 +42,7 @@ window.online  			= true;
 window.start 			= false;
 window.username 		= localStorage.getItem('username');
 window.password 		= localStorage.getItem('password');
-window.startCount		= 10;			
+window.startCount		= 10;		
 window.iscroll;
 
 function pullDownAction () {
@@ -59,11 +59,11 @@ function pullDownAction () {
 
 function pullUpAction () {
 	
-	var type = $('ul.nav-stacked li.active a.left-navigation').attr('id');
-	
+	var type 	= $('ul.nav-stacked li.active a.left-navigation').attr('id');
+	var end 	= window.startCount;
 	window.startCount = window.startCount + 10;
 	
-	window.messages.pullDown(window.messageList[type], type, window.startCount, 0);	
+	window.messages.pullDown(window.messageList[type], type, window.startCount, end);	
 	
 	//Remember to refresh when contents are loaded (ie: on ajax completion)
 	window.iscroll.refresh();		

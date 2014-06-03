@@ -708,7 +708,8 @@ Messages.prototype = {
 		//On click message listing then load message detail
 		//base on Message GUID
 		onClickDetail(type);
-		if(messageList.length < 10) {
+
+		if(messageList != null && messageList.length < 10) {
 			$('#pullUp').hide();
 		} else {
 			$('#pullUp').show();	
@@ -735,11 +736,11 @@ Messages.prototype = {
 		//var i 			= start;
 		var currentGUID = '';
 		var list 		= '';
-		console.log(start)
+		
 		if(messageList.length < start) {
 			return false;
 		}
-		for(i = 0; i < start; i++) {	
+		for(i = end; i < start; i++) {	
 			if(messageList[i] !== null) {
 				//use unread HTML template if only in INBOX
 				if(type == 'Inbox') {
@@ -751,7 +752,7 @@ Messages.prototype = {
 						row = MESSAGE_ROW;
 					}
 				}
-
+				
 				//for important message
 				var star 		= 'fa-star-o';
 				var toUser 		= '';
@@ -759,7 +760,7 @@ Messages.prototype = {
 				var subject 	= messageList[i]['b:Subject'];
 				var fromName 	= messageList[i]['b:Sender']['c:Name']['d:m_firstName']+' '+messageList[i]['b:Sender']['c:Name']['d:m_lastName']
 				var localDate 	= _local.date(messageList[i]['b:DateSent']['c:m_When']);
-
+				console.log(i+' == '+subject)
 				//dont show datetime if in Draft and Outbox listing
 				if(type == 'Draft' || type == 'Outbox') {
 					date = '';
