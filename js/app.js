@@ -194,9 +194,7 @@ function init() {
 		$(this).hide();
 
 	});
-
 }
-
 
 function bind() { 
 	
@@ -214,26 +212,31 @@ function bind() {
 		document.addEventListener('DOMContentLoaded', function () { 
 			setTimeout(loaded, 200); 
 		}, false);
+
 		//get the login username
 		var name = loginUser.sender['c:Name']['d:m_firstName']+' '+loginUser.sender['c:Name']['d:m_lastName'];
+		
 		//make all lowercase then capitalize first letter
 		var newName = capitalize(name.toLowerCase());
-		
+		//now add the user fullname to the left panel
 		$('.user-info h5').html('<b>'+newName+'</b>');
 		
+		//touch start event on every button on navbar	
 		$('.navbar-inverse .navbar-nav li a').on('touchstart', function(e){ 
 			$(this).css('background-color', '#006687');
 		});
-		
+
+		//touch end event on every button on navbar
 		$('.navbar-inverse .navbar-nav li a').on('touchend', function(e){
 			$(this).css('background-color', '#324a61');
 		});
 
-
   		//get contact list
   		window.contactList = window.users = _string.unlock('contactList');
 
+  		//left panel toggle initialization
   		var snapper = new Snap({
+		  //core content
 		  element: document.getElementById('content')
 		});
 
@@ -242,8 +245,6 @@ function bind() {
 		
 		//get INBOX
   		window.messages.get('Inbox', 10, 0);
-
-		//$('#message-list').scrollz('hidePullHeader');
 
   		//show main page
   		mainPage(snapper,loginUser);
@@ -255,72 +256,24 @@ function bind() {
 	  		//on first load, check Outbox
 	  		checkOutbox();
 	  	}
-
-	  	//$('#message-list').scrollz('hidePullHeader');
-
-	  	
-		//pull to refresh 		
-		//pullRefresh();	
-
-		$('.page-sidebar').css('background-color','white');
-		$('.page-sidebar').css('height','100%');
   	}
 }
 
+/**
+ * Helper function to make first char of
+ * string uppercase 
+ *
+ * @param string
+ * @return string
+ */
 function capitalize(str) {
-    strVal = '';
-    str = str.split(' ');
-    for (var chr = 0; chr < str.length; chr++) {
+    strVal 	= '';
+    str 	= str.split(' ');
+    for(var chr = 0; chr < str.length; chr++) {
         strVal += str[chr].substring(0, 1).toUpperCase() + str[chr].substring(1, str[chr].length) + ' '
     }
+
     return strVal
-}
-/**
- * This guys holds the key on pull to refresh
- * function in the message listinf
- *
- * @param string login token 
- */
-function pullRefresh() {
-	
-	//get the active listing
-	var type = $('ul.nav-stacked li.active a.left-navigation').attr('id');
-	var start = 10;
-	var end  = 0;
-	//on pull down the message listing
-	$(document).on('pulled', '#message-list', function() {
-	    //now make request to backend
-	    window.messages.checkInbox(type, 1);
-	});	
-	
-	window.messageList[type] = _string.unlock(type);
-
-}
-
-function pullDown() {
-
-	var type = $('ul.nav-stacked li.active a.left-navigation').attr('id');
-	var start = 10;
-	var count = 11;
-	
-	//window.messageList[type] = _string.unlock(type);
-	
-	$(document).on('bottomreached', '#message-list', function() {
-
-		start = start = 10;
-		count++;
-		//dont go beyond end of list
-		if(window.messageList[type].length >= count) {
-			
-			window.messages.pullDown(window.messageList[type], type, start, 0);	
-		}
-		
-		//On click message listing then load message detail
-		//base on Message GUID
-		onClickDetail(type);
-		//$(".list-title").shorten();
-		
-	});
 }
 
 /**
@@ -341,12 +294,14 @@ function checkOutbox() {
 	//send if ever there is message saved in outbox
 	//whenever has internet
 	for(i in window.messageList['Outbox']) {
+		//prepare variables
 		var subject 	= window.messageList['Outbox'][i]['b:Subject'];
 		var content 	= window.messageList['Outbox'][i]['content'];
 		var priority 	= window.messageList['Outbox'][i]['priority'];
 		var recipients 	= window.messageList['Outbox'][i]['recipients'];
 		var guidFake 	= window.messageList['Outbox'][i]['b:Label']['b:MessageGUID'];
 
+		//now send
 		window.messages.send(subject, content, priority, recipients, 0);
 	}
 
@@ -355,6 +310,11 @@ function checkOutbox() {
 
 }
 
+/**
+ * Click event on message in listing
+ * (this must be touchstart)
+ *
+ */
 function onClickDetail(type) {
 	$('.go-detail').unbind().click(function(e) {
 		//prevent double click
@@ -365,8 +325,6 @@ function onClickDetail(type) {
 		var id 		= $(this).attr('id');
 		var unread 	= $(this).attr('unread');
 
-		
-		$('.scrollz-container').hide();
 		//check if message is unread
 		if(unread == 'true') {
 			//count the current unread message
@@ -407,16 +365,16 @@ function onClickDetail(type) {
  *
  */
 function checkInbox() {
-
-	
+	//get the saved settings of interval
   	window.interval = localStorage.getItem('interval');
-	
+	//corvert sec to millisec
 	timer = Math.floor(Number(window.interval))*60000;
 
+	//start loop 
 	window.setInterval(function(){ 
-		
-	  	/// call your function here
+		//we 1st load os done
 		if(window.start) {
+			//then check inbox for new message
 			window.messages.checkInbox('Inbox', 0);
   		}	
   		
@@ -428,7 +386,6 @@ function checkInbox() {
  * Main page loading animation
  *
  * @param string
- *
  */
 function mainLoader(action) {
 	if(action == 'start') {
@@ -468,17 +425,18 @@ function processSend(guid) {
 
 		//if no internet connection
 		if(!window.connection) {
+			//loading animation
 			$('#loading-ajax #text').html('Saving Message');
 			$('#loading-ajax').popup('open');
-					
+			//save message to outbox		
 			saveOutbox(subject, content, priority, recipients);	
 
 		} else { 
-
+			//loading animation
 			$('#loading-ajax #text').html('Sending Message');
 			$('#loading-ajax').popup('open');
 			
-			//now doa ajax call to send it
+			//now do ajax call to send it
 			window.messages.send(subject, content, priority, recipients, guid);
 		}
 
@@ -583,7 +541,6 @@ function compose() {
 	    		replace('[NAME]', name)
 	    	);
 		}
-		
 		return false;
 	});
 }
@@ -741,6 +698,7 @@ function composeWith(data, type) {
 		}
 
 	});
+
 	//now get the GUID
 	var guid = data['b:Label']['b:MessageGUID'];
 	//and put it sa hidden input 
@@ -830,10 +788,11 @@ function mainPage(snapper, loginUser) {
 		return false;
 	});
 
+	//on click back button
 	$('#back-top').click(function() {
-		
 		backEvent();
 	});
+
 	/**
 	 * On click link in left panel
 	 * load specific message folder list
@@ -842,7 +801,7 @@ function mainPage(snapper, loginUser) {
 	$('.left-navigation').click(function() {
 		//close left panel
 		snapper.close();
-		
+			
 		$('.no-connection').hide();
 		//hide send message icon
 		$('#process-send').hide();
@@ -910,12 +869,13 @@ function mainPage(snapper, loginUser) {
 
 	  	//else it is common page loading
 		} else {
+			//unset pagination whenevery changing to another
+			//message listing
 			window.startCount = 10;
- 			console.log(window.startCount);
+
 			//get message list according on what
 			//user clicked on the LI left panel
 	  		window.messages.get(type, 10, 1);
-
   		}	
 
 		return false;
@@ -936,7 +896,13 @@ function mainPage(snapper, loginUser) {
 	}); 
 }
 
+/**
+ * If no internet connection, all sending will 
+ * be save to outbox
+ *
+ */
 function ifNoInternet() {
+
 	//if no internet access
 	if(!window.connection) {
 		
@@ -948,7 +914,6 @@ function ifNoInternet() {
 
 		//get list of recipients
 		$('.to-holder div').each(function() {
-			
 			recipients.push(window.contactList[this.id]);
 		});
 
@@ -959,16 +924,21 @@ function ifNoInternet() {
 			
 			return false;
 		}
-
+		//do some animation
 		$('#loading-ajax #text').html('Saving Message');
 		$('#loading-ajax').popup('open');
 
+		//save to outbox
 		saveOutbox(subject, content, priority, recipients);	
 
 		return false;
 	}
 }
 
+/**
+ * Save messages to outbox, (lock and save)
+ *
+ */
 function saveOutbox(subject, content, priority, recipients) { 
 	var list = [];
 	//i hate this part
@@ -989,27 +959,33 @@ function saveOutbox(subject, content, priority, recipients) {
 				}
 			}
 		}
-
+		//push, push, push
 		list.push(raw);
 	}
 
+	//get the login user detail
 	var loginUser 	= window.user.get();
+	
 	//just create a random GUID for OUTBOX
     var randLetter 	= String.fromCharCode(65 + Math.floor(Math.random() * 26));
 	var guid 		= randLetter + Date.now();
 
+	//XML again
 	var data = {
 		'b:DateCreated' 		: {
 			'c:m_IsDirty' 		: 'false',
 			'c:m_StampForma' 	: 'MM/dd/yyyy HH:mm:ss.fff',
+			//use current date
 			'c:m_When' 			: $.format.date(new Date().getTime(), "yyyy-MM-ddThh:mm:ss")
 		},
 		'b:DateSent' 			: {
 			'c:m_IsDirty' 		: 'false',
 			'c:m_StampForma' 	: 'MM/dd/yyyy HH:mm:ss.fff',
+			//use current date
 			'c:m_When' 			: $.format.date(new Date().getTime(), "yyyy-MM-ddThh:mm:ss")
 
 		},
+		//the random GUID we generated
 		'b:MessageGUID' 		: guid,
 		'b:Label'				: {
 			'b:MessageGUID' 	: guid,
@@ -1042,10 +1018,12 @@ function saveOutbox(subject, content, priority, recipients) {
 	};
 
 	window.messageList['Outbox'] = _string.unlock('Outbox');
-	
+	//if everthe outbox listing is empty
 	if(window.messageList['Outbox'] === null || window.messageList['Outbox'].length == 0) {
+		//make it an empty array
 		window.messageList['Outbox'] = [];
 	}
+
 	//push 
 	window.messageList['Outbox'].push(data);
 
@@ -1055,19 +1033,26 @@ function saveOutbox(subject, content, priority, recipients) {
 	$('#loading-ajax').popup('close');
 	$('#process-send').hide();
 
+	//show nofication
 	notification('Message saved on outbox');
 
 	return false;	
 }
 
+/**
+ * Check whenever there is an internet connection
+ *
+ */
 function checkConnection() {
 	
 	$('.no-connection').hide();
 
+	//if no internet
 	if(!window.connection) {
 		/* ---------------------------------
 			IF NO INTENET CONNECTION	
 		   ---------------------------------*/
+		//stop all loading stuff in the main page 
 		mainLoader('stop');
 		
 		$('#message-list').scrollz('hidePullHeader');
@@ -1083,11 +1068,15 @@ function checkConnection() {
 			$('.no-connection').show();
 		}
 		
-		
 		return false;
 	}
 }
 
+/**
+ * Back event happen whenever user click the back button 
+ * on the app or the hitting the back button of the phone
+ *
+ */
 function backEvent() {
 	//get the login user
 	var loginUser 	= window.user.get();
@@ -1203,13 +1192,9 @@ function backEvent() {
  	//else it is not in Inbox listing	
  	} else {
 
- 		//$('.scrollz-container').show();
  		//unset scrolling count when hitting new message list
  		window.startCount = 10;
- 		console.log(window.startCount);
  		window.messages.get(parentPage, 10, 1);
- 		//$('#message-list').scrollz('hidePullHeader');
- 		
  	}  
 }
 
@@ -1225,52 +1210,10 @@ function short(length) {
        s[i].innerHTML = allHTML;
     }
 }
+
 /* --------------------------------------------
 			Protected Function
    -------------------------------------------- */
-
-var _search = (function() {
-	return {
-		object : function(query, object) {
-			var data = [];
-			for(i in object) {
-				//found as false at start always
-				found = false; 
-				for(x in object[i]) { 
-					//if only string
-					if(typeof object[i][x] !== 'object') {
-						var string = object[i][x].toLowerCase();
-
-						//finding needle in haystack
-						if(string.match(query.toLowerCase())) {
-							//mak object value as found
-							found = true;
-						}
-					//else it is object	
-					} else { 
-						/*for(y in object[i][x]) {
-							for(z in object[i][x][y]) {
-								var string = object[i][x][y][z].toLowerCase();
-								//finding needle in haystack
-								if(string.match(query.toLowerCase())) {
-									//mak object value as found
-									found = true;
-								}	
-							}
-						}*/
-					}
-				}
-				//if we found it in object value
-				if(found) {
-					//push it
-					data.push(object[i]);
-				}
-			}
-			return data;
-		}
-	}
-}());
-
 var _date = (function() {
 	return {
 		minus : function(days) {
@@ -1327,6 +1270,8 @@ var _string = (function() {
 			// Returns a Base64 encoded string.
 			return encrypted.toString();
 		},
+
+		//convert array to string, encryp string then save to local storage
 		lock : function(object, key) {
 			//convert object to string format
 			var string = JSON.stringify(object);
@@ -1346,6 +1291,7 @@ var _string = (function() {
 			
 			
 		},
+		//get local storage, decryp string
 		unlock : function(key) {
 			
 			var string = localStorage.getItem(key);
@@ -1378,6 +1324,7 @@ var _string = (function() {
  */
 var _SOAP = (function() {
 	return {
+		//all ajax call goes here
 		post : function(method, xml, callback) {
 			
 			$.soap({
@@ -1395,25 +1342,22 @@ var _SOAP = (function() {
 	}
 }());
 
-
 document.addEventListener('deviceready', function() {	
 	
 	//Enables the background mode. The app will not pause while in background.
 	window.plugin.backgroundMode.enable();
 	
-	var params = [];
-	
-	navigator.geolocation.getCurrentPosition(onSuccess, onError);
-	
-	
-	function onSuccess() {
+	navigator.geolocation.getCurrentPosition(
+		//do nothing
+		function() {
 
-	}
-	
-	function onError() {
-		
-	}
+		}, 
+		//do nothing
+		function() {
 
+		}
+	);
+	
     //check internet on load
 	window.connection = window.navigator.onLine;
 	
@@ -1469,19 +1413,14 @@ document.addEventListener('deviceready', function() {
 		
 	});
 
-	
-
-	//setTimeout(loaded, 200); 
-
+	//if all DOM is loaded
 	$(document).ready(function(){
 
 		//for login UI
 		init();
 		//start application
 		bind();
-
-
-		
+	
 	});
 
 }, false);
@@ -1500,6 +1439,95 @@ document.addEventListener("backbutton", function(e){
 
 }, false);
 
+
+
+/* ------------------------------------------------------------
+		OLD FUNCTION, NOT USING ANYMORE FOR BACKUP PURPOSE
+   ------------------------------------------------------------ */
+
+function pullRefresh() {
+	
+	//get the active listing
+	var type = $('ul.nav-stacked li.active a.left-navigation').attr('id');
+	var start = 10;
+	var end  = 0;
+	//on pull down the message listing
+	$(document).on('pulled', '#message-list', function() {
+	    //now make request to backend
+	    window.messages.checkInbox(type, 1);
+	});	
+	
+	window.messageList[type] = _string.unlock(type);
+
+}
+
+function pullDown() {
+
+	var type = $('ul.nav-stacked li.active a.left-navigation').attr('id');
+	var start = 10;
+	var count = 11;
+	
+	//window.messageList[type] = _string.unlock(type);
+	
+	$(document).on('bottomreached', '#message-list', function() {
+
+		start = start = 10;
+		count++;
+		//dont go beyond end of list
+		if(window.messageList[type].length >= count) {
+			
+			window.messages.pullDown(window.messageList[type], type, start, 0);	
+		}
+		
+		//On click message listing then load message detail
+		//base on Message GUID
+		onClickDetail(type);
+		//$(".list-title").shorten();
+		
+	});
+}
+
+var _search = (function() {
+	return {
+		object : function(query, object) {
+			var data = [];
+			for(i in object) {
+				//found as false at start always
+				found = false; 
+				for(x in object[i]) { 
+					//if only string
+					if(typeof object[i][x] !== 'object') {
+						var string = object[i][x].toLowerCase();
+
+						//finding needle in haystack
+						if(string.match(query.toLowerCase())) {
+							//mak object value as found
+							found = true;
+						}
+					//else it is object	
+					} else { 
+						/*for(y in object[i][x]) {
+							for(z in object[i][x][y]) {
+								var string = object[i][x][y][z].toLowerCase();
+								//finding needle in haystack
+								if(string.match(query.toLowerCase())) {
+									//mak object value as found
+									found = true;
+								}	
+							}
+						}*/
+					}
+				}
+				//if we found it in object value
+				if(found) {
+					//push it
+					data.push(object[i]);
+				}
+			}
+			return data;
+		}
+	}
+}());
 
 
 
