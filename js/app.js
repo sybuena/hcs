@@ -52,22 +52,26 @@ function swipeDelete() {
 	 	$(this).hide('slide',{direction:'left'},1000);
 
 	});*/
-	/*$('.go-detail').swipe( {
+	$('.go-detail').swipe({
 		triggerOnTouchEnd 	: true,
 		allowPageScroll 	:"vertical",
 		swipeStatus 		: function(event, phase, direction, distance, fingers) {
 			var id = $(this).attr('id');
 
-			console.log(id);
+			
 			//$('.go-detail').css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
-		
+			
 			//inverse the number we set in the css
 			var value = (distance<0 ? "" : "-") + Math.abs(distance).toString();
-			console.log(direction)
-			$('.go-detail').css("-webkit-transform", "translate3d("+value +"px,0px,0px)");
 			
+			if(distance > 170) {
+				console.log(direction);
+				 $(this).hide("slide", { direction: direction }, 1000);
+			} else {
+				$(this).css("-webkit-transform", "translate3d("+value +"px,0px,0px)");	
+			}
 		},
-	}); */
+	}); 
 }
 
 function pullDownAction () {
@@ -236,6 +240,7 @@ function bind() {
   		
   		//only add event listener to DOM if user is login
 		document.addEventListener('DOMContentLoaded', function () { 
+
 			setTimeout(loaded, 200); 
 		}, false);
 
@@ -1506,8 +1511,6 @@ document.addEventListener('deviceready', function() {
 		init();
 		//start application
 		bind();
-
-		swipeDelete();
 	});
 
 }, false);

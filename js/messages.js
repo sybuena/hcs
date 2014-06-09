@@ -829,6 +829,8 @@ Messages.prototype = {
 		}
 
 		$('#wrapper').show();
+		
+		swipeDelete();
 
 		setTimeout(loaded, 200); 
 	},
