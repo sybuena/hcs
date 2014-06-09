@@ -809,7 +809,7 @@ Messages.prototype = {
 		
 		//On click message listing then load message detail
 		//base on Message GUID
-		onClickDetail(type);
+		//onClickDetail(type);
 
 		if(messageList != null && messageList.length < 10) {
 			$('#pullUp').hide();

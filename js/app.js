@@ -44,34 +44,61 @@ window.username 		= localStorage.getItem('username');
 window.password 		= localStorage.getItem('password');
 window.startCount		= 20;		
 window.iscroll;
-
+var IMG_WIDTH 	= 500,
+	currentImg 	= 0,
+	maxImages 	= 3;
+	speed		= 500;
+		
+		
 function swipeDelete() {
-	/*$('.go-detail').on("swipeleft", function () {
-		var id = $(this).attr('id');
-		console.log(id);
-	 	$(this).hide('slide',{direction:'left'},1000);
 
-	});*/
 	$('.go-detail').swipe({
 		triggerOnTouchEnd 	: true,
 		allowPageScroll 	:"vertical",
 		swipeStatus 		: function(event, phase, direction, distance, fingers) {
+			
 			var id = $(this).attr('id');
+			
+			//If we are moving before swipe, and we are going L or R, then manually drag the images
+			if(phase == "move" && (direction == "left" || direction == "right") ) {
+				var duration=0;
 
-			
-			//$('.go-detail').css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
-			
-			//inverse the number we set in the css
-			var value = (distance<0 ? "" : "-") + Math.abs(distance).toString();
-			
-			if(distance > 170) {
-				console.log(direction);
-				 $(this).hide("slide", { direction: direction }, 1000);
-			} else {
-				$(this).css("-webkit-transform", "translate3d("+value +"px,0px,0px)");	
+				if (direction == "left") {
+					scrollImages((IMG_WIDTH * currentImg) + distance, duration, id, direction);
+
+				} else if (direction == "right") {
+					scrollImages((IMG_WIDTH * currentImg) - distance, duration, id, direction);
+				}	
+			//else, cancel means snap back to the begining
+			} else if (phase == "cancel") {
+				
+				scrollImages(IMG_WIDTH * currentImg, speed, id, direction);
+			//else end means the swipe was completed, so move to the next image
+			} else if (phase =="end" ) {
+				scrollImages(0,0, id, direction);	
+				
 			}
-		},
+		}
 	}); 
+}
+
+/**
+ * Manually update the position of the imgs on drag
+ */
+function scrollImages(distance, duration, id, direction) {
+	//do some math
+	var limit 	= parseInt($('#'+id).css('width')) / 2;	
+	//inverse the number we set in the css
+	var value = (distance<0 ? "" : "-") + Math.abs(distance).toString();
+	//if drag value is bigger than limit
+	if(Math.abs(value) > limit) {
+		//remove the div from the listing
+		$('#'+id).hide("slide", { direction: direction }, 1000);
+	} else {
+
+		$('#'+id).css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
+		$('#'+id).css("-webkit-transform", "translate3d("+value +"px,0px,0px)");
+	}
 }
 
 function pullDownAction () {
@@ -348,7 +375,7 @@ function checkOutbox() {
  */
 function onClickDetail(type) {
 	
-	$('.go-detail').unbind().click(function(e) {
+	$('.go-detail').click(function(e) {
 		//prevent double click
 		e.stopPropagation();
 		e.preventDefault();
