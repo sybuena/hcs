@@ -558,16 +558,7 @@ a {
     margin-right: 20px;
     color: #c94437;
 }
-.loading-messages {
-    margin: auto;
-    position: absolute;
-    top: -100;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    min-height: 300px;
-    width: 300px;
-}
+
 #search-message {border-bottom: 1px solid #ccc;}
 
 .icon-holder {
@@ -750,7 +741,8 @@ button.ui-btn, .ui-controlgroup-controls button.ui-btn-icon-notext {width: initi
     padding-left: 30px;
     margin-bottom: 20px;
     height: 100%;
-    width: 90%;
+    width: 100%;
+    padding-right: 23px;
 }
 .navbar-custom {
     background-color: #324a61;
@@ -906,10 +898,16 @@ a.message-detail:hover {color:black;}
     text-align: center;
 }
 .loading-messages {
-     
-    height: 150px;
     padding: 10px;
     text-align: center;
+    height: 100%;
+    padding-top: 10%;
+    background-color: #f7f7f7;
+    margin: auto;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
 }
 #process-send {
     font-size: 20px;
@@ -982,7 +980,7 @@ a.button-red:hover {color: white}
 }
 
 .page-content{
-    background-color: #F7F7F7;
+    background-color: #ccc;
     z-index: 10;
     display: block;
     height: 100%;
@@ -1545,7 +1543,7 @@ a.button-red:hover {color: white}
 }
 
 
-.scrollz-content-wrapper, #message-detail, #message-compose, #message-settings {margin-top: 50px}
+.scrollz-content-wrapper, #message-detail, #message-compose, #message-settings {background-color: #f7f7f7;margin-top: 50px}
 
 .no-connection {
     width: 65%;

@@ -26,7 +26,7 @@
             maxPosition: 266,
             minPosition: -266,
             tapToClose: true,
-            touchToDrag: false,
+            touchToDrag: true,
             slideIntent: 40, // degrees
             minDragDistance: 5
         },
@@ -314,7 +314,7 @@
                 dragging: function(e) {  
                     
                     utils.events.prevent(e);
-
+                    
                     if (cache.isDragging && settings.touchToDrag) {
 
                         var thePageX = utils.page('X', e),
@@ -381,10 +381,8 @@
 
                         if (openingLeft) {
                            $('#backdrop').show();
-                           
-
                             // Pulling too far to the right
-                            if (settings.maxPosition < absoluteTranslation) {
+                           if (settings.maxPosition < absoluteTranslation) {
                                 diff = (absoluteTranslation - settings.maxPosition) * settings.resistance;
                                 translateTo = whileDragX - diff;
                                 
@@ -424,7 +422,11 @@
                                 }
                             };
                         }
-                        action.translate.x(translateTo + translated);
+                        
+                        if(cache.startDragX < 100) {
+                            action.translate.x(translateTo + translated);
+                        }
+                        
                     }
                 },
                 endDrag: function(e) { 

@@ -2,7 +2,7 @@
 			CONSTANT VARIABLE
    ----------------------------------------- */
 var MESSAGE_ROW = 
-	'<div unread="false" class="messages go-detail" id="[MESSAGE_ID]" ><div class="pull-left" style="width:65%"><p class="list-title">[SUBJECT]</p>'+
+	'<div unread="false" class="messages go-detail" id="[MESSAGE_ID]" style="background-color: #f7f7f7;"><div class="pull-left" style="width:65%"><p class="list-title">[SUBJECT]</p>'+
 	'<p>From: [FROM_NAME]</p><p>[TO_NAME]</p></div><div class="pull-right" style="width:35%; text-align:right"><p class="list-date">[DATE]</p>'+
     '<p class="important-star"><i class="fa [IMPORTANT] fa-2x" style="font-size: 20px"></i></p></div><div class="clearfix"></div></div>';
 
@@ -809,7 +809,7 @@ Messages.prototype = {
 		
 		//On click message listing then load message detail
 		//base on Message GUID
-		//onClickDetail(type);
+		onClickDetail(type);
 
 		if(messageList != null && messageList.length < 10) {
 			$('#pullUp').hide();

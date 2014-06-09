@@ -42,61 +42,78 @@ window.online  			= true;
 window.start 			= false;
 window.username 		= localStorage.getItem('username');
 window.password 		= localStorage.getItem('password');
+//scroll message listing up/dowm parameters
 window.startCount		= 20;		
 window.iscroll;
-var IMG_WIDTH 	= 500,
-	currentImg 	= 0,
-	maxImages 	= 3;
-	speed		= 500;
+//swipe message listing paramaters
+var defaultWidth 		= 500;
+var	currentImg 			= 0;
+var	maxImages 			= 3;
+var	speed				= 500;
 		
 		
 function swipeDelete() {
 
 	$('.go-detail').swipe({
 		triggerOnTouchEnd 	: true,
-		allowPageScroll 	:"vertical",
+		triggerOnTouchLeave : true,
+		allowPageScroll 	: 'vertical',
 		swipeStatus 		: function(event, phase, direction, distance, fingers) {
-			
+			//get the GUID pf the current div
 			var id = $(this).attr('id');
-			
-			//If we are moving before swipe, and we are going L or R, then manually drag the images
-			if(phase == "move" && (direction == "left" || direction == "right") ) {
-				var duration=0;
-
-				if (direction == "left") {
-					scrollImages((IMG_WIDTH * currentImg) + distance, duration, id, direction);
-
-				} else if (direction == "right") {
-					scrollImages((IMG_WIDTH * currentImg) - distance, duration, id, direction);
-				}	
-			//else, cancel means snap back to the begining
-			} else if (phase == "cancel") {
-				
-				scrollImages(IMG_WIDTH * currentImg, speed, id, direction);
-			//else end means the swipe was completed, so move to the next image
-			} else if (phase =="end" ) {
-				scrollImages(0,0, id, direction);	
-				
+			console.log(event.x+' &&'+phase);
+			if(event.x > 100) {
+				//If we are moving before swipe, and we are going L or R, then manually drag the images
+				if(phase == "move" && (direction == "left" || direction == "right") ) {
+					var duration = 0;
+					//if swipe to the left
+					if(direction == "left") {
+						swipelisting((defaultWidth * currentImg) + distance, duration, id, direction, phase);
+					//else it is to the right
+					} else if (direction == "right") {
+						swipelisting((defaultWidth * currentImg) - distance, duration, id, direction, phase);
+					}	
+				//else, cancel means snap back to the begining
+				} else if (phase == "cancel") {
+					
+					swipelisting(defaultWidth * currentImg, speed, id, direction, phase);
+				//else end means the swipe was completed, so move to the next image
+				} else if (phase =="end" ) {
+					//on touch end
+					swipelisting((defaultWidth * currentImg) - distance, speed, id, direction, phase);	
+					
+				}
 			}
+		},
+		swipeLeft : function(event, phase, direction, distance, fingers) {
+			
 		}
 	}); 
 }
 
 /**
- * Manually update the position of the imgs on drag
+ * Manually update the position of the div on drag
  */
-function scrollImages(distance, duration, id, direction) {
+function swipelisting(distance, duration, id, direction,phase) {
 	//do some math
 	var limit 	= parseInt($('#'+id).css('width')) / 2;	
 	//inverse the number we set in the css
 	var value = (distance<0 ? "" : "-") + Math.abs(distance).toString();
-	//if drag value is bigger than limit
-	if(Math.abs(value) > limit) {
+	
+	//if drag value is bigger than limit and drag end
+	if(Math.abs(value) > limit && phase == 'end') {
 		//remove the div from the listing
-		$('#'+id).hide("slide", { direction: direction }, 1000);
-	} else {
-
+		$('#'+id).hide(500);
+	//if drag end but not more than the limit	
+	} else if(phase == 'end') {
+		//animate
 		$('#'+id).css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
+		//slide to the beginning
+		$('#'+id).css("-webkit-transform", "translate3d(0px,0px,0px)");
+	} else {
+		//animate
+		$('#'+id).css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
+		//follow the touch event in div
 		$('#'+id).css("-webkit-transform", "translate3d("+value +"px,0px,0px)");
 	}
 }
@@ -374,8 +391,8 @@ function checkOutbox() {
  *
  */
 function onClickDetail(type) {
-	
-	$('.go-detail').click(function(e) {
+
+	$('.go-detail').bind('tap', function(e) {
 		//prevent double click
 		e.stopPropagation();
 		e.preventDefault();
@@ -417,6 +434,49 @@ function onClickDetail(type) {
 
 		return false;
 	});
+
+	/*$('.go-detail').click(function(e) {
+		//prevent double click
+		e.stopPropagation();
+		e.preventDefault();
+		
+		//get the GUID of the message
+		var id 		= $(this).attr('id');
+		var unread 	= $(this).attr('unread');
+
+		//check if message is unread
+		if(unread == 'true') {
+			//count the current unread message
+			var count = $('#Inbox span.badge').html();
+			//only process if there is unread message	
+			if(count != 0) {
+				//do the math
+				var plus = parseInt(count) - 1;
+				$('#Inbox span.badge').html(plus);
+				$('#folder-name').html($('#Inbox').html());
+			}
+
+			$(this).css('background-color', '#E4E4E4');
+			$(this).css('font-weight', 'none');
+		}
+
+		//prepare UI for detail page
+		$('#message-detail').hide();
+		$('.message-elem').hide();
+		
+		//main loading
+		mainLoader('start');
+
+		//do ajax call and show detail page
+		//if message detail is already saved it 
+		//the local storage, then just get the saved
+		//local data but if not saved then make 
+		//SOAP request to get message datail and save 
+		//to local storage
+		window.messages.getDetail(id, type, unread);
+
+		return false;
+	});*/
 }
 /**
  * This guy will run checkInbox function every 
@@ -1562,6 +1622,12 @@ document.addEventListener("backbutton", function(e){
 		OLD FUNCTION, NOT USING ANYMORE FOR BACKUP PURPOSE
    ------------------------------------------------------------ */
 
+
+
+
+
+/**
+
 function pullRefresh() {
 	
 	//get the active listing
@@ -1603,50 +1669,5 @@ function pullDown() {
 		
 	});
 }
-
-var _search = (function() {
-	return {
-		object : function(query, object) {
-			var data = [];
-			for(i in object) {
-				//found as false at start always
-				found = false; 
-				for(x in object[i]) { 
-					//if only string
-					if(typeof object[i][x] !== 'object') {
-						var string = object[i][x].toLowerCase();
-
-						//finding needle in haystack
-						if(string.match(query.toLowerCase())) {
-							//mak object value as found
-							found = true;
-						}
-					//else it is object	
-					} else { 
-						/*for(y in object[i][x]) {
-							for(z in object[i][x][y]) {
-								var string = object[i][x][y][z].toLowerCase();
-								//finding needle in haystack
-								if(string.match(query.toLowerCase())) {
-									//mak object value as found
-									found = true;
-								}	
-							}
-						}*/
-					}
-				}
-				//if we found it in object value
-				if(found) {
-					//push it
-					data.push(object[i]);
-				}
-			}
-			return data;
-		}
-	}
-}());
-
-/**
-
 */
 
