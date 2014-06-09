@@ -60,9 +60,11 @@ function swipeDelete() {
 		allowPageScroll 	: 'vertical',
 		swipeStatus 		: function(event, phase, direction, distance, fingers) {
 			//get the GUID pf the current div
-			var id = $(this).attr('id');
-			console.log(event.x+' &&'+phase);
-			if(event.x > 100) {
+			var id 		= $(this).attr('id');
+			var width 	= parseInt($(this).css('width'))/5;
+			console.log(event.pageX);
+			//alert(width)
+			//if(event.x > width) {
 				//If we are moving before swipe, and we are going L or R, then manually drag the images
 				if(phase == "move" && (direction == "left" || direction == "right") ) {
 					var duration = 0;
@@ -83,7 +85,7 @@ function swipeDelete() {
 					swipelisting((defaultWidth * currentImg) - distance, speed, id, direction, phase);	
 					
 				}
-			}
+			//}
 		},
 		swipeLeft : function(event, phase, direction, distance, fingers) {
 			

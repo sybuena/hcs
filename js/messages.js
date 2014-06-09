@@ -810,7 +810,8 @@ Messages.prototype = {
 		//On click message listing then load message detail
 		//base on Message GUID
 		onClickDetail(type);
-
+		swipeDelete();
+		
 		if(messageList != null && messageList.length < 10) {
 			$('#pullUp').hide();
 		} else {
@@ -830,7 +831,7 @@ Messages.prototype = {
 
 		$('#wrapper').show();
 		
-		swipeDelete();
+		
 
 		setTimeout(loaded, 200); 
 	},

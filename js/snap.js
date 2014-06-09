@@ -314,7 +314,9 @@
                 dragging: function(e) {  
                     
                     utils.events.prevent(e);
-                    
+                    if(cache.startDragX > 100) {
+                        return;
+                    }
                     if (cache.isDragging && settings.touchToDrag) {
 
                         var thePageX = utils.page('X', e),
@@ -422,10 +424,10 @@
                                 }
                             };
                         }
+
                         
-                        if(cache.startDragX < 100) {
-                            action.translate.x(translateTo + translated);
-                        }
+                        action.translate.x(translateTo + translated);
+                        
                         
                     }
                 },
