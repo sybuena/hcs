@@ -3,7 +3,7 @@
    ----------------------------------------- */
 var MESSAGE_ROW = 
 	'<div unread="false" class="messages go-detail" id="[MESSAGE_ID]" ><div class="pull-left" style="width:65%"><p class="list-title">[SUBJECT]</p>'+
-	'<p>From: [FROM_NAME]</p><p>[TO_NAME]</p></div><div class="pull-right" style="width:35%"><p class="list-date">[DATE]</p>'+
+	'<p>From: [FROM_NAME]</p><p>[TO_NAME]</p></div><div class="pull-right" style="width:35%; text-align:right"><p class="list-date">[DATE]</p>'+
     '<p class="important-star"><i class="fa [IMPORTANT] fa-2x" style="font-size: 20px"></i></p></div><div class="clearfix"></div></div>';
 
 var MESSAGE_ROW_1 = 
@@ -352,12 +352,103 @@ Messages.prototype = {
 		
 		//refresh token 
 		window.user.getToken(window.username, window.password, function(soapResponse){
-				
+			var minus		= 7;
+			var today 		= new Date();
+   			var rawLastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - minus);
+   			var lastWeek 	= $.format.date(rawLastWeek, "yyyy-MM-ddThh:mm:ss");
+   			
 			var results 	= soapResponse.toString();	
 	        var json 		= $.xml2json(results);
 		 	var response 	= json['s:Envelope']['s:Body']['LoginCaregiverPortalResponse']['LoginCaregiverPortalResult'];
 		 	var token 		= response['a:Token'];
+			//var startDate 	= lastWeek;
 			var startDate 	= '1950-04-01T09:00:00';
+			var endDate 	= $.format.date(new Date().getTime(), "yyyy-MM-ddThh:mm:ss");
+			var xml 		=
+		        ['<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:heal="http://schemas.datacontract.org/2004/07/HealthCareAssistant" xmlns:hsim="http://schemas.datacontract.org/2004/07/HSIMessageExchange">',
+		            '<soapenv:Header/>',
+		            '<soapenv:Body>',
+		                '<RetrieveMessages>',
+		                    '<caregiverId>'+token+'</caregiverId>',
+		                    '<messageFolder>',
+		                        '<heal:m_IsDirty>false</heal:m_IsDirty>',
+		                        '<heal:m_DefaultValue></heal:m_DefaultValue>',
+		                        '<heal:m_FilterSet>false</heal:m_FilterSet>',
+		                        '<heal:m_Key>'+type+'</heal:m_Key>',
+		                        '<heal:m_SerializeList></heal:m_SerializeList>',
+		                    '</messageFolder>',
+		                    '<dateRange>',
+		                        '<heal:m_IsDirty>false</heal:m_IsDirty>',
+		                        '<heal:m_EndDate>',
+		                            '<heal:m_IsDirty>false</heal:m_IsDirty>',
+		                            '<heal:DateName></heal:DateName>',
+		                            '<heal:DateStringFormat>YYYY-MM-DDThh:mm:ss</heal:DateStringFormat>',
+		                            '<heal:InnerDate>'+endDate+'</heal:InnerDate>',
+		                        '</heal:m_EndDate>',
+		                        '<heal:m_StartDate>',
+		                            '<heal:m_IsDirty>false</heal:m_IsDirty>',
+		                            '<heal:DateName></heal:DateName>',
+		                            '<heal:DateStringFormat>YYYY-MM-DDThh:mm:ss</heal:DateStringFormat>',
+		                            '<heal:InnerDate>'+startDate+'</heal:InnerDate>',
+		                        '</heal:m_StartDate>',
+		                    '</dateRange>',
+		                    '<unreadOnly>false</unreadOnly>',
+		                '</RetrieveMessages>',
+		            '</soapenv:Body>',
+		        '</soapenv:Envelope>'];
+
+		    //do ajax SOAP call    
+			_SOAP.post('RetrieveMessages', xml, function(soapResponse) { 
+				results = soapResponse.toString(); 
+	            json 	= $.xml2json(results);
+
+	            //if has error
+	            if(json['s:Envelope']['s:Body']['RetrieveMessagesResponse']['RetrieveMessagesResult']['a:HasError'] == 'true') {
+	            	$('.notification-ajax').show();
+					$('.notification-ajax #notification-here').html('<i class="fa fa-warning"></i>'+json['s:Envelope']['s:Body']['RetrieveMessagesResponse']['RetrieveMessagesResult']['a:Error']);	
+	            }
+
+	            var data 	= json['s:Envelope']['s:Body']['RetrieveMessagesResponse']['RetrieveMessagesResult']['a:MessagesResult']['b:MessageLabel'];
+         		var raw = [];
+         		
+         		if(typeof data === 'object' && typeof data[0] === 'undefined') { 
+         			raw.push(data)
+         		} else {
+         			raw = data;
+         		}	
+         		
+         		if(typeof raw !== 'undefined') {
+         			//lock and save
+         			_string.lock(raw, type);
+         			window.messageList[type] = raw;
+         		}	
+         		
+         		if(window.messageList[type].length < 10) {
+         				minus = minus + 7;
+         				console.log(minus);
+						window.messages.loadAgain(minus, type);
+         				return false;
+         		}
+
+	            //now display it
+	            window.messages.displayMessage(raw, type, start, end, 1);
+			});    
+		});
+	},
+	loadAgain : function(minus, type) {
+
+		window.user.getToken(window.username, window.password, function(soapResponse){
+			
+			var today 		= new Date();
+   			var rawLastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - minus);
+   			var lastWeek 	= $.format.date(rawLastWeek, "yyyy-MM-ddThh:mm:ss");
+   			
+			var results 	= soapResponse.toString();	
+	        var json 		= $.xml2json(results);
+		 	var response 	= json['s:Envelope']['s:Body']['LoginCaregiverPortalResponse']['LoginCaregiverPortalResult'];
+		 	var token 		= response['a:Token'];
+			var startDate 	= lastWeek;
+			//var startDate 	= '1950-04-01T09:00:00';
 			var endDate 	= $.format.date(new Date().getTime(), "yyyy-MM-ddThh:mm:ss");
 			var xml 		=
 		        ['<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:heal="http://schemas.datacontract.org/2004/07/HealthCareAssistant" xmlns:hsim="http://schemas.datacontract.org/2004/07/HSIMessageExchange">',
@@ -412,17 +503,28 @@ Messages.prototype = {
          		} else {
          			raw = data;
          		}	
+         		console.log(data);
          		
          		if(typeof raw !== 'undefined') {
+         			var currentList = _string.unlock(type);
+         			currentList.push(raw);
          			//lock and save
-         			_string.lock(raw, type);
-         			window.messageList[type] = raw;
-         		}	
+         			_string.lock(currentList, type);
+         			window.messageList[type] = currentList;
+         			console.log(window.messageList[type]);
+         		} else {
+     				minus = minus + 7;
+					window.messages.loadAgain(minus);
+     				return false;
+         		}
+         		
+         			
 
 	            //now display it
 	            window.messages.displayMessage(raw, type, start, end, 1);
 			});    
 		});
+
 	},
 	displayDetail : function(data, type, guid, unread) { 
 
@@ -452,7 +554,7 @@ Messages.prototype = {
 		} 
 
 		//for important message
-		var star 		= 'fa-star-o';
+		var star 		= 'fa-exclamations';
 		var fromName 	= 'From : '+data['b:Label']['b:Sender']['c:Name']['d:m_firstName']+' '+data['b:Label']['b:Sender']['c:Name']['d:m_lastName'];
      	var toUser 		= '';
      	//now convert the date email sent to current date to get the
@@ -466,7 +568,7 @@ Messages.prototype = {
 		if(typeof data['b:Label']['b:Priority'] !== 'undefined'){
 			if(typeof data['b:Label']['b:Priority']['m_Value'] !== 'undefined') {
 				if(data['b:Label']['b:Priority']['m_Value']['_'] == 'High') {
-					var star = 'fa-star';
+					var star = 'fa-exclamation';
 				}
 			}
 		}
@@ -613,7 +715,7 @@ Messages.prototype = {
 					}
 
 					//for important message
-					var star 		= 'fa-star-o';
+					var star 		= 'fa-exclamations';
 					var toUser 		= '';
 					var fromName 	= '';
 					var subject 	= '';
@@ -646,7 +748,7 @@ Messages.prototype = {
 					if(typeof messageList[i]['b:Priority'] !== 'undefined'){
 						if(typeof messageList[i]['b:Priority']['m_Value'] !== 'undefined') {
 							if(messageList[i]['b:Priority']['m_Value']['_'] == 'High') {
-								var star = 'fa-star';
+								var star = 'fa-exclamation';
 							}
 						}
 					}
@@ -740,6 +842,7 @@ Messages.prototype = {
 		if(messageList.length < start) {
 			return false;
 		}
+
 		for(i = end; i < start; i++) {	
 			if(messageList[i] !== null) {
 				//use unread HTML template if only in INBOX
@@ -754,13 +857,13 @@ Messages.prototype = {
 				}
 				
 				//for important message
-				var star 		= 'fa-star-o';
+				var star 		= 'fa-exclamations';
 				var toUser 		= '';
 				var fromName 	= '';
 				var subject 	= messageList[i]['b:Subject'];
 				var fromName 	= messageList[i]['b:Sender']['c:Name']['d:m_firstName']+' '+messageList[i]['b:Sender']['c:Name']['d:m_lastName']
 				var localDate 	= _local.date(messageList[i]['b:DateSent']['c:m_When']);
-				console.log(i+' == '+subject)
+				
 				//dont show datetime if in Draft and Outbox listing
 				if(type == 'Draft' || type == 'Outbox') {
 					date = '';
@@ -775,7 +878,7 @@ Messages.prototype = {
 				if(typeof messageList[i]['b:Priority'] !== 'undefined'){
 					if(typeof messageList[i]['b:Priority']['m_Value'] !== 'undefined') {
 						if(messageList[i]['b:Priority']['m_Value']['_'] == 'High') {
-							var star = 'fa-star';
+							var star = 'fa-exclamation';
 						}
 					}
 				}
@@ -823,8 +926,6 @@ Messages.prototype = {
 		}
 
 		$('#wrapper').show();
-		
-		
 
 	}, 
 	send : function(subject, content, priority, recipients, guid) {

@@ -546,17 +546,17 @@ a {
 
 .messages {
     width: 100%;
-    min-height: 100px;
+    height: auto;
     border-bottom: 1px solid #ccc;
-    padding: 15px;
+    padding: 8px 15px 8px 10px;
 }
 .messages.unread {background-color: white;}
-.messages p {margin: 0 0 0 0; text-transform: none; font-size: 14px}
-.messages .list-title {color:#c94437;font-size: 20px;}
+.messages p {margin: 0 0 0 0; text-transform: none; font-size: 11px}
+.messages .list-title {color:#c94437;font-size: 12px;}
 .messages .important-star {
     margin-top: 5px;
-    text-align: center;
-    color: goldenrod;
+    margin-right: 20px;
+    color: #c94437;
 }
 .loading-messages {
     margin: auto;
@@ -647,7 +647,7 @@ a {
     to { -webkit-transform:rotate(360deg) translateZ(0); }
 }
 
-p {font-size: 15px;}
+p {font-size: 11px;}
 .ui-input-text input, .ui-input-search input {font-size: 14px; }
 
 .nav-pills { font-size: 15px;}
@@ -911,10 +911,15 @@ a.message-detail:hover {color:black;}
     padding: 10px;
     text-align: center;
 }
+#process-send {
+    font-size: 20px;
+    font-weight: initial;
+    margin-top: 4px;
+}
 .dim-red {color:#c0392b;}
 .red {color :#f04124;}
 .list-important, #detail-important {margin-top: 5px;
-color: goldenrod;}
+color: #c0392b;}
 #content-overlay {
     position: absolute;
     width: 100%;
@@ -1561,11 +1566,17 @@ a.button-red:hover {color: white}
 }
 
 #content-detail {margin-right: -30px;}
-.list-date {text-align: center;
-font-size: 12px;
-padding-top: 10px;}
+.list-date {
+    
+    font-size: 12px;
+    padding-top: 10px;
+}
 
-
+#draft-modal, #subject-modal {
+    top: 20%;width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
 
 
 

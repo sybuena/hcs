@@ -45,6 +45,31 @@ window.password 		= localStorage.getItem('password');
 window.startCount		= 10;		
 window.iscroll;
 
+function swipeDelete() {
+	/*$('.go-detail').on("swipeleft", function () {
+		var id = $(this).attr('id');
+		console.log(id);
+	 	$(this).hide('slide',{direction:'left'},1000);
+
+	});*/
+	/*$('.go-detail').swipe( {
+		triggerOnTouchEnd 	: true,
+		allowPageScroll 	:"vertical",
+		swipeStatus 		: function(event, phase, direction, distance, fingers) {
+			var id = $(this).attr('id');
+
+			console.log(id);
+			//$('.go-detail').css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
+		
+			//inverse the number we set in the css
+			var value = (distance<0 ? "" : "-") + Math.abs(distance).toString();
+			console.log(direction)
+			$('.go-detail').css("-webkit-transform", "translate3d("+value +"px,0px,0px)");
+			
+		},
+	}); */
+}
+
 function pullDownAction () {
 	
 	//get the active listing
@@ -67,7 +92,6 @@ function pullUpAction () {
 	
 	//Remember to refresh when contents are loaded (ie: on ajax completion)
 	window.iscroll.refresh();		
-
 	//On click message listing then load message detail
 	//base on Message GUID
 	onClickDetail(type);
@@ -80,7 +104,7 @@ function pullUpAction () {
  *
  */
 function loaded() {
-	
+
 	if($.isEmptyObject(window.iscroll) || typeof window.iScroll === 'undefined') {
 		
 		var pullDownEl 		= document.getElementById('pullDown');
@@ -132,12 +156,14 @@ function loaded() {
 					pullUpEl.className = 'loading';
 					pullUpEl.querySelector('.pullUpLabel').innerHTML = '';				
 					pullUpAction();	
+					
 				}
 			}
 		}
 		
 		//execute message listing
 		window.iscroll = new iScroll('wrapper', option);
+		
 	}
 }
 
@@ -316,6 +342,7 @@ function checkOutbox() {
  *
  */
 function onClickDetail(type) {
+	
 	$('.go-detail').unbind().click(function(e) {
 		//prevent double click
 		e.stopPropagation();
@@ -395,6 +422,52 @@ function mainLoader(action) {
 	}
 }
 
+function processSendAgain(guid) {
+
+	$('#process-send-again').unbind().click(function() {
+
+		//prepare variables
+		var recipients 	= []
+		var subject 	= $('#compose-subject').val();
+		var content 	= $('#compose-content').val();
+		var priority 	= $('#compose-important option:selected').html();
+
+		//get list of recipients
+		$('.to-holder div').each(function() {
+			recipients.push(window.contactList[this.id]);
+		});
+
+		//if no recipients
+		if(recipients.length == 0) {
+			//add warning
+			$('.warning-holder').html('<div class="alert alert-danger" id="11"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Please add at least one recipient</strong></div>');
+			
+			return false;
+		}
+		
+		$('#subject-modal').modal('hide');
+
+		//if no internet connection
+		if(!window.connection) {
+			//loading animation
+			$('#loading-ajax #text').html('Saving Message');
+			$('#loading-ajax').popup('open');
+			//save message to outbox		
+			saveOutbox(subject, content, priority, recipients);	
+
+		} else { 
+			//loading animation
+			$('#loading-ajax #text').html('Sending Message');
+			$('#loading-ajax').popup('open');
+			
+			//now do ajax call to send it
+			window.messages.send(subject, content, priority, recipients, guid);
+		}
+
+		return false;
+	});
+}
+
 /**
  * Send button handler
  *
@@ -423,6 +496,11 @@ function processSend(guid) {
 			return false;
 		}
 
+		if(subject.length == 0) {
+			$('#subject-modal').modal('show');
+			processSendAgain(guid);
+			return false;
+		}
 		//if no internet connection
 		if(!window.connection) {
 			//loading animation
@@ -1345,7 +1423,7 @@ var _SOAP = (function() {
 document.addEventListener('deviceready', function() {	
 	
 	//Enables the background mode. The app will not pause while in background.
-	window.plugin.backgroundMode.enable();
+	//window.plugin.backgroundMode.enable();
 	
 	navigator.geolocation.getCurrentPosition(
 		//do nothing
@@ -1413,14 +1491,16 @@ document.addEventListener('deviceready', function() {
 		
 	});
 
+
 	//if all DOM is loaded
 	$(document).ready(function(){
-
+		
 		//for login UI
 		init();
 		//start application
 		bind();
-	
+
+		swipeDelete();
 	});
 
 }, false);
@@ -1529,5 +1609,7 @@ var _search = (function() {
 	}
 }());
 
+/**
 
+*/
 
