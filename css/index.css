@@ -551,8 +551,8 @@ a {
     padding: 8px 15px 8px 10px;
 }
 .messages.unread {background-color: white;}
-.messages p {margin: 0 0 0 0; text-transform: none; font-size: 11px}
-.messages .list-title {color:#c94437;font-size: 12px;}
+.messages p {margin: 0 0 0 0; text-transform: none;}
+.messages .list-title {color:#c94437;font-size: 1.2em;}
 .messages .important-star {
     margin-top: 5px;
     margin-right: 20px;
@@ -647,7 +647,7 @@ a {
     to { -webkit-transform:rotate(360deg) translateZ(0); }
 }
 
-p {font-size: 11px;}
+
 .ui-input-text input, .ui-input-search input {font-size: 14px; }
 
 .nav-pills { font-size: 15px;}
@@ -1567,8 +1567,6 @@ a.button-red:hover {color: white}
 
 #content-detail {margin-right: -30px;}
 .list-date {
-    
-    font-size: 12px;
     padding-top: 10px;
 }
 

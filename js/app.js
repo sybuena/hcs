@@ -42,7 +42,7 @@ window.online  			= true;
 window.start 			= false;
 window.username 		= localStorage.getItem('username');
 window.password 		= localStorage.getItem('password');
-window.startCount		= 10;		
+window.startCount		= 20;		
 window.iscroll;
 
 function swipeDelete() {
@@ -1491,10 +1491,17 @@ document.addEventListener('deviceready', function() {
 		
 	});
 
-
 	//if all DOM is loaded
 	$(document).ready(function(){
-		
+		//do the responsive font size
+		$('body').flowtype({
+			 minimum   : 300,
+			 maximum   : 1200,
+			 minFont   : 12,
+			 maxFont   : 15,
+			 fontRatio : 30
+		});
+
 		//for login UI
 		init();
 		//start application
