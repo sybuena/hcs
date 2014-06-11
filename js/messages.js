@@ -1839,13 +1839,13 @@ Messages.prototype = {
 
 	            //now display it
 	           // window.messages.get(type,10,1);
-
-	            localStorage.setItem('Deleted', '');
+	           localStorage.setItem('Deleted', '');
 
 	            $('#message-list').css('pointer-events', 'all');
 	            $('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
 				$('#delete_'+guid).hide(500);
 				$('#'+guid).hide(800);
+
 				addOne()
 			});
 		});

@@ -136,7 +136,6 @@ function swipeDelete(uid) {
 				$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
 				//enable dragging left panel
 				window.snapper.enable();
-				
 			}
 		},
 		
@@ -152,11 +151,9 @@ function swipelisting(distance, duration, id, direction, phase) {
 	//get the width of the current div then divided by two as limit
 	var limit 	= (parseInt($('#'+id).css('width')) / 2);
 	var width 	= (parseInt($('#'+id).css('width')) / 4);
-	
 
 	if(phase == 'start') {
-		
-		
+	
 		//$('#delete_'+id).show();
 		$('#message-list').css('pointer-events', 'all');
 		$('.go-detail').css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
@@ -193,9 +190,6 @@ function swipelisting(distance, duration, id, direction, phase) {
 		window.snapper.enable();
 
 	} else {
-		
-		
-		
 		$('#message-list').css('pointer-events', 'all');
 		//animate
 		$('#'+id).css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
@@ -440,7 +434,7 @@ function bind() {
 		window.messages.countFolder('Inbox');
 		
 		//get INBOX
-  		window.messages.get('Inbox', 10, 0);
+  		window.messages.get('Inbox', 20, 0);
 
   		//show main page
   		mainPage(window.snapper,loginUser);
@@ -513,7 +507,6 @@ function checkOutbox() {
  */
 function onClickDetail(type) {
 	
-
 	//on tap message in listing
 	$('.go-detail').bind('tap', function(e) {
 		//prevent double click
@@ -749,7 +742,7 @@ function compose() {
 	//this guys makes teh TEXTAREA of message content 
 	//a responsive textarea (jquery plugin)...
 	$('#compose-content').autosize();   	
-
+	
 	var typingTimer;                //timer identifier
 	var doneTypingInterval = 1000;
 	
@@ -763,10 +756,11 @@ function compose() {
 	function doneTyping () {
 	    //do something
 	    $('#compose-content').css('height', '150px !important');
-	    $('#compose-content').css('overflow', 'auto !important');
-	    //$('#compose-content').niceScroll();
+	    //$('#compose-content').css('overflow', 'auto !important');
+	    $('#compose-content').niceScroll();
 
 	}
+
 	//populate the contact listing auto search
 	for(i in window.contactList) {
 		//append, append, append
@@ -1387,7 +1381,7 @@ function backEvent() {
 			
 			//go back to the previous listing
 			$('.scrollz-container').show();
-			window.messages.get(parentPage, 10, 1);
+			window.messages.get(parentPage, 20, 1);
 			$('#message-list').scrollz('hidePullHeader');
 
 			return false;
@@ -1428,7 +1422,7 @@ function backEvent() {
 			
 			//go back to the previous listing
 			$('.scrollz-container').show();
-			window.messages.get(parentPage, 10, 1);
+			window.messages.get(parentPage, 20, 1);
 			$('#message-list').scrollz('hidePullHeader');
 	 		
 		});
@@ -1451,7 +1445,7 @@ function backEvent() {
 
 		//checkConnection();
 		//go back to Inbox
-		window.messages.get('Inbox', 10, 1);
+		window.messages.get('Inbox', 20, 1);
 		$('#message-list').scrollz('hidePullHeader');
 
 		return false;
@@ -1461,7 +1455,7 @@ function backEvent() {
 
  		//unset scrolling count when hitting new message list
  		window.startCount = 10;
- 		window.messages.get(parentPage, 10, 1);
+ 		window.messages.get(parentPage, 20, 1);
  	}  
 }
 
