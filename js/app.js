@@ -432,7 +432,7 @@ function bind() {
 		window.messages.countFolder('Inbox');
 		
 		//get INBOX
-  		window.messages.get('Inbox', 10, 0);
+  		window.messages.get('Inbox', 20, 0);
 
   		//show main page
   		mainPage(window.snapper,loginUser);
@@ -744,7 +744,22 @@ function compose() {
 	//this guys makes teh TEXTAREA of message content 
 	//a responsive textarea (jquery plugin)...
 	$('#compose-content').autosize();   	
-	 
+	
+	var typingTimer;                //timer identifier
+	var doneTypingInterval = 1000;
+	
+	$('#compose-content').keyup(function(){
+	    clearTimeout(typingTimer);
+	    if ($('#myInput').val) {
+	        typingTimer = setTimeout(doneTyping, doneTypingInterval);
+	    }
+	});
+
+	function doneTyping () {
+	    //do something
+	    $('#compose-content').css('height', '150px !important');
+
+	}
 	//populate the contact listing auto search
 	for(i in window.contactList) {
 		//append, append, append
@@ -1120,7 +1135,7 @@ function mainPage(snapper, loginUser) {
 
 			//get message list according on what
 			//user clicked on the LI left panel
-	  		window.messages.get(type, 10, 1);
+	  		window.messages.get(type, 15, 1);
   		}	
 
 		return false;

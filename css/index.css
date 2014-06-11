@@ -578,7 +578,7 @@ a {
     text-align: center;
 }
 
-#wrapper {height: 100% !important;}
+#wrapper {height: 100% !important;background-color: #ccc;}
 /**
  *
  * Pull down styles
@@ -980,7 +980,7 @@ a.button-red:hover {color: white}
 }
 
 .page-content{
-    background-color: #ccc;
+    background-color: #f7f7f7;
     z-index: 10;
     display: block;
     height: 100%;
