@@ -220,6 +220,21 @@ function pullDownAction () {
 	window.messageList[type] = _string.unlock(type);			
 }
 
+function addOne() {
+	
+	var type 	= $('ul.nav-stacked li.active a.left-navigation').attr('id');
+	var end 	= window.startCount;
+	window.startCount = window.startCount + 1;
+	
+	window.messages.pullDown(window.messageList[type], type, window.startCount, end);	
+	
+	//Remember to refresh when contents are loaded (ie: on ajax completion)
+	window.iscroll.refresh();		
+	//On click message listing then load message detail
+	//base on Message GUID
+	onClickDetail(type);	
+}
+
 function pullUpAction () {
 	
 	var type 	= $('ul.nav-stacked li.active a.left-navigation').attr('id');
@@ -261,22 +276,11 @@ function loaded() {
 				}
 			},
 			onScrollStart : function() {
-				window.snapper.enable();
-				//$('#message-archive div').hide();
+				$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
 
-				//$('#message-list').css('pointer-events', 'all');
-				//var open = $('#message-archive').attr('isOpen');
-				//console.log('start');
-				//if(open == 'false') {
-					//$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
-					//$('#message-list').css('pointer-events', 'all');	
-				//}
-				
-				
-				
 			},
 			onScrollMove 	: function () {
-
+				window.snapper.enable();
 				//$('#message-archive div').hide();
 				$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
 				$('#message-list').css('pointer-events', 'all');
@@ -436,7 +440,7 @@ function bind() {
 		window.messages.countFolder('Inbox');
 		
 		//get INBOX
-  		window.messages.get('Inbox', 20, 0);
+  		window.messages.get('Inbox', 10, 0);
 
   		//show main page
   		mainPage(window.snapper,loginUser);
@@ -714,9 +718,6 @@ function compose() {
 	//hide sidebar icon	
 	$('#sidebar-top').hide();
 
-	//hide the pn pull refresh listing
-	$('.scrollz-container').hide();
-
 	//unset compose fields
 	$('form.ui-filterable').
 		children().
@@ -763,7 +764,7 @@ function compose() {
 	    //do something
 	    $('#compose-content').css('height', '150px !important');
 	    $('#compose-content').css('overflow', 'auto !important');
-	    $('#compose-content').niceScroll();
+	    //$('#compose-content').niceScroll();
 
 	}
 	//populate the contact listing auto search
@@ -1611,9 +1612,9 @@ var _SOAP = (function() {
 document.addEventListener('deviceready', function() {	
 	
 	//Enables the background mode. The app will not pause while in background.
-	window.plugin.backgroundMode.enable();
+	//window.plugin.backgroundMode.enable();
 	//unset badge
-	window.plugin.notification.badge.set(0);
+	//window.plugin.notification.badge.set(0);
 	navigator.geolocation.getCurrentPosition(
 		//do nothing
 		function() {

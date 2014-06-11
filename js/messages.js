@@ -1846,6 +1846,7 @@ Messages.prototype = {
 	            $('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
 				$('#delete_'+guid).hide(500);
 				$('#'+guid).hide(800);
+				addOne()
 			});
 		});
 
@@ -1971,7 +1972,7 @@ Messages.prototype = {
 	        	}
 	        	$('#pullDown').hide();
 	        	$('#message-archive').show();
-	        	
+
 	            var results 	= soapResponse.toString(); 
 	            var json 		= $.xml2json(results);
 	            var data 		= json['s:Envelope']['s:Body']['RetrieveMessagesResponse']['RetrieveMessagesResult']['a:MessagesResult']['b:MessageLabel'];

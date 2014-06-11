@@ -314,7 +314,7 @@
                 dragging: function(e) {  
                     
                     utils.events.prevent(e);
-                    if(cache.startDragX > 100) {
+                    if(cache.startDragX > 50) {
                         return;
                     }
                     if (cache.isDragging && settings.touchToDrag) {
@@ -445,12 +445,12 @@
                             cache.isDragging = false;
                             cache.startDragX = 0; 
                             $('#backdrop').hide();
+                            
                             return;
                         }
 
                         // Revealing Left
-                        if (cache.simpleStates.opening === 'left') {
-                            
+                        if (cache.simpleStates.opening === 'left') {   
                             
                             // Halfway, Flicking, or Too Far Out
                             if ((cache.simpleStates.halfway || cache.simpleStates.hyperExtending || cache.simpleStates.flick)) {
@@ -461,11 +461,11 @@
                                 } else if (
                                     (cache.simpleStates.flick && cache.simpleStates.towards === 'right') || // Flicking Open OR
                                     (cache.simpleStates.halfway || cache.simpleStates.hyperExtending) // At least halfway open OR hyperextending
-                                ) {
+                                ) { 
                                     action.translate.easeTo(settings.maxPosition); // Open Left
                                 }
                             } else {
-                                
+                                $('#backdrop').hide();
                                 action.translate.easeTo(0); // Close Left
 
                             }
@@ -486,6 +486,7 @@
                                 action.translate.easeTo(0); // Close Right
                             }
                         }
+
                         cache.isDragging = false;
                         cache.startDragX = utils.page('X', e);
                     } 
