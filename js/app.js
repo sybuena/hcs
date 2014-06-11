@@ -333,20 +333,10 @@ function loaded() {
  *
  */
 document.addEventListener('touchmove', function (e) { 
-	//e.preventDefault(); 
-	console.log("event.targetTouches[0].pageX = " + event.targetTouches[0].pageX + " event.targetTouches[0].pageY = " + event.targetTouches[0].pageY);
 
-    var x = event.targetTouches[0].pageX;
-    var y = event.targetTouches[0].pageY;
-
-    //fix the scroll of textareas for iOS by avoiding prevent default in them 
-    if (x > 20 && x < 300 && y > 80 && y < 230){
-        //touch falls within first text area
-    } else if (x > 20 && x < 300 && y > 245 && y < 400){
-        //touch falls within second text area
-    } else {
-        e.preventDefault(); 
-    }
+	if(e.srcElement.type !== "textarea"){ 
+        e.preventDefault();
+    } 
 }, false);
 
 function init() {
@@ -773,6 +763,7 @@ function compose() {
 	    //do something
 	    $('#compose-content').css('height', '150px !important');
 	    $('#compose-content').css('overflow', 'auto !important');
+	    $('#compose-content').niceScroll();
 
 	}
 	//populate the contact listing auto search
@@ -1621,7 +1612,8 @@ document.addEventListener('deviceready', function() {
 	
 	//Enables the background mode. The app will not pause while in background.
 	//window.plugin.backgroundMode.enable();
-	
+	//unset badge
+	//window.plugin.notification.badge.set(0);
 	navigator.geolocation.getCurrentPosition(
 		//do nothing
 		function() {
