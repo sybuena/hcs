@@ -321,7 +321,8 @@ function loaded() {
 		}
 		
 		//execute message listing
-		window.iscroll = new iScroll('wrapper', option);	
+		window.iscroll = new iScroll('wrapper', option);
+
 
 	}
 }
@@ -332,7 +333,20 @@ function loaded() {
  *
  */
 document.addEventListener('touchmove', function (e) { 
-	e.preventDefault(); 
+	//e.preventDefault(); 
+	console.log("event.targetTouches[0].pageX = " + event.targetTouches[0].pageX + " event.targetTouches[0].pageY = " + event.targetTouches[0].pageY);
+
+    var x = event.targetTouches[0].pageX;
+    var y = event.targetTouches[0].pageY;
+
+    //fix the scroll of textareas for iOS by avoiding prevent default in them 
+    if (x > 20 && x < 300 && y > 80 && y < 230){
+        //touch falls within first text area
+    } else if (x > 20 && x < 300 && y > 245 && y < 400){
+        //touch falls within second text area
+    } else {
+        e.preventDefault(); 
+    }
 }, false);
 
 function init() {
@@ -744,7 +758,7 @@ function compose() {
 	//this guys makes teh TEXTAREA of message content 
 	//a responsive textarea (jquery plugin)...
 	$('#compose-content').autosize();   	
-	
+
 	var typingTimer;                //timer identifier
 	var doneTypingInterval = 1000;
 	
@@ -758,6 +772,7 @@ function compose() {
 	function doneTyping () {
 	    //do something
 	    $('#compose-content').css('height', '150px !important');
+	    $('#compose-content').css('overflow', 'auto !important');
 
 	}
 	//populate the contact listing auto search
