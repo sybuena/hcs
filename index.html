@@ -2,8 +2,10 @@
 <head>
   <meta name="format-detection" content="telephone=no" />
     <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
-    <!--<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, target-densitydpi=device-dpi" />-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <!--<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, target-densitydpi=device-dpi" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">-->
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, minimum-scale=1, width=device-width" />
   <title>HCS Messenger</title>
   <link rel="stylesheet" href="pull-down/jquery.scrollz.css" >
   <link rel="stylesheet" type="text/css" href="jmobile/css/jquery.mobile.flatui.css" />
@@ -189,23 +191,23 @@
     
     <div id="wrapper" style="margin-top: 50px;" class="message-elem">
       <div id="scroller">  
+        <!-- on pull down div -->
         <div id="pullDown">
           <span class="pullDownIcon"></span><span class="pullDownLabel"></span>
         </div>
-          <div id="message-list">
-          </div>
+        <!-- main message listing -->
+        <div id="message-list">
+        </div>
+        <!-- swipe right listing -->
+        <div id="message-archive" isOpen="false">
+        </div>
+        <!-- on pull up div -->
         <div id="pullUp">
           <span class="pullUpIcon"></span><span class="pullUpLabel"></span>
         </div>
 
       </div>
     </div>
-
-
-
-
-
-
 
     <!-- MESSAGE DETAIL-->
     <div id="message-detail" class="display-none message-elem">

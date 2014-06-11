@@ -42,7 +42,8 @@ Messages.prototype = {
 		} else {
 			$('.current-page').attr('id', 'list');	
 		}
-		
+
+		$('#message-list').css('pointer-events', 'all');
 		$('#back-top').hide();
 		$('#sidebar-top').show();
 		$('#delete-message').hide();
@@ -62,6 +63,7 @@ Messages.prototype = {
 	    	this.load(type, start, end);
 		//else there is temporary saved data
 		} else { 
+
 			//just show the listing
 			this.displayMessage(window.messageList[type], type, start, end, 1);
 		}
@@ -258,7 +260,8 @@ Messages.prototype = {
          		}
          		
          		$('#'+type+' span.badge').html(count);
-         		$('#folder-name').html($('a#'+type).html());	
+         		$('#folder-name').html($('a#'+type).html());
+         		window.plugin.notification.badge.set(count);	
 			});		        
 		});
 	},
@@ -680,9 +683,11 @@ Messages.prototype = {
 		//HTML template for read messages
 		var row = MESSAGE_ROW;
 		var list = '';
+		var ids = [];
+
 		//empty everything
 		$('#message-list').html('');
-		
+		$('#message-archive').html('');
 		if(messageList == null || messageList.length == 0) {
 			//stop animation
 			this.animateList('stop', type);
@@ -773,11 +778,12 @@ Messages.prototype = {
 					if(subject.length > 20) {
 						subject = subject.substr(0,20)+'..';	
 					}
-
+					$("#message-list").show();
 					//prevent duplicate listing
 					if(currentGUID != messageList[i]['b:MessageGUID'] || type == 'Outbox') {
 						//build DOM first, 
-						list += row.
+						//list += row.
+						$("#message-list").append(row.
 							replace('[MESSAGE_ID]',		messageList[i]['b:MessageGUID']). 	//message GUID
 							replace('[MESSAGE_ID2]',	messageList[i]['b:MessageGUID']). 	//message GUID
 							replace('[DATE]', 			date).								//date (ex. just now, 1 hour ago)
@@ -785,33 +791,32 @@ Messages.prototype = {
 							replace('[IMPORTANT]', 		star).								//message priority (star)
 							replace('[IMPORTANT2]', 	star).								//message priority (star)
 							replace('[FROM_NAME]', 		fromName).							//message From name
-							replace('[TO_NAME]', 		toUser);								//message To name
-
+							replace('[TO_NAME]', 		toUser));
+														//message To name
+						ids.push(messageList[i]['b:MessageGUID']);
+						swipeDelete(messageList[i]['b:MessageGUID']);		
 					}
 					//get the current GUID (prevent duplicate)
 					currentGUID = messageList[i]['b:MessageGUID'];
 				//}
 				
 				}
-				$("#message-list").html(list);
+
+				//$('#message-archive').html(archive);
+				//$("#message-list").html(list);
 			}
 		}
 
-		//show the refresh to pull
-		$('.scrollz-container').show();
-		//hide request to pull header
-		$('#message-list').scrollz('hidePullHeader');
 		//hide no connection image
 		$('.no-connection').hide();
 		//this guy is responsible for making the SUBJECT length responsive to the 
 		//DIV width
-		$(".list-title").shorten();
+		//$(".list-title").shorten();
 		
 		//On click message listing then load message detail
 		//base on Message GUID
 		onClickDetail(type);
-		swipeDelete();
-		
+
 		if(messageList != null && messageList.length < 10) {
 			$('#pullUp').hide();
 		} else {
@@ -830,10 +835,11 @@ Messages.prototype = {
 		}
 
 		$('#wrapper').show();
-		
-		
 
-		setTimeout(loaded, 200); 
+		populateArchive(ids);
+		
+		
+		
 	},
 	pullDown : function(messageList,type, start, end) {
 		
@@ -841,7 +847,8 @@ Messages.prototype = {
 		//var i 			= start;
 		var currentGUID = '';
 		var list 		= '';
-		
+		var ids 		= [];
+
 		if(messageList.length < start) {
 			return false;
 		}
@@ -922,14 +929,18 @@ Messages.prototype = {
 						replace('[TO_NAME]', 		toUser)								//message To name
 					);	
 
+					ids.push(messageList[i]['b:MessageGUID']);
+
+					swipeDelete(messageList[i]['b:MessageGUID']);
 				}
 				//get the current GUID (prevent duplicate)
 				currentGUID = messageList[i]['b:MessageGUID'];
 			}
 		}
-
+	
 		$('#wrapper').show();
-
+		
+		populateArchive(ids);
 	}, 
 	send : function(subject, content, priority, recipients, guid) {
 		//get Token
@@ -1775,6 +1786,9 @@ Messages.prototype = {
 	 * @return mixed
 	 */
 	delete : function(guid, type) {
+		$('#loading-ajax #text').html('Deleting Message');
+		$('#loading-ajax').popup('open');
+		
 		//get Token
 		window.user.getToken(window.username, window.password, function(soapResponse){
 			
@@ -1783,9 +1797,6 @@ Messages.prototype = {
 		 	var response 	= json['s:Envelope']['s:Body']['LoginCaregiverPortalResponse']['LoginCaregiverPortalResult'];
 		 	var token 		= response['a:Token'];
 		
-			$('#loading-ajax #text').html('Deleting Message');
-			$('#loading-ajax').popup('open');
-
 			var xml = 
 			['<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:heal="http://schemas.datacontract.org/2004/07/HealthCareAssistant" xmlns:hsim="http://schemas.datacontract.org/2004/07/HSIMessageExchange">',
 				'<soapenv:Header/>',
@@ -1827,10 +1838,14 @@ Messages.prototype = {
          		_string.lock(newData, type);
 
 	            //now display it
-	            window.messages.get(type,10,1);
+	           // window.messages.get(type,10,1);
 
 	            localStorage.setItem('Deleted', '');
-	            $('#message-list').scrollz('hidePullHeader');
+
+	            $('#message-list').css('pointer-events', 'all');
+	            $('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
+				$('#delete_'+guid).hide(500);
+				$('#'+guid).hide(800);
 			});
 		});
 
@@ -1954,7 +1969,9 @@ Messages.prototype = {
 	        	if(manual == 1) {
 	        		$('#message-list').scrollz('hidePullHeader');
 	        	}
-
+	        	$('#pullDown').hide();
+	        	$('#message-archive').show();
+	        	
 	            var results 	= soapResponse.toString(); 
 	            var json 		= $.xml2json(results);
 	            var data 		= json['s:Envelope']['s:Body']['RetrieveMessagesResponse']['RetrieveMessagesResult']['a:MessagesResult']['b:MessageLabel'];
@@ -2003,12 +2020,14 @@ Messages.prototype = {
 				 					//and display
 				 					$('#'+type+' span.badge').html(plus);
 				 					$('#folder-name').html($('#'+type).html());
+				 					window.plugin.notification.badge.set(plus);
 				 				//else if count is zero
 				 				} else {
 				 					//just add one
 				 					$('#'+type+' span.badge').html('1');
 				 					//and display
 				 					$('#folder-name').html($('#'+type).html());
+				 					window.plugin.notification.badge.set(1);
 				 				}
 
 				 				//lock and save
@@ -2064,12 +2083,14 @@ Messages.prototype = {
 			 					//and display
 			 					$('#'+type+' span.badge').html(plus);
 			 					$('#folder-name').html($('#'+type).html());
+			 					window.plugin.notification.badge.set(plus);
 			 				//else if count is zero	
 			 				} else {
 			 					//just add one
 			 					$('#'+type+' span.badge').html('1');
 			 					//and display
 			 					$('#folder-name').html($('#'+type).html());
+			 					window.plugin.notification.badge.set(1);
 			 				}
 			 				
 			 				//lock and save

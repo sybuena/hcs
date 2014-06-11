@@ -42,6 +42,7 @@ window.online  			= true;
 window.start 			= false;
 window.username 		= localStorage.getItem('username');
 window.password 		= localStorage.getItem('password');
+window.snapper;
 //scroll message listing up/dowm parameters
 window.startCount		= 20;		
 window.iscroll;
@@ -51,10 +52,46 @@ var	currentImg 			= 0;
 var	maxImages 			= 3;
 var	speed				= 500;
 		
-		
-function swipeDelete() {
+function populateArchive(ids) {
+	setTimeout(loaded, 200);
+	//clean content
+	
+	setTimeout(function() {
+		for(i in ids) {
+			var height = $("#"+ids[i]).css('height');
+			
+			
 
-	$('.go-detail').swipe({
+			$('#message-archive').append(
+				'<div id="delete_'+ids[i]+'" class="row" style="height:'+height+'">'+
+	            '<div class="col-xs-6 col-sm-6"></div>'+
+	            '<div class="delete-swipe col-xs-6 col-sm-6">'+
+	            '<a href="#" onclick="tasteTheVictory.call(this,event)" id="'+ids[i]+'"><i class="fa fa-trash-o fa-2x center-swipe"></i></a>'+
+	            '</div></div>');
+		}
+	}, 200);
+
+	
+}	
+
+function tasteTheVictory(e) {
+	$('#message-archive').attr('isOpen', 'true');
+	
+	var guid = $(this).attr('id');
+	var type 	= $('ul.nav-stacked li.active a.left-navigation').attr('id');
+	
+	window.messages.delete(guid, type);
+	
+	window.snapper.enable();
+
+	console.log(guid+' delete now')
+	return false;
+}
+
+function swipeDelete(uid) {
+
+	//make this guys always unique
+	$('#'+uid).swipe({
 		triggerOnTouchEnd 	: true,
 		triggerOnTouchLeave : true,
 		allowPageScroll 	: 'vertical',
@@ -62,74 +99,125 @@ function swipeDelete() {
 			//get the GUID pf the current div
 			var id 		= $(this).attr('id');
 			var width 	= parseInt($(this).css('width'))/5;
-			console.log(event.pageX);
-			//alert(width)
-			//if(event.x > width) {
+			
+			//disable click on all child of archive 
+			$('#message-archive .delete-swipe a').css('pointer-events', 'none');
+			//enable specific click
+			$('#message-archive #delete_'+id+' .delete-swipe a').css('pointer-events', 'all');
+			
+			//done process if drag up or down
+			if(direction != 'up' && direction != 'down' && direction != 'right') {
+				
 				//If we are moving before swipe, and we are going L or R, then manually drag the images
-				if(phase == "move" && (direction == "left" || direction == "right") ) {
+				if(phase == "move" && direction == "left") {
+					//unset all div 1st
+					$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
 					var duration = 0;
 					//if swipe to the left
 					if(direction == "left") {
 						swipelisting((defaultWidth * currentImg) + distance, duration, id, direction, phase);
 					//else it is to the right
 					} else if (direction == "right") {
-						swipelisting((defaultWidth * currentImg) - distance, duration, id, direction, phase);
+						//swipelisting((defaultWidth * currentImg) - distance, duration, id, direction, phase);
 					}	
 				//else, cancel means snap back to the begining
 				} else if (phase == "cancel") {
-					
-					swipelisting(defaultWidth * currentImg, speed, id, direction, phase);
+					//swipelisting(defaultWidth * currentImg, speed, id, direction, phase);
+					swipelisting((defaultWidth * currentImg) + distance, speed, id, direction, phase);	
 				//else end means the swipe was completed, so move to the next image
-				} else if (phase =="end" ) {
+				} else if (phase == "end" ) {
 					//on touch end
-					swipelisting((defaultWidth * currentImg) - distance, speed, id, direction, phase);	
-					
+					swipelisting((defaultWidth * currentImg) + distance, speed, id, direction, phase);	
 				}
-			//}
+			//on dragging up or down	
+			} else {
+				$('#message-list').css('pointer-events', 'all');
+				//unset all div in listing
+				$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
+				//enable dragging left panel
+				window.snapper.enable();
+				
+			}
 		},
-		swipeLeft : function(event, phase, direction, distance, fingers) {
-			
-		}
+		
 	}); 
 }
 
 /**
  * Manually update the position of the div on drag
  */
-function swipelisting(distance, duration, id, direction,phase) {
-	//do some math
-	var limit 	= parseInt($('#'+id).css('width')) / 2;	
-	//inverse the number we set in the css
-	var value = (distance<0 ? "" : "-") + Math.abs(distance).toString();
+function swipelisting(distance, duration, id, direction, phase) { 
 	
-	//if drag value is bigger than limit and drag end
-	if(Math.abs(value) > limit && phase == 'end') {
-		//remove the div from the listing
-		$('#'+id).hide(500);
-	//if drag end but not more than the limit	
+	var value 	= (distance < 0 ? "" : "-") + Math.abs(distance).toString();
+	//get the width of the current div then divided by two as limit
+	var limit 	= (parseInt($('#'+id).css('width')) / 2);
+	var width 	= (parseInt($('#'+id).css('width')) / 4);
+	
+
+	if(phase == 'start') {
+		
+		
+		//$('#delete_'+id).show();
+		$('#message-list').css('pointer-events', 'all');
+		$('.go-detail').css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
+		//slide to the limit
+		$('.go-detail').css("-webkit-transform", "translate3d(-"+limit+"px,0px,0px)");
+		//on touch end or leave
 	} else if(phase == 'end') {
+
+		$('#message-list').css('pointer-events', 'all');
 		//animate
 		$('#'+id).css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
-		//slide to the beginning
+		//if less than limit
+		if(Math.abs(value) < width) {
+			window.snapper.enable();
+			//$('#delete_'+id).hide();
+			//slide to the beginning
+			$('#'+id).css("-webkit-transform", "translate3d(0px,0px,0px)");
+		//if hit the limit
+		} else {
+			//slide to the limit
+			$('#'+id).css("-webkit-transform", "translate3d(-"+limit+"px,0px,0px)");
+			//prevent click 
+			$('#message-list').css('pointer-events', 'none');
+			//disable dragging left panel
+			window.snapper.disable();
+		}
+
+		
+		
+	} else if(phase == 'cancel'){
+		$('#'+id).css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
 		$('#'+id).css("-webkit-transform", "translate3d(0px,0px,0px)");
+		//enable left panel
+		window.snapper.enable();
+
 	} else {
+		
+		
+		
+		$('#message-list').css('pointer-events', 'all');
 		//animate
 		$('#'+id).css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
 		//follow the touch event in div
 		$('#'+id).css("-webkit-transform", "translate3d("+value +"px,0px,0px)");
-	}
-}
+		//console.log(value);
+		//$('#d_'+id).css('width', Math.abs(value)++);
+		window.snapper.enable();
+
+		$('#message-list').css('pointer-events', 'all');	
+	} 
+};
 
 function pullDownAction () {
 	
 	//get the active listing
-	var type 	= $('ul.nav-stacked li.active a.left-navigation').attr('id');
+	var type = $('ul.nav-stacked li.active a.left-navigation').attr('id');
 	
     //now make request to backend
     window.messages.checkInbox(type, 1);
-	
-	window.messageList[type] = _string.unlock(type);		
-	
+				
+	window.messageList[type] = _string.unlock(type);			
 }
 
 function pullUpAction () {
@@ -144,8 +232,7 @@ function pullUpAction () {
 	window.iscroll.refresh();		
 	//On click message listing then load message detail
 	//base on Message GUID
-	onClickDetail(type);
-	
+	onClickDetail(type);	
 }
 
 /**
@@ -173,8 +260,29 @@ function loaded() {
 					pullUpEl.querySelector('.pullUpLabel').innerHTML = '';
 				}
 			},
+			onScrollStart : function() {
+				window.snapper.enable();
+				//$('#message-archive div').hide();
+
+				//$('#message-list').css('pointer-events', 'all');
+				//var open = $('#message-archive').attr('isOpen');
+				//console.log('start');
+				//if(open == 'false') {
+					//$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
+					//$('#message-list').css('pointer-events', 'all');	
+				//}
+				
+				
+				
+			},
 			onScrollMove 	: function () {
+
+				//$('#message-archive div').hide();
+				$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
+				$('#message-list').css('pointer-events', 'all');
 				if (this.y > 5 && !pullDownEl.className.match('flip')) {
+					$(pullDownEl).show();
+					$('#message-archive').hide();
 					pullDownEl.className = 'flip';
 					pullDownEl.querySelector('.pullDownLabel').innerHTML = '';
 					this.minScrollY = 0;
@@ -196,6 +304,7 @@ function loaded() {
 				}
 			},
 			onScrollEnd 	: function () {
+				
 				if (pullDownEl.className.match('flip')) {
 					pullDownEl.className = 'loading';
 					pullDownEl.querySelector('.pullDownLabel').innerHTML = '';				
@@ -212,8 +321,8 @@ function loaded() {
 		}
 		
 		//execute message listing
-		window.iscroll = new iScroll('wrapper', option);
-		
+		window.iscroll = new iScroll('wrapper', option);	
+
 	}
 }
 
@@ -225,7 +334,6 @@ function loaded() {
 document.addEventListener('touchmove', function (e) { 
 	e.preventDefault(); 
 }, false);
-
 
 function init() {
 	/* -----------------------------------------
@@ -284,10 +392,13 @@ function bind() {
   	//else if there is a user	
   	} else {
   		
+  		$('#pullDown').hide();
+  		
   		//only add event listener to DOM if user is login
 		document.addEventListener('DOMContentLoaded', function () { 
 
 			setTimeout(loaded, 200); 
+			
 		}, false);
 
 		//get the login username
@@ -312,7 +423,7 @@ function bind() {
   		window.contactList = window.users = _string.unlock('contactList');
 
   		//left panel toggle initialization
-  		var snapper = new Snap({
+  		window.snapper = new Snap({
 		  //core content
 		  element: document.getElementById('content')
 		});
@@ -324,7 +435,7 @@ function bind() {
   		window.messages.get('Inbox', 10, 0);
 
   		//show main page
-  		mainPage(snapper,loginUser);
+  		mainPage(window.snapper,loginUser);
 
   		//check Inbox only if there is connection
 		if(window.connection) { 
@@ -393,7 +504,9 @@ function checkOutbox() {
  *
  */
 function onClickDetail(type) {
+	
 
+	//on tap message in listing
 	$('.go-detail').bind('tap', function(e) {
 		//prevent double click
 		e.stopPropagation();
@@ -411,8 +524,11 @@ function onClickDetail(type) {
 			if(count != 0) {
 				//do the math
 				var plus = parseInt(count) - 1;
+
 				$('#Inbox span.badge').html(plus);
 				$('#folder-name').html($('#Inbox').html());
+				
+				window.plugin.notification.badge.set(plus);
 			}
 
 			$(this).css('background-color', '#E4E4E4');
@@ -435,50 +551,7 @@ function onClickDetail(type) {
 		window.messages.getDetail(id, type, unread);
 
 		return false;
-	});
-
-	/*$('.go-detail').click(function(e) {
-		//prevent double click
-		e.stopPropagation();
-		e.preventDefault();
-		
-		//get the GUID of the message
-		var id 		= $(this).attr('id');
-		var unread 	= $(this).attr('unread');
-
-		//check if message is unread
-		if(unread == 'true') {
-			//count the current unread message
-			var count = $('#Inbox span.badge').html();
-			//only process if there is unread message	
-			if(count != 0) {
-				//do the math
-				var plus = parseInt(count) - 1;
-				$('#Inbox span.badge').html(plus);
-				$('#folder-name').html($('#Inbox').html());
-			}
-
-			$(this).css('background-color', '#E4E4E4');
-			$(this).css('font-weight', 'none');
-		}
-
-		//prepare UI for detail page
-		$('#message-detail').hide();
-		$('.message-elem').hide();
-		
-		//main loading
-		mainLoader('start');
-
-		//do ajax call and show detail page
-		//if message detail is already saved it 
-		//the local storage, then just get the saved
-		//local data but if not saved then make 
-		//SOAP request to get message datail and save 
-		//to local storage
-		window.messages.getDetail(id, type, unread);
-
-		return false;
-	});*/
+	});	
 }
 /**
  * This guy will run checkInbox function every 
@@ -947,13 +1020,13 @@ function mainPage(snapper, loginUser) {
 	 */
 	$('.deploy-sidebar').click(function(){
 		//if panel already active	
-		if(snapper.state().state=="left" ){
+		if(window.snapper.state().state=="left" ){
 			//close it
-			snapper.close();
+			window.snapper.close();
 		//else 	
 		} else {
 			//open it
-			snapper.open('left');
+			window.snapper.open('left');
 			$('#sidebar').show();
 		}
 
@@ -972,7 +1045,7 @@ function mainPage(snapper, loginUser) {
 	 */
 	$('.left-navigation').click(function() {
 		//close left panel
-		snapper.close();
+		window.snapper.close();
 			
 		$('.no-connection').hide();
 		//hide send message icon
@@ -1060,7 +1133,7 @@ function mainPage(snapper, loginUser) {
 	$('#compose-message').click(function() { 
 		$('#folder-name').html('Compose');
 		//close snapper/left panel
-		snapper.close();
+		window.snapper.close();
 		//prepare compose fields
 		compose();
 		//handle message sending
@@ -1672,4 +1745,28 @@ function pullDown() {
 	});
 }
 */
+
+/*function swipelisting(distance, duration, id, direction,phase) {
+	//do some math
+	var limit 	= parseInt($('#'+id).css('width')) / 2;	
+	//inverse the number we set in the css
+	var value = (distance<0 ? "" : "-") + Math.abs(distance).toString();
+	
+	//if drag value is bigger than limit and drag end
+	if(Math.abs(value) > limit && phase == 'end') {
+		//remove the div from the listing
+		$('#'+id).hide(500);
+	//if drag end but not more than the limit	
+	} else if(phase == 'end') {
+		//animate
+		$('#'+id).css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
+		//slide to the beginning
+		$('#'+id).css("-webkit-transform", "translate3d(0px,0px,0px)");
+	} else {
+		//animate
+		$('#'+id).css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
+		//follow the touch event in div
+		$('#'+id).css("-webkit-transform", "translate3d("+value +"px,0px,0px)");
+	}
+}*/
 
