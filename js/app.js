@@ -365,7 +365,9 @@ function loaded() {
  *
  */
 document.addEventListener('touchmove', function (e) { 	
- 	e.preventDefault();
+ 	if(e.srcElement.type !== "textarea"){ 
+        e.preventDefault();
+    } 
     
 }, false);
 

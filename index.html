@@ -286,7 +286,8 @@
               <label>Message : </label>
                 <textarea onclick="resize(this);" onkeyup="resize(this);" 
 onscroll="resize(this);" onblur="resize(this);" cols="28" rows="17" 
-onchange="resize(this);"style="height: 100px" data-role="none" class="form-control" id="compose-content" placeholder="Message Content">
+onchange="resize(this);"style="height: 100px;overflow:auto;overflow-y: scroll; 
+-webkit-overflow-scrolling: touch;" data-role="none" class="form-control" id="compose-content" placeholder="Message Content">
                 </textarea>
             </div>
           </div>
