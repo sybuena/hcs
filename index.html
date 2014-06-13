@@ -5,9 +5,8 @@
     <!--<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, target-densitydpi=device-dpi" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">-->
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, minimum-scale=1, width=device-width" />
+    <meta name="viewport" content="user-scalable=yes, initial-scale=1, minimum-scale=1, width=device-width" />
   <title>HCS Messenger</title>
-  <link rel="stylesheet" href="pull-down/jquery.scrollz.css" >
   <link rel="stylesheet" type="text/css" href="jmobile/css/jquery.mobile.flatui.css" />
   <link rel="stylesheet" href="boot/css/bootstrap.css" />
   <link rel="stylesheet" href="font-awesome/css/font-awesome.css" />
@@ -243,59 +242,61 @@
     </div> 
     
     <!--  COMPOSE -->
-    <div id="message-compose" class="message-elem display-none">
+    <div id="message-compose" class="message-elem display-none" style="height: 100% !important;">
+
       <div  id="scroller2">
-      <div class="compose-message-box error-label display-none"></div>
+        
+        <div class="compose-message-box error-label display-none"></div>
+        
+        <div id="message-compose-under">
+          <!-- compose to -->  
+          <div class="form-group"  style="height:auto">
+            <div class="col-sm-12">
+              <label>To : </label>
+              <div class="warning-holder"></div>
+              <div class="to-holder"></div>
+              <div class="clearfix"></div>
+              <ul id="compose-contact-list" data-role="listview" data-inset="true" data-filter="true" data-filter-reveal="true" data-filter-placeholder="Search contacts...">
+              </ul>
+            </div>
+          </div>
+
+          <!-- compose subject -->
+          <div class="form-group"  style="height:auto">
+            <div class="col-sm-12">
+              <label>Subject : </label>
+              <input type="text" class="" id="compose-subject" placeholder="Message Subject">
+            </div>
+          </div>
+
+          <!-- compose priority -->  
+          <div class="form-group"  style="height:auto">
+            <div class="col-sm-12">
+              <label>Priority : </label>
+              <select class="" id="compose-important">
+                <option value="0">Normal</option>
+                <option value="1">High</option>
+              </select>  
+            </div>
+          </div>
+
+          <!-- compose content -->
+          <div class="form-group"  style="height:auto">
+            <div class="col-sm-12">
+              <label>Message : </label>
+                <textarea onclick="resize(this);" onkeyup="resize(this);" 
+onscroll="resize(this);" onblur="resize(this);" cols="28" rows="17" 
+onchange="resize(this);"style="height: 100px" data-role="none" class="form-control" id="compose-content" placeholder="Message Content">
+                </textarea>
+            </div>
+          </div>
+
+
+        </div>
+        
+        
+      </div>
       
-      <div role="form">
-        <!-- compose to -->  
-        <div class="form-group">
-          <div class="col-sm-12">
-            <label>To : </label>
-            <div class="warning-holder"></div>
-            <div class="to-holder"></div>
-            <div class="clearfix"></div>
-            <ul id="compose-contact-list" data-role="listview" data-inset="true" data-filter="true" data-filter-reveal="true" data-filter-placeholder="Search contacts...">
-            </ul>
-          </div>
-        </div>
-        <!-- compose subject -->
-        <div class="form-group">
-          <div class="col-sm-12">
-            <label>Subject : </label>
-            <input type="text" class="" id="compose-subject" placeholder="Message Subject">
-          </div>
-        </div>
-        <!-- compose priority -->  
-        <div class="form-group">
-          <div class="col-sm-12">
-            <label>Priority : </label>
-            <select class="" id="compose-important">
-              <option value="0">Normal</option>
-              <option value="1">High</option>
-            </select>  
-          </div>
-        </div>
-        <!-- compose content -->
-        <div class="form-group">
-          <div class="col-sm-12">
-            <label>Message : </label>
-            
-              <textarea 
-              style="
-                min-height: 100px;
-                overflow: auto;
-                resize:none;
-                overflow-y:scroll;
-              " 
-              data-role="none" class="form-control" id="compose-content" placeholder="Message Content"></textarea>
-            
-          </div>
-        </div>
-
-      </div>
-      </div>
-
     </div>  
 
 
@@ -405,13 +406,11 @@
   <script type="text/javascript" src="encrypt/aes.js"></script>
   <script type="text/javascript" src="encrypt/enc-base64-min.js"></script>
   <script type="text/javascript" src="js/jquery.autosize.min.js"></script>
-  <script type="text/javascript" src="pull-down/jquery.scrollz.js"></script>
   <script type="text/javascript" src="js/moment.min.js"></script>
   <script type="text/javascript" src="js/jquery.shorten.min.js"></script>
   <script type="text/javascript" src="js/iscroll.js"></script>
   <script type="text/javascript" src="js/flowtype.js"></script>
   <script type="text/javascript" src="js/touchSwipe.js"></script>
-  <script type="text/javascript" src="js/jquery.nicescroll.js"></script>
   
   <script>
     $(document).bind("mobileinit", function() {

@@ -46,6 +46,7 @@ window.snapper;
 //scroll message listing up/dowm parameters
 window.startCount		= 20;		
 window.iscroll;
+window.composePage;
 //swipe message listing paramaters
 var defaultWidth 		= 500;
 var	currentImg 			= 0;
@@ -66,7 +67,7 @@ function populateArchive(ids) {
 				'<div id="delete_'+ids[i]+'" class="row" style="height:'+height+'">'+
 	            '<div class="col-xs-6 col-sm-6"></div>'+
 	            '<div class="delete-swipe col-xs-6 col-sm-6">'+
-	            '<a href="#" onclick="tasteTheVictory.call(this,event)" id="'+ids[i]+'"><i class="fa fa-trash-o fa-2x center-swipe"></i></a>'+
+	            '<a href="#" onclick="deleteSwipe.call(this,event)" id="'+ids[i]+'"><i class="fa fa-trash-o fa-2x center-swipe"></i></a>'+
 	            '</div></div>');
 		}
 	}, 200);
@@ -74,7 +75,7 @@ function populateArchive(ids) {
 	
 }	
 
-function tasteTheVictory(e) {
+function deleteSwipe(e) {
 	$('#message-archive').attr('isOpen', 'true');
 	
 	var guid = $(this).attr('id');
@@ -144,6 +145,7 @@ function swipeDelete(uid) {
 
 /**
  * Manually update the position of the div on drag
+ *
  */
 function swipelisting(distance, duration, id, direction, phase) { 
 	
@@ -181,8 +183,6 @@ function swipelisting(distance, duration, id, direction, phase) {
 			window.snapper.disable();
 		}
 
-		
-		
 	} else if(phase == 'cancel'){
 		$('#'+id).css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
 		$('#'+id).css("-webkit-transform", "translate3d(0px,0px,0px)");
@@ -216,9 +216,9 @@ function pullDownAction () {
 
 function addOne() {
 	
-	var type 	= $('ul.nav-stacked li.active a.left-navigation').attr('id');
-	var end 	= window.startCount;
-	window.startCount = window.startCount + 1;
+	var type 			= $('ul.nav-stacked li.active a.left-navigation').attr('id');
+	var end 			= window.startCount;
+	window.startCount 	= window.startCount + 1;
 	
 	window.messages.pullDown(window.messageList[type], type, window.startCount, end);	
 	
@@ -231,9 +231,9 @@ function addOne() {
 
 function pullUpAction () {
 	
-	var type 	= $('ul.nav-stacked li.active a.left-navigation').attr('id');
-	var end 	= window.startCount;
-	window.startCount = window.startCount + 10;
+	var type 			= $('ul.nav-stacked li.active a.left-navigation').attr('id');
+	var end 			= window.startCount;
+	window.startCount 	= window.startCount + 10;
 	
 	window.messages.pullDown(window.messageList[type], type, window.startCount, end);	
 	
@@ -271,24 +271,39 @@ function loaded() {
 			},
 			onScrollStart : function() {
 				$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
-
+				
 			},
 			onScrollMove 	: function () {
+				//check where page we are
+				var currentPage = $('.current-page').attr('id');
+				
+				if(currentPage == 'compose') {
+					
+					//return false;
+				}
+				
 				window.snapper.enable();
-				//$('#message-archive div').hide();
+
 				$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
 				$('#message-list').css('pointer-events', 'all');
+
 				if (this.y > 5 && !pullDownEl.className.match('flip')) {
 					$(pullDownEl).show();
+					//hide the swipe delete icons behind the message listing
 					$('#message-archive').hide();
+
 					pullDownEl.className = 'flip';
 					pullDownEl.querySelector('.pullDownLabel').innerHTML = '';
 					this.minScrollY = 0;
+
 				} else if (this.y < 5 && pullDownEl.className.match('flip')) {
+
 					pullDownEl.className = '';
 					pullDownEl.querySelector('.pullDownLabel').innerHTML = '';
 					this.minScrollY = -pullDownOffset;
+				
 				} else if (this.y < (this.maxScrollY - 5) && !pullUpEl.className.match('flip')) {
+				
 					pullUpEl.className = 'flip';
 					pullUpEl.querySelector('.pullUpLabel').innerHTML = '';
 					this.maxScrollY = this.maxScrollY;
@@ -302,6 +317,14 @@ function loaded() {
 				}
 			},
 			onScrollEnd 	: function () {
+				
+				//check where page we are
+				var currentPage = $('.current-page').attr('id');
+				
+				if(currentPage == 'compose') {
+					
+					return false;
+				}
 				
 				if (pullDownEl.className.match('flip')) {
 					pullDownEl.className = 'loading';
@@ -320,8 +343,18 @@ function loaded() {
 		
 		//execute message listing
 		window.iscroll = new iScroll('wrapper', option);
-		compo = new iScroll('message-compose', option);
 
+		/*window.composePage = new iScroll('message-compose', option);
+
+		composePage.options.onBeforeScrollStart = function(e) {                
+	        var target = e.target;
+	        
+	        while (target.nodeType != 1) target = target.parentNode;
+	        if (target.tagName != 'SELECT' && target.tagName != 'INPUT' && target.tagName != 'TEXTAREA'){
+	            e.preventDefault();
+	        }
+	   	}*/
+	   	
 
 	}
 }
@@ -331,11 +364,9 @@ function loaded() {
  * Fixed for IOS position : fixed
  *
  */
-document.addEventListener('touchmove', function (e) { 
-
-	if(e.srcElement.type !== "textarea"){ 
- //       e.preventDefault();
-    } 
+document.addEventListener('touchmove', function (e) { 	
+ 	e.preventDefault();
+    
 }, false);
 
 function init() {
@@ -731,6 +762,7 @@ function compose() {
 	$('.loading-messages').hide();
 	$('.message-elem').hide();
 	$('#message-compose').show();
+
 	$('.to-holder').html('');
 	$('#compose-subject').val('');
 	$('#compose-content').val('');
@@ -740,10 +772,11 @@ function compose() {
 	$('.warning-holder').html('');
 	$('#compose-contact-list').html('');
 
+
 	//this guys makes teh TEXTAREA of message content 
 	//a responsive textarea (jquery plugin)...
-	$('#compose-content').autosize();   	
-	
+	//$('#compose-content').autosize();   
+
 	var typingTimer;                //timer identifier
 	var doneTypingInterval = 1000;
 	
@@ -754,11 +787,8 @@ function compose() {
 	    }
 	});
 
+		
 	function doneTyping () {
-
-	    //do something
-	   	//$('#compose-content').css('height', '500px !important');
-	    //$('#compose-content').css('overflow', 'auto !important');	    
 		
 	}
 
@@ -806,6 +836,17 @@ function compose() {
 		return false;
 	});
 }
+
+	function resize(t) { 
+	    a = t.value.split('\n'); 
+	    b=1; 
+	    for (x=0;x < a.length; x++) { 
+	        if (a[x].length >= t.cols) b+= Math.floor(a[x].length/ 
+	t.cols); 
+	    } 
+	    b+= a.length; 
+	    if (b > t.rows) t.rows = b; 
+	} 
 
 /**
  * Load if you need to populate 
@@ -1075,8 +1116,6 @@ function mainPage(snapper, loginUser) {
 		$(this).parent().addClass('active');
 		//show loading it main content
 		$('.loading-messages').show();
-		//hide the pull to refresh element
-		$('.scrollz-container').hide();
 		//hide detail page
 		$('#message-detail').hide();
 		//hide compose page
@@ -1316,15 +1355,11 @@ function checkConnection() {
 		   ---------------------------------*/
 		//stop all loading stuff in the main page 
 		mainLoader('stop');
-		
-		$('#message-list').scrollz('hidePullHeader');
-		
-		var list 	= $('.scrollz-container').css('display');
 		var detail 	= $('#message-detail').css('display');
 		var currentPage = $('.current-page').attr('id');
 		
 		//if no elemet in the field
-		if(list == 'none' && detail == 'none' && currentPage != 'compose') {
+		if(detail == 'none' && currentPage != 'compose') {
 			$('.current-page').attr('id', 'list');
 			//show no connection icon	
 			$('.no-connection').show();
@@ -1380,15 +1415,11 @@ function backEvent() {
 			$('#draft-modal').modal('hide');
 			$('#process-send').hide();	
 			
-			//go back to the previous listing
-			$('.scrollz-container').show();
 			window.messages.get(parentPage, 20, 1);
-			$('#message-list').scrollz('hidePullHeader');
-
+			
 			return false;
 		}
 		
-		$('.scrollz-container').hide();
 		//show dialog
 		$('#draft-modal').modal('show');
 
@@ -1422,10 +1453,7 @@ function backEvent() {
 			$('#process-send').hide();	
 			
 			//go back to the previous listing
-			$('.scrollz-container').show();
 			window.messages.get(parentPage, 20, 1);
-			$('#message-list').scrollz('hidePullHeader');
-	 		
 		});
 
 		return false;
@@ -1447,7 +1475,6 @@ function backEvent() {
 		//checkConnection();
 		//go back to Inbox
 		window.messages.get('Inbox', 20, 1);
-		$('#message-list').scrollz('hidePullHeader');
 
 		return false;
 
@@ -1686,6 +1713,8 @@ document.addEventListener('deviceready', function() {
 			 maxFont   : 15,
 			 fontRatio : 30
 		});
+		
+		document.body.style.height = screen.availHeight + 'px';
 
 		//$("#message-compose").niceScroll();
 		//$("#compose-content").niceScroll();

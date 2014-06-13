@@ -1131,7 +1131,7 @@ Messages.prototype = {
 					//unsent sent item so it can load again
 					localStorage.setItem('Sent', '');
 					window.messages.get('Inbox', 10, 0);
-					$('#message-list').scrollz('hidePullHeader');
+					
 
          		} else {
          			notification('Message not send');
@@ -1325,7 +1325,6 @@ Messages.prototype = {
 
 					//go back to Inbox
 					window.messages.get('Inbox', 10, 1);
-					$('#message-list').scrollz('hidePullHeader');
 
          		} else {
          			notification('Message not save in draft');
@@ -1906,7 +1905,7 @@ Messages.prototype = {
 	            localStorage.setItem('Inbox', '');
 	            localStorage.setItem('Draft', '');
 	            localStorage.setItem('Sent', '');
-	            $('#message-list').scrollz('hidePullHeader');
+	            
 			});
 			
 		});
@@ -1966,10 +1965,7 @@ Messages.prototype = {
 	        ];
 
 	        _SOAP.post('RetrieveMessages', xml, function(soapResponse) { 
-	        	
-	        	if(manual == 1) {
-	        		$('#message-list').scrollz('hidePullHeader');
-	        	}
+	        
 	        	$('#pullDown').hide();
 	        	$('#message-archive').show();
 

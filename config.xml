@@ -26,6 +26,7 @@
     <preference name="android-installLocation" value="auto" />
     <preference name="DisallowOverscroll" value="false" />
     <preference name="StatusBarOverlaysWebView" value="true" />
+    <preference name="KeyboardShrinksView" value="true" />
     <!-- Plugin -->
     <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" />
     <gap:plugin name="de.appplant.cordova.plugin.local-notification" />
