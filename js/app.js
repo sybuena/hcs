@@ -58,18 +58,23 @@ function populateArchive(ids) {
 	//clean content
 	
 	setTimeout(function() {
+		var currentId;
+		var counter = 0;	
 		for(i in ids) {
 			var height = $("#"+ids[i]).css('height');
 			
-			
-
-			$('#message-archive').append(
-				'<div id="delete_'+ids[i]+'" class="row" style="height:'+height+'">'+
-	            '<div class="col-xs-6 col-sm-6"></div>'+
-	            '<div class="delete-swipe col-xs-6 col-sm-6">'+
-	            '<a href="#" onclick="deleteSwipe.call(this,event)" id="'+ids[i]+'"><i class="fa fa-trash-o fa-2x center-swipe"></i></a>'+
-	            '</div></div>');
+			if(currentId != ids[i]) {	
+				$('#message-archive').append(
+					'<div id="delete_'+ids[i]+'" class="row" style="height:'+height+'">'+
+		            '<div class="col-xs-6 col-sm-6"></div>'+
+		            '<div class="delete-swipe col-xs-6 col-sm-6">'+
+		            '<a href="#" onclick="deleteSwipe.call(this,event)" id="'+ids[i]+'"><i class="fa fa-trash-o fa-2x center-swipe"></i></a>'+
+		            '</div></div>');
+			}
+			counter++;
+			var currentId = ids[i];
 		}
+		console.log(counter);
 	}, 200);
 
 	
@@ -1454,18 +1459,20 @@ function backEvent() {
 		});
 	
 		//on click Discard
-		$('#cancel-draft').click(function() {
-			
+		$('#cancel-draft').unbind().click(function(e) {
+			e.preventDefault();
+			e.stopPropagation();
 			$('#draft-modal').modal('hide');
 			$('#process-send').hide();	
 
 			//unset pagination whenevery changing to another
 			//message listing
 			window.startCount = 10;
-
+			
 			//get message list according on what
 			//user clicked on the LI left panel
 	  		window.messages.get(parentPage, 15, 1);
+	  		return false;
 		});
 
 		return false;
@@ -1493,12 +1500,12 @@ function backEvent() {
  	//else it is not in Inbox listing	
  	} else {
  		//unset pagination whenevery changing to another
-			//message listing
-			window.startCount = 10;
+		//message listing
+		window.startCount = 10;
 
-			//get message list according on what
-			//user clicked on the LI left panel
-	  		window.messages.get(parentPage, 15, 1);
+		//get message list according on what
+		//user clicked on the LI left panel
+  		window.messages.get(parentPage, 15, 1);
  	}  
 }
 
@@ -1649,9 +1656,9 @@ var _SOAP = (function() {
 document.addEventListener('deviceready', function() {	
 	
 	//Enables the background mode. The app will not pause while in background.
-	window.plugin.backgroundMode.enable();
+	//window.plugin.backgroundMode.enable();
 	//unset badge
-	window.plugin.notification.badge.set(0);
+	//window.plugin.notification.badge.set(0);
 	
 	navigator.geolocation.getCurrentPosition(
 		//do nothing

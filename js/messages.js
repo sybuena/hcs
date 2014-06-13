@@ -426,12 +426,12 @@ Messages.prototype = {
          			window.messageList[type] = raw;
          		}	
          		
-         		if(window.messageList[type].length < 10) {
+         		/*if(window.messageList[type].length < 10) {
          				minus = minus + 7;
          				console.log(minus);
 						window.messages.loadAgain(minus, type);
          				return false;
-         		}
+         		}*/
 
 	            //now display it
 	            window.messages.displayMessage(raw, type, start, end, 1);
@@ -792,9 +792,10 @@ Messages.prototype = {
 							replace('[IMPORTANT]', 		star).								//message priority (star)
 							replace('[IMPORTANT2]', 	star).								//message priority (star)
 							replace('[FROM_NAME]', 		fromName).							//message From name
-							replace('[TO_NAME]', 		toUser));
-														//message To name
+							replace('[TO_NAME]', 		toUser)); 							//message To name
+
 						ids.push(messageList[i]['b:MessageGUID']);
+
 						swipeDelete(messageList[i]['b:MessageGUID']);		
 					}
 					//get the current GUID (prevent duplicate)
@@ -837,9 +838,11 @@ Messages.prototype = {
 
 		$('#wrapper').show();
 
+		console.log(ids.length+' --> displayed');
+		console.log(start+' --> start');
+		console.log('----------------------------');
+		
 		populateArchive(ids);
-		
-		
 		
 	},
 	pullDown : function(messageList,type, start, end) {
@@ -938,7 +941,7 @@ Messages.prototype = {
 				currentGUID = messageList[i]['b:MessageGUID'];
 			}
 		}
-	
+		
 		$('#wrapper').show();
 		
 		populateArchive(ids);
@@ -1840,13 +1843,20 @@ Messages.prototype = {
 	            //now display it
 	           // window.messages.get(type,10,1);
 	           localStorage.setItem('Deleted', '');
+	           	
+	           	var currentPage = $('.current-page').attr('id');
+	        	
+	        	if(currentPage == 'home') {
+		            $('#message-list').css('pointer-events', 'all');
+		           // $('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
+					$('#delete_'+guid).hide(500);
+					$('#'+guid).hide(800);
 
-	            $('#message-list').css('pointer-events', 'all');
-	            $('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
-				$('#delete_'+guid).hide(500);
-				$('#'+guid).hide(800);
-
-				addOne()
+					addOne()
+				} else {
+					window.startCount = 10;
+					window.messages.get(type,15,1);
+				}
 			});
 		});
 
