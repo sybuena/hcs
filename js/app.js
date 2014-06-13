@@ -344,7 +344,7 @@ function loaded() {
 		//execute message listing
 		window.iscroll = new iScroll('wrapper', option);
 
-		/*window.composePage = new iScroll('message-compose', option);
+		window.composePage = new iScroll('message-compose', option);
 
 		composePage.options.onBeforeScrollStart = function(e) {                
 	        var target = e.target;
@@ -353,7 +353,7 @@ function loaded() {
 	        if (target.tagName != 'SELECT' && target.tagName != 'INPUT' && target.tagName != 'TEXTAREA'){
 	            e.preventDefault();
 	        }
-	   	}*/
+	   	}
 	   	
 
 	}
@@ -784,7 +784,14 @@ function compose() {
 		$('#compose-contact-list').append(CONTACT_LIST.
 			replace('[ID]', i).
 			replace('[NAME]', window.contactList[i].name));
+		
 	}
+
+	$('.ui-filterable input').keyup(function() {
+		setTimeout(function(){window.composePage.refresh();
+		console.log('xxx');}, 1000)
+		
+	});
 
 	//on typing in To field
 	$('.contact-pick').click(function() {
@@ -798,6 +805,7 @@ function compose() {
 		//prevent dual TO name in listing
 		$('.to-holder div').each(function() {
 			var ids = $(this).attr('id');
+
 			if(ids == id) {
 				hasID = true;
 			}
@@ -819,20 +827,12 @@ function compose() {
 	    		replace('[NAME]', name)
 	    	);
 		}
+
+
+
 		return false;
 	});
 }
-
-	function resize(t) { 
-	    a = t.value.split('\n'); 
-	    b=1; 
-	    for (x=0;x < a.length; x++) { 
-	        if (a[x].length >= t.cols) b+= Math.floor(a[x].length/ 
-	t.cols); 
-	    } 
-	    b+= a.length; 
-	    if (b > t.rows) t.rows = b; 
-	} 
 
 /**
  * Load if you need to populate 
@@ -1620,9 +1620,9 @@ var _SOAP = (function() {
 document.addEventListener('deviceready', function() {	
 	
 	//Enables the background mode. The app will not pause while in background.
-	window.plugin.backgroundMode.enable();
+	//window.plugin.backgroundMode.enable();
 	//unset badge
-	window.plugin.notification.badge.set(0);
+	//window.plugin.notification.badge.set(0);
 	
 	navigator.geolocation.getCurrentPosition(
 		//do nothing
