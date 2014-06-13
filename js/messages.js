@@ -1821,7 +1821,7 @@ Messages.prototype = {
 	            $('#loading-ajax').popup('close');
 	           
 	            //throw message that the message is deleted
-	           	notification('Message deleted');
+	           //	notification('Message deleted');
 	           	
          		//get localstorage data
 	           	var data = _string.unlock(type);
