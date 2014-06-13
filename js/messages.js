@@ -8,7 +8,7 @@ var MESSAGE_ROW =
 
 var MESSAGE_ROW_1 = 
 	'<div unread="true" class="messages unread go-detail" id="[MESSAGE_ID]"><div class="pull-left" style="width:65%"><p class="list-title">[SUBJECT]</p>'+
-    '<p>From: [FROM_NAME]</p><p>[TO_NAME]</p></div><div class="pull-right" style="width:35%"><p class="list-date">[DATE]</p>'+
+    '<p>From: [FROM_NAME]</p><p>[TO_NAME]</p></div><div class="pull-right" style="width:35%; text-align:right;"><p class="list-date">[DATE]</p>'+
     '<p class="important-star"><i class="fa [IMPORTANT] fa-2x"></i></p></div><div class="clearfix"></div></div>';
 
 var TO_COMPOSE = 
@@ -684,7 +684,7 @@ Messages.prototype = {
 		var row = MESSAGE_ROW;
 		var list = '';
 		var ids = [];
-
+		
 		//empty everything
 		$('#message-list').html('');
 		$('#message-archive').html('');

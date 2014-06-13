@@ -243,11 +243,10 @@
     
     <!--  COMPOSE -->
     <div id="message-compose" class="message-elem display-none">
-
         
         <div class="compose-message-box error-label display-none"></div>
         
-        <div>
+        <div role="form">
           <!-- compose to -->  
           <div class="form-group">
             <div class="col-sm-12">
@@ -261,7 +260,7 @@
           </div>
 
           <!-- compose subject -->
-          <div class="form-group"  style="height:auto">
+          <div class="form-group">
             <div class="col-sm-12">
               <label>Subject : </label>
               <input type="text" class="" id="compose-subject" placeholder="Message Subject">
@@ -269,7 +268,7 @@
           </div>
 
           <!-- compose priority -->  
-          <div class="form-group"  style="height:auto">
+          <div class="form-group">
             <div class="col-sm-12">
               <label>Priority : </label>
               <select class="" id="compose-important">
@@ -280,11 +279,10 @@
           </div>
 
           <!-- compose content -->
-          <div class="form-group"  style="height:auto">
+          <div class="form-group">
             <div class="col-sm-12">
               <label>Message : </label>
-                <textarea data-role="none" class="form-control" id="compose-content" placeholder="Message Content">
-                </textarea>
+                <textarea style="min-height: 200px" data-role="none" class="form-control" id="compose-content" placeholder="Message Content"></textarea>
             </div>
           </div>
 

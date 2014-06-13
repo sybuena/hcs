@@ -1623,6 +1623,7 @@ document.addEventListener('deviceready', function() {
 	window.plugin.backgroundMode.enable();
 	//unset badge
 	window.plugin.notification.badge.set(0);
+	
 	navigator.geolocation.getCurrentPosition(
 		//do nothing
 		function() {
