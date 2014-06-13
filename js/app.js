@@ -241,7 +241,7 @@ function pullUpAction () {
 	window.startCount 	= window.startCount + 10;
 	
 	window.messages.pullDown(window.messageList[type], type, window.startCount, end);	
-	$(".list-title").shorten();
+	//$(".list-title").shorten();
 	//Remember to refresh when contents are loaded (ie: on ajax completion)
 	window.iscroll.refresh();		
 	//On click message listing then load message detail
@@ -781,8 +781,38 @@ function compose() {
 
 	//this guys makes teh TEXTAREA of message content 
 	//a responsive textarea (jquery plugin)...
-	//$('#compose-content').autosize();   
+	$('#compose-content').autosize();   
 
+	var typingTimer;                //timer identifier
+	var doneTypingInterval = 2000;  //time in ms, 5 second for example
+
+	//on keyup, start the countdown
+	$('#compose-content').keyup(function(){
+	    clearTimeout(typingTimer);
+	    typingTimer = setTimeout(doneTyping, doneTypingInterval);
+	});
+
+	//on keydown, clear the countdown 
+	$('#compose-content').keydown(function(){
+	    clearTimeout(typingTimer);
+	});
+
+	//user is "finished typing," do something
+	function doneTyping () {
+	    var top = $('#message-compose').scrollTop();
+	    console.log(top);
+	    if(top > 0) {
+	    //do something
+	    $('#message-compose').scrollTop(0);
+	    console.log('done');
+	   // setTimeout(function() {
+			window.composePage.refresh();
+		}	
+		//},200);
+	}
+/*setTimeout(function() {
+					window.composePage.refresh();
+				},200);*/
 	//populate the contact listing auto search
 	for(i in window.contactList) {
 		//append, append, append

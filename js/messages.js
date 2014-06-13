@@ -813,7 +813,7 @@ Messages.prototype = {
 		$('.no-connection').hide();
 		//this guy is responsible for making the SUBJECT length responsive to the 
 		//DIV width
-		$(".list-title").shorten();
+		//$(".list-title").shorten();
 		
 		//On click message listing then load message detail
 		//base on Message GUID
@@ -838,10 +838,6 @@ Messages.prototype = {
 
 		$('#wrapper').show();
 
-		console.log(ids.length+' --> displayed');
-		console.log(start+' --> start');
-		console.log('----------------------------');
-		
 		populateArchive(ids);
 		
 	},
@@ -1849,9 +1845,9 @@ Messages.prototype = {
 	        	if(currentPage == 'home') {
 		            $('#message-list').css('pointer-events', 'all');
 		           // $('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
-					$('#delete_'+guid).hide(500);
-					$('#'+guid).hide(800);
-
+					$('#delete_'+guid).hide(800);
+					$('#'+guid).hide(500);
+					
 					addOne()
 				} else {
 					window.startCount = 10;

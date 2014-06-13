@@ -552,7 +552,13 @@ a {
 }
 .messages.unread {background-color: white;}
 .messages p {margin: 0 0 0 0; text-transform: none;}
-.messages .list-title {color:#c94437;font-size: 1.2em;}
+.messages .list-title {
+    color:#c94437;
+    font-size: 1.2em;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;    
+}
 .messages .important-star {
     margin-top: 5px;
     margin-right: 20px;
