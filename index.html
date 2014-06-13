@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="boot/css/bootstrap.css" />
   <link rel="stylesheet" href="font-awesome/css/font-awesome.css" />
   <link rel="stylesheet" href="css/index.css" >
+
 </head>
 
 <body>
@@ -243,6 +244,7 @@
     
     <!--  COMPOSE -->
     <div id="message-compose" class="message-elem display-none">
+      <div  id="scroller2">
       <div class="compose-message-box error-label display-none"></div>
       
       <div role="form">
@@ -278,13 +280,26 @@
         <div class="form-group">
           <div class="col-sm-12">
             <label>Message : </label>
-            <textarea  style="min-height: 200px"data-role="none" class="form-control" id="compose-content" placeholder="Message Content"name="textarea"></textarea>
+            
+              <textarea 
+              style="
+                min-height: 100px;
+                overflow: auto;
+                resize:none;
+                overflow-y:scroll;
+              " 
+              data-role="none" class="form-control" id="compose-content" placeholder="Message Content"></textarea>
+            
           </div>
         </div>
 
       </div>
+      </div>
 
-    </div>   
+    </div>  
+
+
+
     <!-- MESSAGE SETTINGS -->
     <div id="message-settings" class="display-none message-elem">
       <div class="" role="form">
@@ -398,8 +413,6 @@
   <script type="text/javascript" src="js/touchSwipe.js"></script>
   <script type="text/javascript" src="js/jquery.nicescroll.js"></script>
   
-  <!--<script type="text/javascript" src="http://labs.skinkers.com/content/touchSwipe/jquery.touchSwipe.min.js"></script>
-  -->
   <script>
     $(document).bind("mobileinit", function() {
       $.support.cors = true;

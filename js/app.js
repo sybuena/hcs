@@ -320,6 +320,7 @@ function loaded() {
 		
 		//execute message listing
 		window.iscroll = new iScroll('wrapper', option);
+		compo = new iScroll('message-compose', option);
 
 
 	}
@@ -333,7 +334,7 @@ function loaded() {
 document.addEventListener('touchmove', function (e) { 
 
 	if(e.srcElement.type !== "textarea"){ 
-        e.preventDefault();
+ //       e.preventDefault();
     } 
 }, false);
 
@@ -748,17 +749,17 @@ function compose() {
 	
 	$('#compose-content').keyup(function(){
 	    clearTimeout(typingTimer);
-	    if ($('#myInput').val) {
+	    if ($('#compose-content').val) {
 	        typingTimer = setTimeout(doneTyping, doneTypingInterval);
 	    }
 	});
 
 	function doneTyping () {
-	    //do something
-	    $('#compose-content').css('height', '150px !important');
-	    //$('#compose-content').css('overflow', 'auto !important');
-	    $('#compose-content').niceScroll();
 
+	    //do something
+	   	//$('#compose-content').css('height', '500px !important');
+	    //$('#compose-content').css('overflow', 'auto !important');	    
+		
 	}
 
 	//populate the contact listing auto search
@@ -1686,6 +1687,8 @@ document.addEventListener('deviceready', function() {
 			 fontRatio : 30
 		});
 
+		//$("#message-compose").niceScroll();
+		//$("#compose-content").niceScroll();
 		//for login UI
 		init();
 		//start application
