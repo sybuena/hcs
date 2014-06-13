@@ -1422,7 +1422,7 @@ function backEvent() {
 
 			//get message list according on what
 			//user clicked on the LI left panel
-	  		window.messages.get(type, 15, 1);
+	  		window.messages.get(parentPage, 15, 1);
 			
 			return false;
 		}
@@ -1465,7 +1465,7 @@ function backEvent() {
 
 			//get message list according on what
 			//user clicked on the LI left panel
-	  		window.messages.get(type, 15, 1);
+	  		window.messages.get(parentPage, 15, 1);
 		});
 
 		return false;
@@ -1493,12 +1493,12 @@ function backEvent() {
  	//else it is not in Inbox listing	
  	} else {
  		//unset pagination whenevery changing to another
-		//message listing
-		window.startCount = 10;
+			//message listing
+			window.startCount = 10;
 
-		//get message list according on what
-		//user clicked on the LI left panel
-  		window.messages.get(type, 15, 1);
+			//get message list according on what
+			//user clicked on the LI left panel
+	  		window.messages.get(parentPage, 15, 1);
  	}  
 }
 
