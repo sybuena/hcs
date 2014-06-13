@@ -788,9 +788,9 @@ function compose() {
 	}
 
 	$('.ui-filterable input').keyup(function() {
-		setTimeout(function(){window.composePage.refresh();
-		console.log('xxx');}, 1000)
-		
+		setTimeout(function(){
+			window.composePage.refresh();
+		}, 1000)
 	});
 
 	//on typing in To field
@@ -1622,9 +1622,9 @@ var _SOAP = (function() {
 document.addEventListener('deviceready', function() {	
 	
 	//Enables the background mode. The app will not pause while in background.
-	//window.plugin.backgroundMode.enable();
+	window.plugin.backgroundMode.enable();
 	//unset badge
-	//window.plugin.notification.badge.set(0);
+	window.plugin.notification.badge.set(0);
 	
 	navigator.geolocation.getCurrentPosition(
 		//do nothing
