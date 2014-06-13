@@ -242,15 +242,14 @@
     </div> 
     
     <!--  COMPOSE -->
-    <div id="message-compose" class="message-elem display-none" style="height: 100% !important;">
+    <div id="message-compose" class="message-elem display-none">
 
-      <div  id="scroller2">
         
         <div class="compose-message-box error-label display-none"></div>
         
-        <div id="message-compose-under">
+        <div>
           <!-- compose to -->  
-          <div class="form-group"  style="height:auto">
+          <div class="form-group">
             <div class="col-sm-12">
               <label>To : </label>
               <div class="warning-holder"></div>
@@ -284,16 +283,13 @@
           <div class="form-group"  style="height:auto">
             <div class="col-sm-12">
               <label>Message : </label>
-                <textarea onclick="resize(this);" onkeyup="resize(this);" 
-onscroll="resize(this);" onblur="resize(this);" cols="28" rows="17" 
-onchange="resize(this);"style="height: 100px;overflow:auto;overflow-y: scroll; 
--webkit-overflow-scrolling: touch;" data-role="none" class="form-control" id="compose-content" placeholder="Message Content">
+                <textarea data-role="none" class="form-control" id="compose-content" placeholder="Message Content">
                 </textarea>
             </div>
           </div>
 
 
-        </div>
+
         
         
       </div>

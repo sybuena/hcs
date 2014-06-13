@@ -774,25 +774,9 @@ function compose() {
 	$('.warning-holder').html('');
 	$('#compose-contact-list').html('');
 
-
 	//this guys makes teh TEXTAREA of message content 
 	//a responsive textarea (jquery plugin)...
-	//$('#compose-content').autosize();   
-
-	var typingTimer;                //timer identifier
-	var doneTypingInterval = 1000;
-	
-	$('#compose-content').keyup(function(){
-	    clearTimeout(typingTimer);
-	    if ($('#compose-content').val) {
-	        typingTimer = setTimeout(doneTyping, doneTypingInterval);
-	    }
-	});
-
-		
-	function doneTyping () {
-		
-	}
+	$('#compose-content').autosize();   
 
 	//populate the contact listing auto search
 	for(i in window.contactList) {
@@ -1636,9 +1620,9 @@ var _SOAP = (function() {
 document.addEventListener('deviceready', function() {	
 	
 	//Enables the background mode. The app will not pause while in background.
-	window.plugin.backgroundMode.enable();
+	//window.plugin.backgroundMode.enable();
 	//unset badge
-	window.plugin.notification.badge.set(0);
+	//window.plugin.notification.badge.set(0);
 	navigator.geolocation.getCurrentPosition(
 		//do nothing
 		function() {
