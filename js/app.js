@@ -776,7 +776,7 @@ function compose() {
 
 	//this guys makes teh TEXTAREA of message content 
 	//a responsive textarea (jquery plugin)...
-	$('#compose-content').autosize();   
+	//$('#compose-content').autosize();   
 
 	//populate the contact listing auto search
 	for(i in window.contactList) {
@@ -827,8 +827,10 @@ function compose() {
 	    		replace('[NAME]', name)
 	    	);
 		}
-
-
+		//refresh page
+		setTimeout(function(){window.composePage.refresh();
+		console.log('xxx');}, 1000)
+		
 
 		return false;
 	});
