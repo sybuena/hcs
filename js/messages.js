@@ -684,7 +684,7 @@ Messages.prototype = {
 		var row = MESSAGE_ROW;
 		var list = '';
 		var ids = [];
-		
+
 		//empty everything
 		$('#message-list').html('');
 		$('#message-archive').html('');
@@ -776,8 +776,9 @@ Messages.prototype = {
 					}
 					
 					if(subject.length > 20) {
-						subject = subject.substr(0,20)+'..';	
+						//subject = subject.substr(0,20)+'..';	
 					}
+
 					$("#message-list").show();
 					//prevent duplicate listing
 					if(currentGUID != messageList[i]['b:MessageGUID'] || type == 'Outbox') {
@@ -811,7 +812,7 @@ Messages.prototype = {
 		$('.no-connection').hide();
 		//this guy is responsible for making the SUBJECT length responsive to the 
 		//DIV width
-		//$(".list-title").shorten();
+		$(".list-title").shorten();
 		
 		//On click message listing then load message detail
 		//base on Message GUID
@@ -894,7 +895,7 @@ Messages.prototype = {
 				}
 				
 				if(subject.length > 20) {
-					subject = subject.substr(0,20)+'..';	
+					//subject = subject.substr(0,20)+'..';	
 				}
 
 				if(typeof messageList[i]['b:Recipients'] == 'object') {

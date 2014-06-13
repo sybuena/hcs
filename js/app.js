@@ -236,7 +236,7 @@ function pullUpAction () {
 	window.startCount 	= window.startCount + 10;
 	
 	window.messages.pullDown(window.messageList[type], type, window.startCount, end);	
-	
+	$(".list-title").shorten();
 	//Remember to refresh when contents are loaded (ie: on ajax completion)
 	window.iscroll.refresh();		
 	//On click message listing then load message detail

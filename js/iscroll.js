@@ -146,7 +146,7 @@ var m = Math,
 				  !(e.target instanceof HTMLTextAreaElement) && 
  				  !(e.srcElement instanceof HTMLTextAreaElement)) {
  				
- 					e.preventDefault(); 
+ 					//e.preventDefault(); 
  
  				  }},
 			onScrollStart: null,
