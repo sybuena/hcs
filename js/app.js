@@ -827,6 +827,7 @@ function compose() {
 	    		replace('[NAME]', name)
 	    	);
 		}
+
 		//refresh page
 		setTimeout(function(){window.composePage.refresh();
 		console.log('xxx');}, 1000)
@@ -959,6 +960,12 @@ function composeWith(data, type) {
 			replace('[NAME]', contactList[i].name));
 	}
 
+	$('.ui-filterable input').keyup(function() {
+		setTimeout(function(){
+			window.composePage.refresh();
+		}, 1000)
+	});
+
 	$('.contact-pick').click(function() {
 		var id 		= $(this).attr('id');
 		var name 	= $(this).html();
@@ -987,6 +994,11 @@ function composeWith(data, type) {
 	    		replace('[NAME]', name)
 	    	);
 		}
+
+		//refresh page
+		setTimeout(function(){window.composePage.refresh();
+		console.log('xxx');}, 1000)
+
 
 	});
 
@@ -1398,12 +1410,19 @@ function backEvent() {
 		if(subject.length > 0 || content.length > 0 || recipients.length > 0) {
 			empty = false;
 		}
+
 		//if everything is empty, then dont show modal
 		if(empty) {
 			$('#draft-modal').modal('hide');
 			$('#process-send').hide();	
 			
-			window.messages.get(parentPage, 20, 1);
+			//unset pagination whenevery changing to another
+			//message listing
+			window.startCount = 10;
+
+			//get message list according on what
+			//user clicked on the LI left panel
+	  		window.messages.get(type, 15, 1);
 			
 			return false;
 		}
@@ -1439,9 +1458,14 @@ function backEvent() {
 			
 			$('#draft-modal').modal('hide');
 			$('#process-send').hide();	
-			
-			//go back to the previous listing
-			window.messages.get(parentPage, 20, 1);
+
+			//unset pagination whenevery changing to another
+			//message listing
+			window.startCount = 10;
+
+			//get message list according on what
+			//user clicked on the LI left panel
+	  		window.messages.get(type, 15, 1);
 		});
 
 		return false;
@@ -1468,10 +1492,13 @@ function backEvent() {
 
  	//else it is not in Inbox listing	
  	} else {
+ 		//unset pagination whenevery changing to another
+		//message listing
+		window.startCount = 10;
 
- 		//unset scrolling count when hitting new message list
- 		window.startCount = 10;
- 		window.messages.get(parentPage, 20, 1);
+		//get message list according on what
+		//user clicked on the LI left panel
+  		window.messages.get(type, 15, 1);
  	}  
 }
 
@@ -1622,9 +1649,9 @@ var _SOAP = (function() {
 document.addEventListener('deviceready', function() {	
 	
 	//Enables the background mode. The app will not pause while in background.
-	window.plugin.backgroundMode.enable();
+	//window.plugin.backgroundMode.enable();
 	//unset badge
-	window.plugin.notification.badge.set(0);
+	//window.plugin.notification.badge.set(0);
 	
 	navigator.geolocation.getCurrentPosition(
 		//do nothing
