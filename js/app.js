@@ -276,24 +276,25 @@ function loaded() {
 			},
 			onScrollStart : function() {
 				$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
-				
+				//hide mobile keyboard
+				hideKeyboard();
 			},
 			onScrollMove 	: function () {
 				//check where page we are
 				var currentPage = $('.current-page').attr('id');
-				
-				if(currentPage == 'compose') {
+
+				//disable left sidebar if inside compose page
+				if(currentPage != 'compose') {
 					
-					//return false;
+					window.snapper.enable();
 				}
 				
-				window.snapper.enable();
 
 				$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
 				$('#message-list').css('pointer-events', 'all');
 
 				if (this.y > 5 && !pullDownEl.className.match('flip')) {
-					$(pullDownEl).show();
+					$('#pullDown').show();
 					//hide the swipe delete icons behind the message listing
 					$('#message-archive').hide();
 
@@ -729,12 +730,20 @@ function processSend(guid) {
 	});
 }
 
+function hideKeyboard() {
+    document.activeElement.blur();
+    $("input").blur();
+};
+
 /**
  * On show compose page, 
  *
  * @return false;
  */
 function compose() {
+	//disable left sidebar if in compose page
+	window.snapper.disable();
+	
 	//flag page as COMPOSE
 	$('.current-page').attr('id', 'compose');
 	
@@ -881,6 +890,9 @@ function compose() {
  * @param string message type
  */
 function composeWith(data, type) {
+	//disable left sidebar if in compose page
+	window.snapper.disable();
+
 	//flag page as compose
 	$('.current-page').attr('id', 'compose');
 
@@ -1448,6 +1460,10 @@ function backEvent() {
 
 		//if everything is empty, then dont show modal
 		if(empty) {
+
+			//enable left sidebar if in compose page
+			window.snapper.enable();
+
 			$('#draft-modal').modal('hide');
 			$('#process-send').hide();	
 			
@@ -1467,6 +1483,10 @@ function backEvent() {
 
 		//on click Save 
 		$('#process-draft').unbind().click(function() {
+
+			//enable left sidebar if in compose page
+			window.snapper.enable();
+
 			$('#draft-modal').modal('hide');
 
 			if(!window.connection) {
@@ -1490,6 +1510,10 @@ function backEvent() {
 	
 		//on click Discard
 		$('#cancel-draft').unbind().click(function(e) {
+
+			//enable left sidebar if in compose page
+			window.snapper.enable();
+
 			e.preventDefault();
 			e.stopPropagation();
 			$('#draft-modal').modal('hide');
