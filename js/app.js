@@ -91,7 +91,6 @@ function deleteSwipe(e) {
 	
 	window.snapper.enable();
 
-	console.log(guid+' delete now')
 	return false;
 }
 
@@ -277,7 +276,7 @@ function loaded() {
 				}
 			},
 			onScrollStart : function(e) {
-				
+				$('.go-detail').css("-webkit-transition-duration", 1 + "s");
 				$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
 				
 				//hide mobile keyboard
@@ -295,7 +294,7 @@ function loaded() {
 					window.snapper.enable();
 				} 
 					
-				$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
+				//$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
 				$('#message-list').css('pointer-events', 'all');
 
 				if (this.y > 5 && !pullDownEl.className.match('flip')) {

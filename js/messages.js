@@ -1792,12 +1792,13 @@ Messages.prototype = {
 					
 		//$('#loading-ajax #text').html('Deleting Message');
 		//$('#loading-ajax').popup('open');
-		$('#'+guid).css("-webkit-transition-duration", 1 + "s");
-		$('#'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
-		//$('#'+guid).hide(500);
-		$('#delete_'+guid).css("-webkit-transition-duration", 1 + "s");
-		$('#delete_'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
-		//$('#delete_'+guid).hide(500);
+		//$('#'+guid).css("-webkit-transition-duration", 1 + "s");
+		//$('#'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
+		
+		//$('#delete_'+guid).css("-webkit-transition-duration", 1 + "s");
+		//$('#delete_'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
+		$('#'+guid).hide();
+		$('#delete_'+guid).hide();
 
 		//get Token
 		window.user.getToken(window.username, window.password, function(soapResponse){
@@ -1858,13 +1859,13 @@ Messages.prototype = {
 		           // $('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
 					
 					
-					$('#'+guid).css("-webkit-transition-duration", 1 + "s");
+					/*$('#'+guid).css("-webkit-transition-duration", 1 + "s");
 					$('#'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
 					$('#'+guid).hide(500);
 					$('#delete_'+guid).css("-webkit-transition-duration", 1 + "s");
 					$('#delete_'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
 					$('#delete_'+guid).hide(500);
-					//$('#'+guid).hide();
+					//$('#'+guid).hide();*/
 					
 					addOne()
 				} else {
