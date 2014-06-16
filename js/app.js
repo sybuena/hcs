@@ -181,6 +181,7 @@ function swipelisting(distance, duration, id, direction, phase) {
 			$('#'+id).css("-webkit-transform", "translate3d(0px,0px,0px)");
 		//if hit the limit
 		} else {
+			
 			//slide to the limit
 			$('#'+id).css("-webkit-transform", "translate3d(-"+limit+"px,0px,0px)");
 			//prevent click 
