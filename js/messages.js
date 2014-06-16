@@ -1789,8 +1789,8 @@ Messages.prototype = {
 	 * @return mixed
 	 */
 	delete : function(guid, type) {
-		$('#loading-ajax #text').html('Deleting Message');
-		$('#loading-ajax').popup('open');
+		//$('#loading-ajax #text').html('Deleting Message');
+		//$('#loading-ajax').popup('open');
 		
 		//get Token
 		window.user.getToken(window.username, window.password, function(soapResponse){
@@ -1849,8 +1849,8 @@ Messages.prototype = {
 	        	if(currentPage == 'home') {
 		            $('#message-list').css('pointer-events', 'all');
 		           // $('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
-					$('#delete_'+guid).hide(800);
-					$('#'+guid).hide(500);
+					$('#delete_'+guid).hide();
+					$('#'+guid).hide();
 					
 					addOne()
 				} else {

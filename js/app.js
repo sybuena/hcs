@@ -276,7 +276,9 @@ function loaded() {
 				}
 			},
 			onScrollStart : function(e) {
+				
 				$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
+				
 				//hide mobile keyboard
 				hideKeyboard();
 				
@@ -625,6 +627,7 @@ function onClickDetail(type) {
 		return false;
 	});	
 }
+
 /**
  * This guy will run checkInbox function every 
  * 5 secs if there is a user login

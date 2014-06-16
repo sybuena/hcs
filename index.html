@@ -90,7 +90,7 @@
           <ul class="nav navbar-nav pull-right">
               <li class="pull-left">
                 <!-- DELETE MESSAGE ICON -->
-                <a href="#" id="delete-message" style="display:none"><i class="fa fa-trash-o fa-2x"></i></a>
+                <!--<a href="#" id="delete-message" style="display:none"><i class="fa fa-trash-o fa-2x"></i></a>-->
               </li>
               <li class="pull-left">
                 <!-- UNDELETE MESSAGE ICON -->
@@ -214,6 +214,7 @@
       <div>
         <!-- hidden guid -->
         <input type="hidden" id="detail-guid" />
+        
         <div class="row" id="content-detail">
           <!-- right side top-->
           <div class="col-xs-8 col-sm-8 col-md-10">
@@ -235,10 +236,17 @@
           <button class="btn btn-default" id="detail-reply-all">Reply All</button>
           <button class="btn btn-default"  id="detail-forward">Forward</button>
         </div>
+
         <!-- bottom -->
         <div class="row">
-          <!-- detail content-->
-          <p class="text-justify" id="detail-content" style="min-height: 50px"></p> 
+          <div class="col-xs-12 col-sm-12 col-md-12">
+            <!-- detail content-->
+            <p class="text-justify" id="detail-content" style="min-height: 50px"></p> 
+          </div>
+        </div>
+
+        <div style="height: 50px">
+          
         </div>
       </div> 
     </div> 
