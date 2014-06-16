@@ -35,6 +35,8 @@ Messages.prototype = {
 	 * @return object|mixed
 	 */
 	get : function(type, start, end, force) {
+		$('#pullDown').hide();
+		
 		//mark inbox as home page
 		if(type == 'Inbox') {
 			$('.current-page').attr('id', 'home');

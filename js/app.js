@@ -274,12 +274,14 @@ function loaded() {
 					pullUpEl.querySelector('.pullUpLabel').innerHTML = '';
 				}
 			},
-			onScrollStart : function() {
+			onScrollStart : function(e) {
 				$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
 				//hide mobile keyboard
 				hideKeyboard();
+				
 			},
-			onScrollMove 	: function () {
+			onScrollMove 	: function (e) {
+				
 				//check where page we are
 				var currentPage = $('.current-page').attr('id');
 
@@ -287,9 +289,8 @@ function loaded() {
 				if(currentPage != 'compose') {
 					
 					window.snapper.enable();
-				}
-				
-
+				} 
+					
 				$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
 				$('#message-list').css('pointer-events', 'all');
 
@@ -321,6 +322,8 @@ function loaded() {
 					this.maxScrollY = pullUpOffset;
 				
 				}
+				
+				
 			},
 			onScrollEnd 	: function () {
 				
@@ -350,18 +353,41 @@ function loaded() {
 		//execute message listing
 		window.iscroll = new iScroll('wrapper', option);
 
-		window.composePage = new iScroll('message-compose', option);
-
-		composePage.options.onBeforeScrollStart = function(e) {                
-	        var target = e.target;
+		window.composePage = new iScroll('message-compose', {
+			useTransition 			: true,
+			topOffset 				: pullDownOffset,
+			bounce 					: false,
+			onBeforeScrollStart 	: function(e) {
+				var target = e.target;
 	        
-	        while (target.nodeType != 1) target = target.parentNode;
-	        if (target.tagName != 'SELECT' && target.tagName != 'INPUT' && target.tagName != 'TEXTAREA'){
-	            e.preventDefault();
-	        }
-	   	}
-	   	
+		        while (target.nodeType != 1) target = target.parentNode;
+		        if (target.tagName != 'SELECT' && target.tagName != 'INPUT' && target.tagName != 'TEXTAREA'){
+		            //e.preventDefault();
+		        }
+			}, 
+			onScrollStart : function(e) {
+				var target = e.target;
+				while (target.nodeType != 1) target = target.parentNode;
+				
+		        if (target.tagName != 'TEXTAREA'){
+		        	//hide mobile keyboard
+					hideKeyboard();
+		        }
+				
+				
+			},
+			onScrollMove 	: function (e) {
+				
+				//check where page we are
+				var currentPage = $('.current-page').attr('id');
 
+				//disable left sidebar if inside compose page
+				if(currentPage != 'compose') {
+					
+					window.snapper.enable();
+				} 
+			}
+		});
 	}
 }
 
@@ -372,7 +398,7 @@ function loaded() {
  */
 document.addEventListener('touchmove', function (e) { 	
  	if(e.srcElement.type !== "textarea"){ 
-        e.preventDefault();
+      //  e.preventDefault();
     } 
     
 }, false);
@@ -790,9 +816,9 @@ function compose() {
 
 	//this guys makes teh TEXTAREA of message content 
 	//a responsive textarea (jquery plugin)...
-	$('#compose-content').autosize();   
-
-	var typingTimer;                //timer identifier
+	//$('#compose-content').autosize();   
+	//setTimeout(function() {window.composePage.refresh();}, 1000)
+	/*var typingTimer;                //timer identifier
 	var doneTypingInterval = 2000;  //time in ms, 5 second for example
 
 	//on keyup, start the countdown
@@ -808,7 +834,9 @@ function compose() {
 
 	//user is "finished typing," do something
 	function doneTyping () {
-	    var top = $('#message-compose').scrollTop();
+		//$('#compose-content').css('height', '200px');
+		//$('.scroll-here').scrollTop(0);
+	   /* var top = $('#message-compose').scrollTop();
 	    console.log(top);
 	    if(top > 0) {
 	    //do something
@@ -818,7 +846,7 @@ function compose() {
 			window.composePage.refresh();
 		}	
 		//},200);
-	}
+	}*/
 /*setTimeout(function() {
 					window.composePage.refresh();
 				},200);*/
@@ -1782,6 +1810,8 @@ document.addEventListener('deviceready', function() {
 
 	//if all DOM is loaded
 	$(document).ready(function(){
+		
+		
 		//do the responsive font size
 		$('body').flowtype({
 			 minimum   : 300,
@@ -1794,7 +1824,7 @@ document.addEventListener('deviceready', function() {
 		//document.body.style.height = screen.availHeight + 'px';
 
 		//$("#message-compose").niceScroll();
-		//$("#compose-content").niceScroll();
+		
 		//for login UI
 		init();
 		//start application
