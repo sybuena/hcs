@@ -47,6 +47,7 @@ window.snapper;
 window.startCount		= 20;		
 window.iscroll;
 window.composePage;
+window.messageDetail;
 //swipe message listing paramaters
 var defaultWidth 		= 500;
 var	currentImg 			= 0;
@@ -352,6 +353,10 @@ function loaded() {
 		
 		//execute message listing
 		window.iscroll = new iScroll('wrapper', option);
+
+		window.messageDetail = new iScroll('message-detail', {
+			bounce : false
+		});
 
 		window.composePage = new iScroll('message-compose', {
 			useTransition 			: true,

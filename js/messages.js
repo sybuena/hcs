@@ -36,7 +36,7 @@ Messages.prototype = {
 	 */
 	get : function(type, start, end, force) {
 		$('#pullDown').hide();
-		
+
 		//mark inbox as home page
 		if(type == 'Inbox') {
 			$('.current-page').attr('id', 'home');
@@ -610,6 +610,8 @@ Messages.prototype = {
  		
  		//we can now show the div for detail page
  		$('#message-detail').show();
+
+ 		window.messageDetail.refresh();
  		
  		//if message is not yet read
  		if(unread == 'true') {

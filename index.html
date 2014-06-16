@@ -211,33 +211,35 @@
 
     <!-- MESSAGE DETAIL-->
     <div id="message-detail" class="display-none message-elem">
-      <!-- hidden guid -->
-      <input type="hidden" id="detail-guid" />
-      <div class="row" id="content-detail">
-        <!-- right side top-->
-        <div class="col-xs-8 col-sm-8 col-md-10">
-          <h4 id="detail-subject"></h4> <!-- detail subject -->
-          <h5 id="detail-from"></h5>  <!-- detail from -->
-          <h5 id="detail-to"></h5> <!-- detail to -->
-        </div>
-        <!-- left side top -->
-        <div class="col-xs-4 col-md-2" style="text-align: center">  
-          <h5 id="detail-date">date</h5> <!-- detail date-->
-          <span id="detail-important">
-            <i class="fa fa-star-o fa-2x"></i> <!-- detail important-->
-          </span>
-        </div>
+      <div>
+        <!-- hidden guid -->
+        <input type="hidden" id="detail-guid" />
+        <div class="row" id="content-detail">
+          <!-- right side top-->
+          <div class="col-xs-8 col-sm-8 col-md-10">
+            <h4 id="detail-subject"></h4> <!-- detail subject -->
+            <h5 id="detail-from"></h5>  <!-- detail from -->
+            <h5 id="detail-to"></h5> <!-- detail to -->
+          </div>
+          <!-- left side top -->
+          <div class="col-xs-4 col-md-2" style="text-align: center">  
+            <h5 id="detail-date">date</h5> <!-- detail date-->
+            <span id="detail-important">
+              <i class="fa fa-star-o fa-2x"></i> <!-- detail important-->
+            </span>
+          </div>
 
-        <div class="clearfix"></div>
-        <!-- button action -->
-        <button class="btn btn-default" id="detail-reply">Reply</button>
-        <button class="btn btn-default" id="detail-reply-all">Reply All</button>
-        <button class="btn btn-default"  id="detail-forward">Forward</button>
-      </div>
-      <!-- bottom -->
-      <div class="row">
-        <!-- detail content-->
-        <p class="text-justify" id="detail-content" style="min-height: 50px"></p> 
+          <div class="clearfix"></div>
+          <!-- button action -->
+          <button class="btn btn-default" id="detail-reply">Reply</button>
+          <button class="btn btn-default" id="detail-reply-all">Reply All</button>
+          <button class="btn btn-default"  id="detail-forward">Forward</button>
+        </div>
+        <!-- bottom -->
+        <div class="row">
+          <!-- detail content-->
+          <p class="text-justify" id="detail-content" style="min-height: 50px"></p> 
+        </div>
       </div> 
     </div> 
     
