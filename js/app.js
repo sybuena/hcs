@@ -278,14 +278,14 @@ function loaded() {
 			},
 			onScrollStart : function(e) {
 				
-				$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
+				//$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
 				
 				//hide mobile keyboard
 				hideKeyboard();
 				
 			},
 			onScrollMove 	: function (e) {
-				
+				$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
 				//check where page we are
 				var currentPage = $('.current-page').attr('id');
 
