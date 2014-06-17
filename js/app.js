@@ -48,6 +48,7 @@ window.startCount		= 20;
 window.iscroll;
 window.composePage;
 window.messageDetail;
+window.sidebar;
 //swipe message listing paramaters
 var defaultWidth 		= 500;
 var	currentImg 			= 0;
@@ -357,7 +358,7 @@ function loaded() {
 		//execute message listing
 		window.iscroll = new iScroll('wrapper', option);
 		
-		var sidebar = new iScroll('sidebar', {bounce : false});
+		window.sidebar = new iScroll('sidebar', {bounce : false});
 
 		
 		//no rubber band effect
@@ -1840,7 +1841,7 @@ document.addEventListener('deviceready', function() {
 		bind();
 
 		$(window).bind('orientationchange', function() {
-			alert('flip');
+
 			$('#message-list').children().each(function() {
 				var id = $(this).attr('id');
 

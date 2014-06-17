@@ -382,6 +382,7 @@
                         }
 
                         if (openingLeft) {
+                            window.sidebar.refresh();
                            $('#backdrop').show();
                             // Pulling too far to the right
                            if (settings.maxPosition < absoluteTranslation) {

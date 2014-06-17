@@ -1792,7 +1792,7 @@ Messages.prototype = {
 					
 		$('#loading-ajax #text').html('Deleting Message');
 		$('#loading-ajax').popup('open');
-		
+
 	//	$('#'+guid).css("-webkit-transition-duration", 1 + "s");
 	//	$('#'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
 		
@@ -1830,7 +1830,7 @@ Messages.prototype = {
 			_SOAP.post('DeleteMessage', xml, function(soapResponse) { 
 				var results = soapResponse.toString(); 
 	            var json 	= $.xml2json(results);
-	            $('#loading-ajax').popup('close');
+	            
 	           
 	            //throw message that the message is deleted
 	           //	notification('Message deleted');
@@ -1873,6 +1873,9 @@ Messages.prototype = {
 					window.startCount = 10;
 					window.messages.get(type,15,1);
 				}
+
+				$('#loading-ajax').popup('close');
+			
 			});
 		});
 
