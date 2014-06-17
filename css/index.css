@@ -546,7 +546,7 @@ a {
 
 .messages {
     width: 100%;
-    
+    height: auto;
     border-bottom: 1px solid #ccc;
     padding: 8px 15px 8px 10px;
 }

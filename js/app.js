@@ -67,9 +67,8 @@ function populateArchive(ids) {
 			if(currentId != ids[i]) {	
 				$('#message-archive').append(
 					'<div id="delete_'+ids[i]+'" class="row" style="height:'+height+'">'+
-		            '<div class="col-xs-6 col-sm-6"></div>'+
-		            '<div class="delete-swipe col-xs-6 col-sm-6">'+
-		            '<a href="#" onclick="deleteSwipe.call(this,event)" id="'+ids[i]+'"><i class="fa fa-trash-o fa-2x center-swipe"></i></a>'+
+		            '<div class="delete-swipe col-xs-6 col-sm-6 pull-right">'+
+		            '<a href="#" onclick="deleteSwipe.call(this,event)" id="'+ids[i]+'"><p class="fa fa-trash-o fa-2x center-swipe"></p></a>'+
 		            '</div></div>');
 			}
 			counter++;
@@ -118,7 +117,9 @@ function swipeDelete(uid) {
 				if(phase == "move" && direction == "left") {
 					//unset all div 1st
 					$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
+					
 					var duration = 0;
+
 					//if swipe to the left
 					if(direction == "left") {
 						swipelisting((defaultWidth * currentImg) + distance, duration, id, direction, phase);
@@ -174,15 +175,16 @@ function swipelisting(distance, duration, id, direction, phase) {
 		$('#'+id).css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
 		//if less than limit
 		if(Math.abs(value) < width) {
+			//enable left sidebar
 			window.snapper.enable();
-			//$('#delete_'+id).hide();
+			
 			//slide to the beginning
 			$('#'+id).css("-webkit-transform", "translate3d(0px,0px,0px)");
 		//if hit the limit
 		} else {
 			
 			//slide to the limit
-			$('#'+id).css("-webkit-transform", "translate3d(-"+limit+"px,0px,0px)");
+			$('#'+id).css("-webkit-transform", "translate3d(-50%,0px,0px)");
 			//prevent click 
 			$('#message-list').css('pointer-events', 'none');
 			//disable dragging left panel
@@ -190,6 +192,7 @@ function swipelisting(distance, duration, id, direction, phase) {
 		}
 
 	} else if(phase == 'cancel'){
+
 		$('#'+id).css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
 		$('#'+id).css("-webkit-transform", "translate3d(0px,0px,0px)");
 		//enable left panel
@@ -294,59 +297,51 @@ function loaded() {
 					window.snapper.enable();
 				} 
 					
-				//$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
 				$('#message-list').css('pointer-events', 'all');
-
+				
 				if (this.y > 5 && !pullDownEl.className.match('flip')) {
+					
 					$('#pullDown').show();
-					//hide the swipe delete icons behind the message listing
-					$('#message-archive').hide();
+					
+					$('#message-archive').css('margin-top', '45px');
 
 					pullDownEl.className = 'flip';
-					pullDownEl.querySelector('.pullDownLabel').innerHTML = '';
 					this.minScrollY = 0;
 
 				} else if (this.y < 5 && pullDownEl.className.match('flip')) {
 
 					pullDownEl.className = '';
-					pullDownEl.querySelector('.pullDownLabel').innerHTML = '';
 					this.minScrollY = -pullDownOffset;
 				
 				} else if (this.y < (this.maxScrollY - 5) && !pullUpEl.className.match('flip')) {
 				
 					pullUpEl.className = 'flip';
-					pullUpEl.querySelector('.pullUpLabel').innerHTML = '';
 					this.maxScrollY = this.maxScrollY;
 					
 				} else if (this.y > (this.maxScrollY + 5) && pullUpEl.className.match('flip')) {
 					
 					pullUpEl.className = '';
-					pullUpEl.querySelector('.pullUpLabel').innerHTML = '';
 					this.maxScrollY = pullUpOffset;
-				
 				}
-				
 				
 			},
 			onScrollEnd 	: function () {
-				
 				//check where page we are
 				var currentPage = $('.current-page').attr('id');
-				
+				//do nothing if we are in compose page
 				if(currentPage == 'compose') {
-					
 					return false;
 				}
-				
+				//on pull down release
 				if (pullDownEl.className.match('flip')) {
-					pullDownEl.className = 'loading';
-					pullDownEl.querySelector('.pullDownLabel').innerHTML = '';				
-					//check messages on pull down
-					pullDownAction();	
-				} else if (pullUpEl.className.match('flip')) {
 					
+					pullDownEl.className = 'loading';		
+					//check messages on pull down
+					pullDownAction();
+				//on pull up release		
+				} else if (pullUpEl.className.match('flip')) {
 					pullUpEl.className = 'loading';
-					pullUpEl.querySelector('.pullUpLabel').innerHTML = '';				
+					//pagination loading			
 					pullUpAction();	
 					
 				}
@@ -355,11 +350,10 @@ function loaded() {
 		
 		//execute message listing
 		window.iscroll = new iScroll('wrapper', option);
+		//no rubber band effect
+		window.messageDetail = new iScroll('message-detail', {bounce : false});
 
-		window.messageDetail = new iScroll('message-detail', {
-			bounce : false
-		});
-
+		//no rubber band effect
 		window.composePage = new iScroll('message-compose', {
 			useTransition 			: true,
 			topOffset 				: pullDownOffset,
@@ -373,15 +367,14 @@ function loaded() {
 		        }
 			}, 
 			onScrollStart : function(e) {
+				//when evern touch start then mobile keyboard will hide
 				var target = e.target;
 				while (target.nodeType != 1) target = target.parentNode;
-				
-		        if (target.tagName != 'TEXTAREA'){
+				//excemption if touch start inside textarea
+		        if(target.tagName != 'TEXTAREA'){
 		        	//hide mobile keyboard
 					hideKeyboard();
 		        }
-				
-				
 			},
 			onScrollMove 	: function (e) {
 				

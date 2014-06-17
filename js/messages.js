@@ -1792,14 +1792,14 @@ Messages.prototype = {
 					
 		//$('#loading-ajax #text').html('Deleting Message');
 		//$('#loading-ajax').popup('open');
-		//$('#'+guid).css("-webkit-transition-duration", 1 + "s");
-		//$('#'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
+	//	$('#'+guid).css("-webkit-transition-duration", 1 + "s");
+	//	$('#'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
 		
 		//$('#delete_'+guid).css("-webkit-transition-duration", 1 + "s");
 		//$('#delete_'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
 		$('#'+guid).hide();
 		$('#delete_'+guid).hide();
-
+		return false;
 		//get Token
 		window.user.getToken(window.username, window.password, function(soapResponse){
 			
@@ -1994,6 +1994,7 @@ Messages.prototype = {
 	        
 	        	$('#pullDown').hide();
 	        	$('#message-archive').show();
+	        	$('#message-archive').css('margin-top', '0px');
 
 	            var results 	= soapResponse.toString(); 
 	            var json 		= $.xml2json(results);
@@ -2113,6 +2114,7 @@ Messages.prototype = {
 			 					$('#'+type+' span.badge').html('1');
 			 					//and display
 			 					$('#folder-name').html($('#'+type).html());
+			 					
 			 					window.plugin.notification.badge.set(1);
 			 				}
 			 				
