@@ -68,13 +68,15 @@ function populateArchive(ids) {
 				$('#message-archive').append(
 					'<div id="delete_'+ids[i]+'" class="row" style="height:'+height+'">'+
 		            '<div class="delete-swipe col-xs-6 col-sm-6 pull-right">'+
-		            '<a href="#" onclick="deleteSwipe.call(this,event)" id="'+ids[i]+'"><p class="fa fa-trash-o fa-2x center-swipe"></p></a>'+
+		            '<a href="#" onclick="deleteSwipe.call(this,event)" id="'+ids[i]+'"><i class="fa fa-trash-o fa-2x center-swipe"></i></a>'+
 		            '</div></div>');
 			}
+
 			counter++;
 			var currentId = ids[i];
+			
 		}
-		console.log(counter);
+		
 	}, 200);
 
 	
@@ -1739,9 +1741,9 @@ var _SOAP = (function() {
 document.addEventListener('deviceready', function() {	
 	
 	//Enables the background mode. The app will not pause while in background.
-	window.plugin.backgroundMode.enable();
+	//window.plugin.backgroundMode.enable();
 	//unset badge
-	window.plugin.notification.badge.set(0);
+	//window.plugin.notification.badge.set(0);
 	
 	navigator.geolocation.getCurrentPosition(
 		//do nothing
@@ -1808,6 +1810,40 @@ document.addEventListener('deviceready', function() {
 		$('.notification-ajax #notification-here').html('<i class="fa fa-warning"></i> No Internet connection');
 		
 	});
+
+
+
+	document.addEventListener('orientationchange', function() {
+
+		$('.go-detail').css("-webkit-transition-duration", 1 + "s");
+		$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
+		
+    	switch(window.orientation)  {  
+	      case -90:
+	      case 90:
+	        alert('landscape');
+	        break; 
+	      default:
+	        alert('portrait');
+	        break; 
+	    }
+  	});
+  	
+  	window.addEventListener('orientationchange', function() {
+
+		$('.go-detail').css("-webkit-transition-duration", 1 + "s");
+		$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
+
+    	switch(window.orientation)  {  
+	      case -90:
+	      case 90:
+	        alert('landscape');
+	        break; 
+	      default:
+	        alert('portrait');
+	        break; 
+	    }
+  	});
 
 	//if all DOM is loaded
 	$(document).ready(function(){
