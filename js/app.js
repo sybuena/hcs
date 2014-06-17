@@ -287,7 +287,7 @@ function loaded() {
 			onScrollStart : function(e) {
 				$('.go-detail').css("-webkit-transition-duration", 1 + "s");
 				$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
-				
+				$('#message-list').css('pointer-events', 'all');
 				//hide mobile keyboard
 				hideKeyboard();
 				
