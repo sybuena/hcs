@@ -66,9 +66,7 @@ function populateArchive(ids) {
 		
 		for(i in ids) {
 			var height = $("#"+ids[i]).css('height');
-			if(i == 0) {	
-				window.font = height;
-			}
+			
 			if(currentId != ids[i]) {	
 				$('#message-archive').append(
 					'<div id="delete_'+ids[i]+'" class="row" style="height:'+height+'">'+
@@ -89,15 +87,19 @@ function populateArchive2(ids) {
 	//clean content
 	
 	setTimeout(function() {
+
 		var currentId;
 		var counter = 0;	
 		
 		$('#message-list').children().each(function() {
+
 			var id = $(this).attr('id');
 			var height = $("#"+id).css('height');
+			
 			if(i == 0) {	
 				window.font = height;
 			}
+			
 			var deleteSwipe = $('#delete_'+id).css('height');
 			
 			//if ID is still not i the list
@@ -112,23 +114,7 @@ function populateArchive2(ids) {
 			
 		});
 
-		/*for(i in ids) {
-			var height = $("#"+ids[i]).css('height');
-			if(i == 0) {	
-				window.font = height;
-			}
-			if(currentId != ids[i]) {	
-				$('#message-archive').append(
-					'<div id="delete_'+ids[i]+'" class="row" style="height:'+height+'">'+
-		            '<div class="delete-swipe col-xs-6 col-sm-6 pull-right">'+
-		            '<a href="#" onclick="deleteSwipe.call(this,event)" id="'+ids[i]+'"><i class="fa fa-trash-o fa-2x center-swipe"></i></a>'+
-		            '</div></div>');
-			}
 
-			counter++;
-			var currentId = ids[i];
-		}*/
-		
 	}, 200);
 
 	
@@ -336,11 +322,13 @@ function loaded() {
 				$('.go-detail').css("-webkit-transition-duration", 1 + "s");
 				$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
 				//$('#message-list').css('pointer-events', 'all');
+				//$('#message-list').css('pointer-events', 'all');
 				//hide mobile keyboard
 				hideKeyboard();
 				
 			},
 			onScrollMove 	: function (e) {
+				
 				//$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
 				//check where page we are
 				var currentPage = $('.current-page').attr('id');
@@ -353,7 +341,7 @@ function loaded() {
 					
 				$('#message-list').css('pointer-events', 'all');
 				
-				if (this.y > 5 && !pullDownEl.className.match('flip')) {
+				if(this.y > 5 && !pullDownEl.className.match('flip')) {
 					
 					$('#pullDown').show();
 					
@@ -386,12 +374,17 @@ function loaded() {
 				if(currentPage == 'compose') {
 					return false;
 				}
+
 				//on pull down release
 				if (pullDownEl.className.match('flip')) {
 
 					pullDownEl.className = 'loading';		
+					
 					//check messages on pull down
-					pullDownAction();
+					setTimeout(function() {
+						pullDownAction();	
+					}, 500);
+					
 				//on pull up release		
 				} else if (pullUpEl.className.match('flip')) {
 					pullUpEl.className = 'loading';
@@ -518,7 +511,7 @@ function bind() {
   	//else if there is a user	
   	} else {
   		
-  		$('#pullDown').hide();
+  		//$('#pullDown').hide();
   		
   		//only add event listener to DOM if user is login
 		document.addEventListener('DOMContentLoaded', function () { 

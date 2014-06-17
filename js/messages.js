@@ -1797,8 +1797,8 @@ Messages.prototype = {
 		$('#loading-ajax #text').html('Deleting Message');
 		$('#loading-ajax').popup('open');
 
-	//	$('#'+guid).css("-webkit-transition-duration", 1 + "s");
-	//	$('#'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
+		//	$('#'+guid).css("-webkit-transition-duration", 1 + "s");
+		//	$('#'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
 		
 		//$('#delete_'+guid).css("-webkit-transition-duration", 1 + "s");
 		//$('#delete_'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
@@ -1941,7 +1941,7 @@ Messages.prototype = {
          		_string.lock(newData, type)
 
          		//put it back
-	            window.messages.get(type,10,1);
+	            window.messages.get(type,15,1);
 	            //unset all
 	            localStorage.setItem('Inbox', '');
 	            localStorage.setItem('Draft', '');
@@ -2042,9 +2042,9 @@ Messages.prototype = {
 		         				}
 		         			}
 			         		
-			         		count++;
+			         		count++; 
 			         		//if not in listing
-		         			if(!inListing) {
+		         			if(!inListing && type == 'Inbox') {
 		         				 
 		         				//push everything
 		         				window.messageList[type].splice(0, 0, data[i]);
@@ -2054,6 +2054,7 @@ Messages.prototype = {
 								
 								//do the Math in the Message unread Count
 				 				if(count != 0) {
+
 				 					//do the math
 				 					var plus = parseInt(count) + 1;
 				 					//and display
@@ -2107,7 +2108,7 @@ Messages.prototype = {
 
 	         			}
 
-	         			if(!inListing) {
+	         			if(!inListing && type == 'Inbox') {
 
 	         				window.messageList[type].splice(0, 0, data);
 	         				//window.messageList[type].unshift(data);
