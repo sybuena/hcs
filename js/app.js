@@ -356,6 +356,10 @@ function loaded() {
 		
 		//execute message listing
 		window.iscroll = new iScroll('wrapper', option);
+		
+		var sidebar = new iScroll('sidebar', {bounce : false});
+
+		
 		//no rubber band effect
 		window.messageDetail = new iScroll('message-detail', {bounce : false});
 
@@ -1815,22 +1819,36 @@ document.addEventListener('deviceready', function() {
 	});
 
 	document.addEventListener('orientationchange', function() {
-		var parentPage 	= $('ul.nav-stacked li.active a.left-navigation').attr('id');
-		window.startCount = 10;
-			
-		//get message list according on what
-		//user clicked on the LI left panel
-  		window.messages.get(parentPage, 15, 1);
+		
+
+		$('#message-list').children().each(function() {
+			var id = $(this).attr('id');
+
+			// element's width or height has changed!
+			$('#'+id).bind('resize', function(e) {
+				var h = $(this).css('height');		
+			  
+			  	$('#delete_'+id).css('height', h);
+			  
+			});
+		});	
+
   	});
 
   	window.addEventListener('orientationchange', function() {
-  		var parentPage 	= $('ul.nav-stacked li.active a.left-navigation').attr('id');
-		window.startCount = 10;
-			
-		//get message list according on what
-		//user clicked on the LI left panel
-  		window.messages.get(parentPage, 15, 1);
-    	
+
+		$('#message-list').children().each(function() {
+			var id = $(this).attr('id');
+
+			// element's width or height has changed!
+			$('#'+id).bind('resize', function(e) {
+				var h = $(this).css('height');		
+			  
+			  	$('#delete_'+id).css('height', h);
+			  
+			});
+		});		
+		
   	});
 
 	//if all DOM is loaded
@@ -1840,7 +1858,7 @@ document.addEventListener('deviceready', function() {
 		//do the responsive font size
 		$('body').flowtype({
 			 minimum   : 300,
-			 maximum   : 1200,
+			 maximum   : 1000,
 			 minFont   : 12,
 			 maxFont   : 15,
 			 fontRatio : 30
