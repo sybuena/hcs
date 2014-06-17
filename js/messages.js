@@ -1864,7 +1864,7 @@ Messages.prototype = {
 					$('#delete_'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
 					$('#delete_'+guid).hide(500);
 					//$('#'+guid).hide();*/
-					
+
 					$('#'+guid).hide();
 					$('#delete_'+guid).hide();
 					addOne()
@@ -1873,8 +1873,13 @@ Messages.prototype = {
 					window.messages.get(type,15,1);
 				}
 
-				$('#loading-ajax').popup('close');
-				$('#message-list').css('pointer-events', 'all');
+				setTimeout(function() {
+
+					$('#loading-ajax').popup('close');
+					$('#message-list').css('pointer-events', 'all');
+				
+				}, 1000);
+
 			
 			});
 		});
