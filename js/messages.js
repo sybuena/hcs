@@ -799,8 +799,10 @@ Messages.prototype = {
 							replace('[TO_NAME]', 		toUser)); 							//message To name
 
 						ids.push(messageList[i]['b:MessageGUID']);
-
-						swipeDelete(messageList[i]['b:MessageGUID']);		
+						
+						if(type != 'Deleted') {
+							swipeDelete(messageList[i]['b:MessageGUID']);	
+						}	
 					}
 					//get the current GUID (prevent duplicate)
 					currentGUID = messageList[i]['b:MessageGUID'];
@@ -934,8 +936,10 @@ Messages.prototype = {
 					);	
 
 					ids.push(messageList[i]['b:MessageGUID']);
-
-					swipeDelete(messageList[i]['b:MessageGUID']);
+					
+					if(type != 'Deleted') {
+						swipeDelete(messageList[i]['b:MessageGUID']);
+					}
 				}
 				//get the current GUID (prevent duplicate)
 				currentGUID = messageList[i]['b:MessageGUID'];
@@ -1798,10 +1802,12 @@ Messages.prototype = {
 		
 		//$('#delete_'+guid).css("-webkit-transition-duration", 1 + "s");
 		//$('#delete_'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
-		
 		//return false;
 		//get Token
 		window.user.getToken(window.username, window.password, function(soapResponse){
+			
+			$('#'+guid).hide();
+			$('#delete_'+guid).hide();
 			
 			var results 	= soapResponse.toString();	
 	        var json 		= $.xml2json(results);
@@ -1865,8 +1871,8 @@ Messages.prototype = {
 					$('#delete_'+guid).hide(500);
 					//$('#'+guid).hide();*/
 
-					$('#'+guid).hide();
-					$('#delete_'+guid).hide();
+					//$('#'+guid).hide();
+					//$('#delete_'+guid).hide();
 					addOne()
 				} else {
 					window.startCount = 10;
