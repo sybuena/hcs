@@ -1792,6 +1792,7 @@ Messages.prototype = {
 					
 		$('#loading-ajax #text').html('Deleting Message');
 		$('#loading-ajax').popup('open');
+		
 	//	$('#'+guid).css("-webkit-transition-duration", 1 + "s");
 	//	$('#'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
 		
