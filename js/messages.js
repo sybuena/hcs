@@ -1799,7 +1799,7 @@ Messages.prototype = {
 		//$('#delete_'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
 		$('#'+guid).hide();
 		$('#delete_'+guid).hide();
-		return false;
+		//return false;
 		//get Token
 		window.user.getToken(window.username, window.password, function(soapResponse){
 			
