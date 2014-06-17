@@ -53,7 +53,8 @@ var defaultWidth 		= 500;
 var	currentImg 			= 0;
 var	maxImages 			= 3;
 var	speed				= 500;
-		
+window.font 			= [];
+
 function populateArchive(ids) {
 	setTimeout(loaded, 200);
 	//clean content
@@ -61,9 +62,12 @@ function populateArchive(ids) {
 	setTimeout(function() {
 		var currentId;
 		var counter = 0;	
+
 		for(i in ids) {
 			var height = $("#"+ids[i]).css('height');
-			
+			if(i == 0) {	
+				window.font = height;
+			}
 			if(currentId != ids[i]) {	
 				$('#message-archive').append(
 					'<div id="delete_'+ids[i]+'" class="row" style="height:'+height+'">'+
@@ -850,7 +854,7 @@ function compose() {
 		}	
 		//},200);
 	}*/
-/*setTimeout(function() {
+	/*setTimeout(function() {
 					window.composePage.refresh();
 				},200);*/
 	//populate the contact listing auto search
@@ -1807,42 +1811,26 @@ document.addEventListener('deviceready', function() {
 		window.connection = false;
 		
 		$('.notification-ajax').show();
-		$('.notification-ajax #notification-here').html('<i class="fa fa-warning"></i> No Internet connection');
-		
+		$('.notification-ajax #notification-here').html('<i class="fa fa-warning"></i> No Internet connection');		
 	});
 
-
-
 	document.addEventListener('orientationchange', function() {
-
-		$('.go-detail').css("-webkit-transition-duration", 1 + "s");
-		$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
-		
-    	switch(window.orientation)  {  
-	      case -90:
-	      case 90:
-	        alert('landscape');
-	        break; 
-	      default:
-	        alert('portrait');
-	        break; 
-	    }
+		var parentPage 	= $('ul.nav-stacked li.active a.left-navigation').attr('id');
+		window.startCount = 10;
+			
+		//get message list according on what
+		//user clicked on the LI left panel
+  		window.messages.get(parentPage, 15, 1);
   	});
-  	
+
   	window.addEventListener('orientationchange', function() {
-
-		$('.go-detail').css("-webkit-transition-duration", 1 + "s");
-		$('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
-
-    	switch(window.orientation)  {  
-	      case -90:
-	      case 90:
-	        alert('landscape');
-	        break; 
-	      default:
-	        alert('portrait');
-	        break; 
-	    }
+  		var parentPage 	= $('ul.nav-stacked li.active a.left-navigation').attr('id');
+		window.startCount = 10;
+			
+		//get message list according on what
+		//user clicked on the LI left panel
+  		window.messages.get(parentPage, 15, 1);
+    	
   	});
 
 	//if all DOM is loaded
@@ -1857,10 +1845,6 @@ document.addEventListener('deviceready', function() {
 			 maxFont   : 15,
 			 fontRatio : 30
 		});
-		
-		//document.body.style.height = screen.availHeight + 'px';
-
-		//$("#message-compose").niceScroll();
 		
 		//for login UI
 		init();

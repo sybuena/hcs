@@ -1790,15 +1790,14 @@ Messages.prototype = {
 	 */
 	delete : function(guid, type) {
 					
-		//$('#loading-ajax #text').html('Deleting Message');
-		//$('#loading-ajax').popup('open');
+		$('#loading-ajax #text').html('Deleting Message');
+		$('#loading-ajax').popup('open');
 	//	$('#'+guid).css("-webkit-transition-duration", 1 + "s");
 	//	$('#'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
 		
 		//$('#delete_'+guid).css("-webkit-transition-duration", 1 + "s");
 		//$('#delete_'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
-		$('#'+guid).hide();
-		$('#delete_'+guid).hide();
+		
 		//return false;
 		//get Token
 		window.user.getToken(window.username, window.password, function(soapResponse){
@@ -1866,7 +1865,8 @@ Messages.prototype = {
 					$('#delete_'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
 					$('#delete_'+guid).hide(500);
 					//$('#'+guid).hide();*/
-					
+					$('#'+guid).hide();
+					$('#delete_'+guid).hide();
 					addOne()
 				} else {
 					window.startCount = 10;
