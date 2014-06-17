@@ -1188,7 +1188,11 @@ function mainPage(snapper, loginUser) {
 	 * load specific message folder list
 	 *
 	 */
-	$('.left-navigation').click(function() {
+	$('.left-navigation').unbind().click(function(e) {
+		
+		e.preventDefault();
+		e.stopPropagation();
+
 		//close left panel
 		window.snapper.close();
 			
