@@ -1818,39 +1818,9 @@ document.addEventListener('deviceready', function() {
 		$('.notification-ajax #notification-here').html('<i class="fa fa-warning"></i> No Internet connection');		
 	});
 
-	document.addEventListener('orientationchange', function() {
-		
+	
 
-		$('#message-list').children().each(function() {
-			var id = $(this).attr('id');
-
-			// element's width or height has changed!
-			$('#'+id).bind('resize', function(e) {
-				var h = $(this).css('height');		
-			  
-			  	$('#delete_'+id).css('height', h);
-			  
-			});
-		});	
-
-  	});
-
-  	window.addEventListener('orientationchange', function() {
-
-		$('#message-list').children().each(function() {
-			var id = $(this).attr('id');
-
-			// element's width or height has changed!
-			$('#'+id).bind('resize', function(e) {
-				var h = $(this).css('height');		
-			  
-			  	$('#delete_'+id).css('height', h);
-			  
-			});
-		});		
-		
-  	});
-
+  	
 	//if all DOM is loaded
 	$(document).ready(function(){
 		
@@ -1868,6 +1838,23 @@ document.addEventListener('deviceready', function() {
 		init();
 		//start application
 		bind();
+
+		$(window).bind('orientationchange', function() {
+
+			$('#message-list').children().each(function() {
+				var id = $(this).attr('id');
+
+				// element's width or height has changed!
+				$('#'+id).bind('resize', function(e) {
+					var h = $(this).css('height');		
+				  
+				  	$('#delete_'+id).css('height', h);
+				  
+				});
+			});		
+			
+	  	});
+
 	});
 
 }, false);
