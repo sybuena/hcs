@@ -687,7 +687,7 @@ Messages.prototype = {
 		//HTML template for read messages
 		var row = MESSAGE_ROW;
 		var list = '';
-		var ids = [];
+		
 
 		//empty everything
 		$('#message-list').html('');
@@ -700,7 +700,7 @@ Messages.prototype = {
 		} else {
 
 			var lister = 0;
-			
+			var ids = [];
 			var currentGUID = '';
 
 			//for(i in messageList) { 
@@ -842,7 +842,7 @@ Messages.prototype = {
 
 		$('#wrapper').show();
 
-		populateArchive(ids);
+		populateArchive2(ids);
 		
 	},
 	pullDown : function(messageList,type, start, end) {

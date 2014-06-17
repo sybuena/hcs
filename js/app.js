@@ -56,14 +56,14 @@ var	maxImages 			= 3;
 var	speed				= 500;
 window.font 			= [];
 
-function populateArchive(ids) {
+function populateArchive(ids) { 
 	setTimeout(loaded, 200);
 	//clean content
 	
 	setTimeout(function() {
 		var currentId;
 		var counter = 0;	
-
+		
 		for(i in ids) {
 			var height = $("#"+ids[i]).css('height');
 			if(i == 0) {	
@@ -79,8 +79,49 @@ function populateArchive(ids) {
 
 			counter++;
 			var currentId = ids[i];
-			
 		}
+		
+	}, 200);
+}
+
+function populateArchive2(ids) {
+	setTimeout(loaded, 200);
+	//clean content
+	
+	setTimeout(function() {
+		var currentId;
+		var counter = 0;	
+		
+		$('#message-list').children().each(function() {
+			var id = $(this).attr('id');
+			var height = $("#"+id).css('height');
+			if(i == 0) {	
+				window.font = height;
+			}
+			$('#message-archive').append(
+				'<div id="delete_'+id+'" class="row" style="height:'+height+'">'+
+	            '<div class="delete-swipe col-xs-6 col-sm-6 pull-right">'+
+	            '<a href="#" onclick="deleteSwipe.call(this,event)" id="'+id+'"><i class="fa fa-trash-o fa-2x center-swipe"></i></a>'+
+	            '</div></div>');
+			
+		});
+
+		/*for(i in ids) {
+			var height = $("#"+ids[i]).css('height');
+			if(i == 0) {	
+				window.font = height;
+			}
+			if(currentId != ids[i]) {	
+				$('#message-archive').append(
+					'<div id="delete_'+ids[i]+'" class="row" style="height:'+height+'">'+
+		            '<div class="delete-swipe col-xs-6 col-sm-6 pull-right">'+
+		            '<a href="#" onclick="deleteSwipe.call(this,event)" id="'+ids[i]+'"><i class="fa fa-trash-o fa-2x center-swipe"></i></a>'+
+		            '</div></div>');
+			}
+
+			counter++;
+			var currentId = ids[i];
+		}*/
 		
 	}, 200);
 
