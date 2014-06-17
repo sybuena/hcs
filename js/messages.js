@@ -1855,10 +1855,8 @@ Messages.prototype = {
 	           	var currentPage = $('.current-page').attr('id');
 	        	
 	        	if(currentPage == 'home') {
-		            $('#message-list').css('pointer-events', 'all');
+		            
 		           // $('.go-detail').css("-webkit-transform", "translate3d(0px,0px,0px)");
-					
-					
 					/*$('#'+guid).css("-webkit-transition-duration", 1 + "s");
 					$('#'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
 					$('#'+guid).hide(500);
@@ -1866,6 +1864,7 @@ Messages.prototype = {
 					$('#delete_'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
 					$('#delete_'+guid).hide(500);
 					//$('#'+guid).hide();*/
+					
 					$('#'+guid).hide();
 					$('#delete_'+guid).hide();
 					addOne()
@@ -1875,6 +1874,7 @@ Messages.prototype = {
 				}
 
 				$('#loading-ajax').popup('close');
+				$('#message-list').css('pointer-events', 'all');
 			
 			});
 		});
