@@ -96,10 +96,6 @@ function populateArchive2(ids) {
 			var id = $(this).attr('id');
 			var height = $("#"+id).css('height');
 			
-			if(i == 0) {	
-				window.font = height;
-			}
-			
 			var deleteSwipe = $('#delete_'+id).css('height');
 			
 			//if ID is still not i the list
@@ -107,14 +103,12 @@ function populateArchive2(ids) {
 			if(typeof deleteSwipe === 'undefined') {
 				$('#message-archive').append(
 					'<div id="delete_'+id+'" class="row" style="height:'+height+'">'+
-		            '<div class="delete-swipe col-xs-6 col-sm-6 pull-right">'+
-		            '<a href="#" onclick="deleteSwipe.call(this,event)" id="'+id+'"><i class="fa fa-trash-o fa-2x center-swipe"></i></a>'+
+		            '<div onclick="deleteSwipe.call(this,event)" id="'+id+'" class="delete-swipe col-xs-6 col-sm-6 pull-right">'+
+		            '<p><i class="fa fa-trash-o fa-2x center-swipe"></i></p>'+
 		            '</div></div>');
 			}
 			
 		});
-
-
 	}, 200);
 
 	

@@ -476,7 +476,7 @@ iScroll.prototype = {
 		if (newY > that.minScrollY || newY < that.maxScrollY) {
 			newY = that.options.bounce ? that.y + (deltaY / 2) : newY >= that.minScrollY || that.maxScrollY >= 0 ? that.minScrollY : that.maxScrollY;
 		}
-		
+
 		//put limit on the scroll rubber band effect
 		if(newY > '50') {
 			newY = '50';
