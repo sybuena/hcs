@@ -479,7 +479,8 @@ iScroll.prototype = {
 
 		//put limit on the scroll rubber band effect
 		if(newY > '50') {
-			newY = '50';
+			return;
+		//	newY = '50';
 		}
 
 		that.distX += deltaX;
