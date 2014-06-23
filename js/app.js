@@ -1213,7 +1213,11 @@ function mainPage(snapper, loginUser) {
 	});
 
 	//on click back button
-	$('#back-top').click(function() {
+	//$('#back-top').click(function() {
+	$('#back-top').bind('tap', function(e) {		
+		e.preventDefault();
+		e.stopPropagation();
+		
 		backEvent();
 	});
 
@@ -1222,8 +1226,8 @@ function mainPage(snapper, loginUser) {
 	 * load specific message folder list
 	 *
 	 */
-	$('.left-navigation').unbind().click(function(e) {
-		
+	//$('.left-navigation').unbind().click(function(e) {
+	$('.left-navigation').bind('tap', function(e) {	
 		e.preventDefault();
 		e.stopPropagation();
 
