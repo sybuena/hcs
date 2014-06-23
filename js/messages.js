@@ -1138,8 +1138,10 @@ Messages.prototype = {
 					$('.warning-holder').html('');
 					//unsent sent item so it can load again
 					localStorage.setItem('Sent', '');
-					window.messages.get('Inbox', 10, 0);
 					
+					var parentPage 	= $('ul.nav-stacked li.active a.left-navigation').attr('id');
+
+					window.messages.get(parentPage, 15, 1);
 
          		} else {
          			notification('Message not send');

@@ -1740,7 +1740,7 @@ var _string = (function() {
 			var string = localStorage.getItem(key);
 			
 			//if string from local storage is null
-			if(string === null || $.isEmptyObject(string)) { 
+			if(string === null/* || $.isEmptyObject(string)*/) { 
 				//just return it, do nothing
 				return string;
 			}
@@ -1749,7 +1749,7 @@ var _string = (function() {
 				var decrypted = CryptoJS.AES.decrypt(string, SECRET);
 				var json = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
 			} else { 
-				var json = JSON.parse(string);
+				var json = jQuery.parseJSON(string);//JSON.parse(string);
 			}
 
 			return json;
