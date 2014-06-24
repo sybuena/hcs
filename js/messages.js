@@ -266,7 +266,8 @@ Messages.prototype = {
          		
          		$('#'+type+' span.badge').html(count);
          		$('#folder-name').html($('a#'+type).html());
-         		window.plugin.notification.badge.set(count);	
+         		setBadge(count)
+         		
 			});		        
 		});
 	},
@@ -649,6 +650,8 @@ Messages.prototype = {
  				data['b:Label']['b:Subject'] = '';
  			}
 
+ 			$(this).attr('isClick', 'true');
+
  			e.stopPropagation();
 			e.preventDefault();
  			compose();
@@ -663,6 +666,9 @@ Messages.prototype = {
  				
  				data['b:Label']['b:Subject'] = '';
  			}
+ 			
+ 			$(this).attr('isClick', 'true');
+
  			e.stopPropagation();
 			e.preventDefault();
  			compose();
@@ -675,6 +681,9 @@ Messages.prototype = {
  			if(emptySubject == true) {
  				data['b:Label']['b:Subject'] = '';
  			}
+
+ 			$(this).attr('isClick', 'true');
+
  			e.stopPropagation();
 			e.preventDefault();
  			compose();
@@ -1178,11 +1187,23 @@ Messages.prototype = {
 					$('.warning-holder').html('');
 					//unsent sent item so it can load again
 					localStorage.setItem('Sent', '');
+					
+					var clicked = false;
 
-					var parentPage 	= $('ul.nav-stacked li.active a.left-navigation').attr('id');
+					$('.detail-button-group').each(function() {
+						
+						if($(this).attr('isClick') == 'true') {
+							clicked = true;
+						}
+					});
+					
+					if(clicked == 'true') {
+						//window.messages.getDetail(id, type, unread);
+					} else {
+						var parentPage 	= $('ul.nav-stacked li.active a.left-navigation').attr('id');
 
-					window.messages.get(parentPage, 15, 1);
-
+						window.messages.get(parentPage, 15, 1);
+					}
          		} else {
          			notification('Message not send');
          		}
@@ -1838,7 +1859,7 @@ Messages.prototype = {
 		$('#message-list').css('pointer-events', 'all');			
 		$('#loading-ajax #text').html('Deleting Message');
 		$('#loading-ajax').popup('open');
-
+		
 
 		//	$('#'+guid).css("-webkit-transition-duration", 1 + "s");
 		//	$('#'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
@@ -1889,26 +1910,28 @@ Messages.prototype = {
 
 						$('#'+type+' span.badge').html(plus);
 						$('#folder-name').html($('#'+type).html());
-						
-						//window.plugin.notification.badge.set(plus);
+						setBadge(plus);						
 					}
 	        	}    
 	           
 	            //throw message that the message is deleted
 	           //	notification('Message deleted');
 	           	
-         		//get localstorage data
-	           	var data = _string.unlock(type);
-	           	var data2 = _string.unlock('Deleted');
-	           	
-         		newData = [];
+         		//get local Storage data
+	           	var data 	= _string.unlock(type);
+	           	var data2 	= _string.unlock('Deleted');
+         		var newData = [];
+
          		//now remove the message to the local storage
          		for(i in  data) {
+
          			if(data[i]['b:MessageGUID'] != guid){
+
          				newData.push(data[i])
          			} else {
-         				
+         				//only add if deleted message is already loaded
          				if(data2 !== null) {
+         					//push to the beginning of the listing
          					data2.splice(0, 0, data[i]);
          					_string.lock(data2, 'Deleted');
          				}
@@ -1917,21 +1940,46 @@ Messages.prototype = {
          		
          		_string.lock(newData, type);
          		
-         		
-	            //now display it
-	           // window.messages.get(type,10,1);
-	           //localStorage.setItem('Deleted', '');
-	           	
 	           	var currentPage = $('.current-page').attr('id');
 	        	
 	        	if(currentPage == 'home') {
-		            
 					$('#'+guid).hide();
 					$('#delete_'+guid).hide();
 					addOne()
 				} else {
-					window.startCount = 10;
-					window.messages.get(type,15,1);
+					var next = $('#'+guid).next().attr('id');
+					//if end of the list
+					if(typeof next === 'undefined') {
+						//we jsut go back to the listing
+						window.startCount = 10;
+						window.messages.get(type,15,1);	
+					//go to the next message detail				
+					} else {
+						
+						var unread 	= $('#'+next).attr('unread');
+
+						//check if message is unread
+						if(unread == 'true') {
+							//count the current unread message
+							var count = $('#Inbox span.badge').html();
+
+							//only process if there is unread message	
+							if(count != 0) {
+								//do the math
+								var plus = parseInt(count) - 1;
+
+								$('#Inbox span.badge').html(plus);
+								$('#folder-name').html($('#Inbox').html());
+								
+								setBadge(plus);
+							}
+							$('#'+next).css('background-color', '#E4E4E4');
+							$('#'+next).css('font-weight', 'none');
+							
+						}
+
+						window.messages.getDetail(next, type, unread);	
+					}	
 				}
 
 				setTimeout(function() {
@@ -2115,14 +2163,16 @@ Messages.prototype = {
 				 					//and display
 				 					$('#'+type+' span.badge').html(plus);
 				 					$('#folder-name').html($('#'+type).html());
-				 					window.plugin.notification.badge.set(plus);
+				 					setBadge(plus);
+				 					
 				 				//else if count is zero
 				 				} else {
 				 					//just add one
 				 					$('#'+type+' span.badge').html('1');
 				 					//and display
 				 					$('#folder-name').html($('#'+type).html());
-				 					window.plugin.notification.badge.set(1);
+				 					setBadge(1)
+				 				
 				 				}
 
 				 				//lock and save
@@ -2178,15 +2228,16 @@ Messages.prototype = {
 			 					//and display
 			 					$('#'+type+' span.badge').html(plus);
 			 					$('#folder-name').html($('#'+type).html());
-			 					window.plugin.notification.badge.set(plus);
+			 					setBadge(plus);
+			 					
 			 				//else if count is zero	
 			 				} else {
 			 					//just add one
 			 					$('#'+type+' span.badge').html('1');
 			 					//and display
 			 					$('#folder-name').html($('#'+type).html());
-			 					
-			 					window.plugin.notification.badge.set(1);
+			 					setBadge(1)
+			 				
 			 				}
 			 				
 			 				//lock and save

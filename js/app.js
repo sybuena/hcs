@@ -639,8 +639,8 @@ function onClickDetail(type) {
 
 				$('#Inbox span.badge').html(plus);
 				$('#folder-name').html($('#Inbox').html());
+				setBadge(plus);
 				
-				window.plugin.notification.badge.set(plus);
 			}
 
 			$(this).css('background-color', '#E4E4E4');
@@ -1802,12 +1802,12 @@ var _SOAP = (function() {
 }());
 
 document.addEventListener('deviceready', function() {	
-	
-	//Enables the background mode. The app will not pause while in background.
-	window.plugin.backgroundMode.enable();
-	//unset badge
-	window.plugin.notification.badge.set(0);
-	
+	if(typeof window.plugin !== 'undefined') {
+		//Enables the background mode. The app will not pause while in background.
+		window.plugin.backgroundMode.enable();
+		//unset badge
+		window.plugin.notification.badge.set(0);
+	}
 	navigator.geolocation.getCurrentPosition(
 		//do nothing
 		function() {
