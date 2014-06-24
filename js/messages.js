@@ -596,10 +596,11 @@ Messages.prototype = {
 
 			}
 		}
-
+		var emptySubject = false;
 		//for empty subject
  		if(data['b:Label']['b:Subject'].length == 0) {
- 			data['b:Label']['b:Subject'] = '<i>Empty Subject</i>';
+ 			emptySubject = true;
+ 			data['b:Label']['b:Subject'] = 'Empty Subject';
  		}
 
  		//MESSAGE CONTENT
@@ -644,6 +645,10 @@ Messages.prototype = {
 
  		//reply all button
  		$('#detail-reply-all').unbind().click(function(e) {
+ 			if(emptySubject == true) {
+ 				data['b:Label']['b:Subject'] = '';
+ 			}
+
  			e.stopPropagation();
 			e.preventDefault();
  			compose();
@@ -654,6 +659,10 @@ Messages.prototype = {
 
  		//reply button
  		$('#detail-reply').unbind().click(function(e) {
+ 			if(emptySubject == true) {
+ 				
+ 				data['b:Label']['b:Subject'] = '';
+ 			}
  			e.stopPropagation();
 			e.preventDefault();
  			compose();
@@ -663,6 +672,9 @@ Messages.prototype = {
 
  		//forward button
  		$('#detail-forward').unbind().click(function(e) {
+ 			if(emptySubject == true) {
+ 				data['b:Label']['b:Subject'] = '';
+ 			}
  			e.stopPropagation();
 			e.preventDefault();
  			compose();
@@ -787,15 +799,15 @@ Messages.prototype = {
 					}
 					
 					if(subject.length == 0) {
-						subject = '<i>Empty subject</i>';
+						subject = 'Empty subject';
 					}
 					
 					if(fromName.length == 0) {
-						fromName = '<i>Empty</i>';
+						fromName = 'Empty';
 					}
 
 					if(toUser.length == 0) {
-						toUser = '<i>Empty</i>';
+						toUser = 'Empty<';
 					}
 
 					$("#message-list").show();
@@ -936,15 +948,15 @@ Messages.prototype = {
 				}
 				
 				if(subject.length == 0) {
-					subject = '<i>Empty subject</i>';
+					subject = 'Empty subject';
 				}
 				
 				if(fromName.length == 0) {
-					fromName = '<i>Empty</i>';
+					fromName = 'Empty';
 				}
 
 				if(toUser.length == 0) {
-					toUser = '<i>Empty</i>';
+					toUser = 'Empty';
 				}
 
 				//prevent duplicate listing
@@ -978,9 +990,10 @@ Messages.prototype = {
 		populateArchive(ids);
 	}, 
 	send : function(subject, content, priority, recipients, guid) {
+
 		//get Token
 		window.user.getToken(window.username, window.password, function(soapResponse){
-			
+				
 			var results 	= soapResponse.toString();	
 	        var json 		= $.xml2json(results);
 		 	var response 	= json['s:Envelope']['s:Body']['LoginCaregiverPortalResponse']['LoginCaregiverPortalResult'];
@@ -1165,7 +1178,7 @@ Messages.prototype = {
 					$('.warning-holder').html('');
 					//unsent sent item so it can load again
 					localStorage.setItem('Sent', '');
-					
+
 					var parentPage 	= $('ul.nav-stacked li.active a.left-navigation').attr('id');
 
 					window.messages.get(parentPage, 15, 1);
