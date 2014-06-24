@@ -545,6 +545,7 @@ a {
 }
 
 .messages {
+    min-height: 74px;
     width: 100%;
     height: auto;
     border-bottom: 1px solid #ccc;
@@ -1552,7 +1553,7 @@ a.button-red:hover {color: white}
 }
 
 
-.scrollz-content-wrapper, #message-detail, #message-compose, #message-settings {background-color: #f7f7f7;margin-top: 50px}
+#message-detail, #message-compose, #message-settings {background-color: #f7f7f7;margin-top: 50px}
 
 .no-connection {
     width: 65%;

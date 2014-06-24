@@ -3,12 +3,12 @@
    ----------------------------------------- */
 var MESSAGE_ROW = 
 	'<div unread="false" class="messages go-detail" id="[MESSAGE_ID]" style="background-color: #f7f7f7;"><div class="pull-left" style="width:65%"><p class="list-title">[SUBJECT]</p>'+
-	'<p>From: [FROM_NAME]</p><p>[TO_NAME]</p></div><div class="pull-right" style="width:35%; text-align:right"><p class="list-date">[DATE]</p>'+
+	'<p>From: [FROM_NAME]</p><p> To: [TO_NAME]</p></div><div class="pull-right" style="width:35%; text-align:right"><p class="list-date">[DATE]</p>'+
     '<p class="important-star"><i class="fa [IMPORTANT] fa-2x" style="font-size: 20px"></i></p></div><div class="clearfix"></div></div>';
 
 var MESSAGE_ROW_1 = 
 	'<div unread="true" class="messages unread go-detail" id="[MESSAGE_ID]"><div class="pull-left" style="width:65%"><p class="list-title">[SUBJECT]</p>'+
-    '<p>From: [FROM_NAME]</p><p>[TO_NAME]</p></div><div class="pull-right" style="width:35%; text-align:right;"><p class="list-date">[DATE]</p>'+
+    '<p>From: [FROM_NAME]</p><p>To: [TO_NAME]</p></div><div class="pull-right" style="width:35%; text-align:right;"><p class="list-date">[DATE]</p>'+
     '<p class="important-star"><i class="fa [IMPORTANT] fa-2x"></i></p></div><div class="clearfix"></div></div>';
 
 var TO_COMPOSE = 
@@ -35,8 +35,11 @@ Messages.prototype = {
 	 * @return object|mixed
 	 */
 	get : function(type, start, end, force) {
-		$('#pullDown').hide();
+		
+		window.messages.animateList('start', type);
 
+		$('#pullDown').hide();
+		
 		//mark inbox as home page
 		if(type == 'Inbox') {
 			$('.current-page').attr('id', 'home');
@@ -353,7 +356,6 @@ Messages.prototype = {
 		});
 	},
 	load : function(type, start, end) {
-		this.animateList('start', type);
 		
 		//refresh token 
 		window.user.getToken(window.username, window.password, function(soapResponse){
@@ -594,7 +596,12 @@ Messages.prototype = {
 
 			}
 		}
- 		
+
+		//for empty subject
+ 		if(data['b:Label']['b:Subject'].length == 0) {
+ 			data['b:Label']['b:Subject'] = '<i>Empty Subject</i>';
+ 		}
+
  		//MESSAGE CONTENT
  		$('#detail-content').html(data['b:Content'].replace(/\n/g, "<br />"));
  		//MESSAGE SUBJECT
@@ -769,18 +776,26 @@ Messages.prototype = {
 							for(x in messageList[i]['b:Recipients']['b:Recipient']) {
 								//and make HTML format
 								toName = messageList[i]['b:Recipients']['b:Recipient'][x]['b:m_Receiver']['c:Name']['d:m_firstName']+' '+messageList[i]['b:Recipients']['b:Recipient'][x]['b:m_Receiver']['c:Name']['d:m_lastName'];	
-								toUser += ' To:<span class="gray m-l-25">'+toName+'</span><br />';
+								toUser += ' <span class="gray m-l-25">'+toName+'</span><br />';
 							}
 						//otherwise if only one recipient	
 						} else {
 							//just do HTML format
 							toName = messageList[i]['b:Recipients']['b:Recipient']['b:m_Receiver']['c:Name']['d:m_firstName']+' '+messageList[i]['b:Recipients']['b:Recipient']['b:m_Receiver']['c:Name']['d:m_lastName'];	
-							toUser += ' To:<span class="gray m-l-25">'+toName+'</span><br />';
+							toUser += ' <span class="gray m-l-25">'+toName+'</span><br />';
 						}
 					}
 					
-					if(subject.length > 20) {
-						//subject = subject.substr(0,20)+'..';	
+					if(subject.length == 0) {
+						subject = '<i>Empty subject</i>';
+					}
+					
+					if(fromName.length == 0) {
+						fromName = '<i>Empty</i>';
+					}
+
+					if(toUser.length == 0) {
+						toUser = '<i>Empty</i>';
 					}
 
 					$("#message-list").show();
@@ -910,16 +925,28 @@ Messages.prototype = {
 						for(x in messageList[i]['b:Recipients']['b:Recipient']) {
 							//and make HTML format
 							toName = messageList[i]['b:Recipients']['b:Recipient'][x]['b:m_Receiver']['c:Name']['d:m_firstName']+' '+messageList[i]['b:Recipients']['b:Recipient'][x]['b:m_Receiver']['c:Name']['d:m_lastName'];	
-							toUser += ' To:<span class="gray m-l-25">'+toName+'</span><br />';
+							toUser += ' <span class="gray m-l-25">'+toName+'</span><br />';
 						}
 					//otherwise if only one recipient	
 					} else {
 						//just do HTML format
 						toName = messageList[i]['b:Recipients']['b:Recipient']['b:m_Receiver']['c:Name']['d:m_firstName']+' '+messageList[i]['b:Recipients']['b:Recipient']['b:m_Receiver']['c:Name']['d:m_lastName'];	
-						toUser += ' To:<span class="gray m-l-25">'+toName+'</span><br />';
+						toUser += ' <span class="gray m-l-25">'+toName+'</span><br />';
 					}
 				}
-			
+				
+				if(subject.length == 0) {
+					subject = '<i>Empty subject</i>';
+				}
+				
+				if(fromName.length == 0) {
+					fromName = '<i>Empty</i>';
+				}
+
+				if(toUser.length == 0) {
+					toUser = '<i>Empty</i>';
+				}
+
 				//prevent duplicate listing
 				if(currentGUID != messageList[i]['b:MessageGUID'] || type == 'Outbox') {
 					//this guys will append everything he gets from loop 
@@ -1845,20 +1872,24 @@ Messages.prototype = {
 	           	
          		//get localstorage data
 	           	var data = _string.unlock(type);
+	           	var data2 = _string.unlock('Deleted');
 
          		newData = [];
          		//now remove the message to the local storage
          		for(i in  data) {
          			if(data[i]['b:MessageGUID'] != guid){
          				newData.push(data[i])
+         			} else {
+         				data2.splice(0, 0, data[i]);
          			}
          		}
          		
          		_string.lock(newData, type);
-
+         		_string.lock(data2, 'Deleted');
+         		
 	            //now display it
 	           // window.messages.get(type,10,1);
-	           localStorage.setItem('Deleted', '');
+	           //localStorage.setItem('Deleted', '');
 	           	
 	           	var currentPage = $('.current-page').attr('id');
 	        	
@@ -1922,12 +1953,12 @@ Messages.prototype = {
 	           	var data = _string.unlock(type);
 
 	           	newData = [];
-         		
+				 		
          		//now remove the message to the local storage
          		for(i in  data) {
          			if(data[i]['b:MessageGUID'] != guid){
          				newData.push(data[i])
-         			}
+	         		}
          		}
          		
          		//lock and save

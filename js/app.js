@@ -1197,7 +1197,11 @@ function mainPage(snapper, loginUser) {
 	 * html/css
 	 *
 	 */
-	$('.deploy-sidebar').click(function(){
+	//$('.deploy-sidebar').click(function(){
+	$('.deploy-sidebar').bind('tap', function(e) {		
+		e.preventDefault();
+		e.stopPropagation();
+
 		//if panel already active	
 		if(window.snapper.state().state=="left" ){
 			//close it
@@ -1217,7 +1221,7 @@ function mainPage(snapper, loginUser) {
 	$('#back-top').bind('tap', function(e) {		
 		e.preventDefault();
 		e.stopPropagation();
-		
+
 		backEvent();
 	});
 
@@ -1515,7 +1519,7 @@ function backEvent() {
 	mainLoader('stop');
 	
 	$('.no-connection').hide();
-
+	console.log(parentPage);
 	//if in compose then hit back button
 	if(currentPage == 'compose') {
 		//prepare variables
@@ -1744,7 +1748,7 @@ var _string = (function() {
 			var string = localStorage.getItem(key);
 			
 			//if string from local storage is null
-			if(string === null/* || $.isEmptyObject(string)*/) { 
+			if(string === null || string == ''/* || $.isEmptyObject(string)*/) { 
 				//just return it, do nothing
 				return string;
 			}
@@ -1753,7 +1757,8 @@ var _string = (function() {
 				var decrypted = CryptoJS.AES.decrypt(string, SECRET);
 				var json = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
 			} else { 
-				var json = jQuery.parseJSON(string);//JSON.parse(string);
+				
+				var json = JSON.parse(string);
 			}
 
 			return json;
