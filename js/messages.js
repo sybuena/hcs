@@ -1873,19 +1873,22 @@ Messages.prototype = {
          		//get localstorage data
 	           	var data = _string.unlock(type);
 	           	var data2 = _string.unlock('Deleted');
-
+	           	
          		newData = [];
          		//now remove the message to the local storage
          		for(i in  data) {
          			if(data[i]['b:MessageGUID'] != guid){
          				newData.push(data[i])
          			} else {
-         				data2.splice(0, 0, data[i]);
+         				if(!data) {
+         					data2.splice(0, 0, data[i]);
+         					_string.lock(data2, 'Deleted');
+         				}
          			}
          		}
          		
          		_string.lock(newData, type);
-         		_string.lock(data2, 'Deleted');
+         		
          		
 	            //now display it
 	           // window.messages.get(type,10,1);
