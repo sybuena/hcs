@@ -1826,9 +1826,7 @@ Messages.prototype = {
 		$('#loading-ajax #text').html('Deleting Message');
 		$('#loading-ajax').popup('open');
 
-		
-		
-		
+
 		//	$('#'+guid).css("-webkit-transition-duration", 1 + "s");
 		//	$('#'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
 		
@@ -1865,7 +1863,23 @@ Messages.prototype = {
 			_SOAP.post('DeleteMessage', xml, function(soapResponse) { 
 				var results = soapResponse.toString(); 
 	            var json 	= $.xml2json(results);
-	            
+	        	var newMessage = $('#'+guid).attr('unread');
+	        	
+	        	if(newMessage == 'true') {
+
+	        		var count = $('#'+type+' span.badge').html();
+					
+					//only process if there is unread message	
+					if(count != 0) {
+						//do the math
+						var plus = parseInt(count) - 1;
+
+						$('#'+type+' span.badge').html(plus);
+						$('#folder-name').html($('#'+type).html());
+						
+						//window.plugin.notification.badge.set(plus);
+					}
+	        	}    
 	           
 	            //throw message that the message is deleted
 	           //	notification('Message deleted');
@@ -1880,7 +1894,8 @@ Messages.prototype = {
          			if(data[i]['b:MessageGUID'] != guid){
          				newData.push(data[i])
          			} else {
-         				if(!data) {
+         				
+         				if(data2 !== null) {
          					data2.splice(0, 0, data[i]);
          					_string.lock(data2, 'Deleted');
          				}

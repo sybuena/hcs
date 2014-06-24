@@ -985,14 +985,17 @@ function composeWith(data, type) {
 	$('#compose-contact').prev().html('');
 	$('.warning-holder').html('');
 	$('#compose-contact-list').html('');
-
+	$('#compose-content').html('');
+	$('#compose-content').val('');
+	$('#compose-content').empty();
 	var contactList = window.contactList;
-
+	
 	//FOR OUTBOX
 	if(type == 'Outbox') {
 		var res = data['b:Recipients']['b:Recipient'];
 		//MESSAGE CONTENT
 		$('#compose-content').html(data['content']);
+		$('#compose-content').val(data['content']);
  		//MESSAGE SUBJECT
  		$('#compose-subject').val(data['b:Subject']);
  		
@@ -1018,9 +1021,12 @@ function composeWith(data, type) {
 
 	//FOR DRAFT	
 	} else {
+		
 		var res = data['b:Label']['b:Recipients']['b:Recipient'];
+		
 		//MESSAGE CONTENT
 		$('#compose-content').html(data['b:Content']);
+		$('#compose-content').val(data['b:Content']);
  		//MESSAGE SUBJECT
  		$('#compose-subject').val(data['b:Label']['b:Subject']);
  		
@@ -1044,15 +1050,28 @@ function composeWith(data, type) {
 			}
 		}	
 	}
+	
+	if(typeof res !== 'undefined') {
+		//MESSAGE TO LISTING
+		//if multiple contact list
+		if(typeof res[0] !== 'undefined') {
+			//find name
+			for(i in res) {
+				for(x in contactList) {
+					
+					if(res[i]['b:m_Receiver']['c:PortalAccess']['c:LoginId'] == contactList[x].data['b:PortalAccess']['b:LoginId']) {
+						$('.to-holder').append(TO_COMPOSE.
+				    		replace('[ID]', x).
+				    		replace('[NAME]', contactList[x].name)
+				    	);
+					}	
+				}
+			}
 
-	//MESSAGE TO LISTING
-	//if multiple contact list
-	if(typeof res[0] !== 'undefined') {
-		//find name
-		for(i in res) {
+		} else {
 			for(x in contactList) {
 				
-				if(res[i]['b:m_Receiver']['c:PortalAccess']['c:LoginId'] == contactList[x].data['b:PortalAccess']['b:LoginId']) {
+				if(res['b:m_Receiver']['c:PortalAccess']['c:LoginId'] == contactList[x].data['b:PortalAccess']['b:LoginId']) {
 					$('.to-holder').append(TO_COMPOSE.
 			    		replace('[ID]', x).
 			    		replace('[NAME]', contactList[x].name)
@@ -1060,19 +1079,7 @@ function composeWith(data, type) {
 				}	
 			}
 		}
-
-	} else {
-		for(x in contactList) {
-			
-			if(res['b:m_Receiver']['c:PortalAccess']['c:LoginId'] == contactList[x].data['b:PortalAccess']['b:LoginId']) {
-				$('.to-holder').append(TO_COMPOSE.
-		    		replace('[ID]', x).
-		    		replace('[NAME]', contactList[x].name)
-		    	);
-			}	
-		}
 	}
-
 	//populate autocomplete with contact listing
 	for(i in contactList) {
 		
@@ -1797,9 +1804,9 @@ var _SOAP = (function() {
 document.addEventListener('deviceready', function() {	
 	
 	//Enables the background mode. The app will not pause while in background.
-	window.plugin.backgroundMode.enable();
+	//window.plugin.backgroundMode.enable();
 	//unset badge
-	window.plugin.notification.badge.set(0);
+	//window.plugin.notification.badge.set(0);
 	
 	navigator.geolocation.getCurrentPosition(
 		//do nothing
