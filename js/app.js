@@ -458,8 +458,10 @@ function init() {
 		$('.login-error').html('Welcome');
 		$('#setting-content').show();
 		$('#login-content').hide();
+		$('#help-content').hide();
 		$('#login-page').show();
 		$(this).hide();
+		$('#help-page').show();
 
 		$('#soap-url').val(window.url);
 		
@@ -477,6 +479,18 @@ function init() {
 		});
 	});
 
+	$('#help-page').click(function() {
+		$('.login-error').html('Help Line');
+		$('#setting-content').hide();
+		$('#login-content').hide();
+		$('#loading-login').hide();
+		$('.loading-circle').hide();
+		$('#help-content').show();
+		$(this).hide();
+		$('#login-page').show();
+		$('#settings-page').show();
+	});
+
 	//show login page
 	$('#login-page').click(function() {
 		
@@ -484,11 +498,13 @@ function init() {
 		$('#login-content').show();
 		
 		$('#setting-content').hide();
+		$('#help-content').hide();
 		$('#setting-page').show();
 		$('#loading-login').hide();
 		$('.loading-circle').hide();
 		
 		$(this).hide();
+		$('#help-page').show();
 
 	});
 }
@@ -1152,6 +1168,17 @@ function notification(html) {
 	$('.message-ajax').fadeOut(4000);
 }
 
+function outbox() {
+	var loginUser = window.user.get();
+	$('#folder-name').html($('a#Outbox').html());
+	$('.loading-messages').hide();
+
+	//get outbox from localstorage
+	window.messages.getOutbox(loginUser);
+
+	return false;
+}
+
 /**
  * If ever user logout, then the settings for
  * message will be set to default as the user login
@@ -1160,6 +1187,21 @@ function notification(html) {
  * @return bool 
  */
 function settings() {
+
+	$('.slimScrollDiv').hide();
+	$('#back-top').hide();
+	$('#sidebar-top').show();
+	$('#delete-message').hide();
+	$('#compose-message').show();
+	$('#process-send').hide();
+
+	//flag currrent page as LIST
+	$('.message-elem').hide();
+	$('.current-page').attr('id', 'list');	
+	$('#folder-name').html('Settings');
+	$('.loading-messages').hide();
+	$('#message-settings').show();
+
 	//get settings variables from local storage
 	window.url 		= localStorage.getItem('url');
   	window.interval = parseInt(localStorage.getItem('interval'));
@@ -1190,6 +1232,23 @@ function settings() {
 	});
 
 	return false;
+}
+
+function help() {
+	$('.slimScrollDiv').hide();
+	$('#back-top').hide();
+	$('#sidebar-top').show();
+	$('#delete-message').hide();
+	$('#compose-message').show();
+	$('#process-send').hide();
+
+	//flag currrent page as LIST
+	$('.message-elem').hide();
+	$('.current-page').attr('id', 'list');	
+	$('#folder-name').html('Help');
+	$('.loading-messages').hide();
+	$('#message-help').show();
+
 }
 
 function mainPage(snapper, loginUser) {
@@ -1281,17 +1340,16 @@ function mainPage(snapper, loginUser) {
 			click, then show message settings
 		   ------------------------------------ */
 		} else if(type == 'Settings') {
-			//flag currrent page as LIST
-			$('.message-elem').hide();
-			$('.current-page').attr('id', 'list');	
-			$('#folder-name').html('Settings');
-			$('.loading-messages').hide();
-			$('#message-settings').show();
+			
 			//show message settings page 
 			settings();
 
 			return false
-		
+		} else if(type == 'Help') {
+			
+			help();
+
+			return false;
 		/* ------------------------------------
 			SPECIAL CASE : if OUTBOX page is 
 			click, then dont make any SOAP CALL
@@ -1301,11 +1359,7 @@ function mainPage(snapper, loginUser) {
 		   ------------------------------------ */
 		} else if(type == 'Outbox') {
 
-			$('#folder-name').html($('a#Outbox').html());
-			$('.loading-messages').hide();
-			//get outbox from localstorage
-			window.messages.
-	  			getOutbox(loginUser);
+			outbox();
 	  		//pullDown();
 
 	  	//else it is common page loading
@@ -1526,7 +1580,7 @@ function backEvent() {
 	mainLoader('stop');
 	
 	$('.no-connection').hide();
-	console.log(parentPage);
+	
 	//if in compose then hit back button
 	if(currentPage == 'compose') {
 		//prepare variables
@@ -1560,6 +1614,29 @@ function backEvent() {
 			$('#draft-modal').modal('hide');
 			$('#process-send').hide();	
 			
+			//if  page is from settings
+			if(parentPage == 'Settings') {
+				
+				//show message settings page 
+				settings();
+
+				return false;
+			}
+			
+			if(parentPage == 'Outbox') {
+				
+				outbox();
+
+		  		return false;
+	  		}
+
+	  		if(parentPage == 'Help') {
+				
+				help();
+
+		  		return false;
+	  		}	
+
 			//unset pagination whenevery changing to another
 			//message listing
 			window.startCount = 10;

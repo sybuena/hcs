@@ -68,9 +68,11 @@ Messages.prototype = {
 	    	this.load(type, start, end);
 		//else there is temporary saved data
 		} else { 
-
-			//just show the listing
-			this.displayMessage(window.messageList[type], type, start, end, 1);
+			
+			setTimeout(function() {
+				//just show the listing
+				window.messages.displayMessage(window.messageList[type], type, start, end, 1);
+			}, 200);
 		}
 
 		//this will only work if no ajax call happen
@@ -140,8 +142,10 @@ Messages.prototype = {
          	window.messages.loadDetail(guid, type, unread);
 		//else if found	
 		} else {
+			
 			//just display it
 			window.messages.displayDetail(window.messageDetail[guid], type, guid, unread);
+			
 		}
 
 		return false;
@@ -204,7 +208,7 @@ Messages.prototype = {
 			var start 		= '1950-04-01T09:00:00';
 			var end 		= $.format.date(new Date().getTime(), "yyyy-MM-ddThh:mm:ss");
 			var xml 		=
-		        ['<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:heal="http://schemas.datacontract.org/2004/07/HealthCareAssistant" xmlns:hsim="http://schemas.datacontract.org/2004/07/HSIMessageExchange">',
+		        ['<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:heal="http://schemas.datacontract.org/2004/07/HealthCareAssistant.Core" xmlns:arr="http://schemas.microsoft.com/2003/10/Serialization/Arrays" xmlns:hsim="http://schemas.datacontract.org/2004/07/HSIMessageExchange.Core">',
 		            '<soapenv:Header/>',
 		            '<soapenv:Body>',
 		                '<RetrieveMessages>',
@@ -373,7 +377,7 @@ Messages.prototype = {
 			var startDate 	= '1950-04-01T09:00:00';
 			var endDate 	= $.format.date(new Date().getTime(), "yyyy-MM-ddThh:mm:ss");
 			var xml 		=
-		        ['<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:heal="http://schemas.datacontract.org/2004/07/HealthCareAssistant" xmlns:hsim="http://schemas.datacontract.org/2004/07/HSIMessageExchange">',
+		        ['<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:heal="http://schemas.datacontract.org/2004/07/HealthCareAssistant.Core" xmlns:arr="http://schemas.microsoft.com/2003/10/Serialization/Arrays" xmlns:hsim="http://schemas.datacontract.org/2004/07/HSIMessageExchange.Core">',
 		            '<soapenv:Header/>',
 		            '<soapenv:Body>',
 		                '<RetrieveMessages>',
@@ -1040,7 +1044,7 @@ Messages.prototype = {
 				var xml =
 		       [
 		           '<?xml version="1.0" encoding="UTF-8"?>',
-		               '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:heal="http://schemas.datacontract.org/2004/07/HealthCareAssistant" xmlns:hsim="http://schemas.datacontract.org/2004/07/HSIMessageExchange" xmlns:hsi="http://schemas.datacontract.org/2004/07/HSIAccess">',
+		               '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:heal="http://schemas.datacontract.org/2004/07/HealthCareAssistant.Core" xmlns:hsim="http://schemas.datacontract.org/2004/07/HSIMessageExchange.Core" xmlns:arr="http://schemas.microsoft.com/2003/10/Serialization/Arrays" xmlns:hsi="http://schemas.datacontract.org/2004/07/HSIAccess.Core">',
 		               '<soapenv:Header/>',
 		                   '<soapenv:Body>',
 		                       '<Send>',
@@ -1104,7 +1108,7 @@ Messages.prototype = {
 	   			var xml =
 		       [
 		           '<?xml version="1.0" encoding="UTF-8"?>',
-		               '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:heal="http://schemas.datacontract.org/2004/07/HealthCareAssistant" xmlns:hsim="http://schemas.datacontract.org/2004/07/HSIMessageExchange" xmlns:hsi="http://schemas.datacontract.org/2004/07/HSIAccess">',
+		               '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:heal="http://schemas.datacontract.org/2004/07/HealthCareAssistant.Core" xmlns:hsim="http://schemas.datacontract.org/2004/07/HSIMessageExchange.Core" xmlns:arr="http://schemas.microsoft.com/2003/10/Serialization/Arrays" xmlns:hsi="http://schemas.datacontract.org/2004/07/HSIAccess.Core">',
 		               '<soapenv:Header/>',
 		                   '<soapenv:Body>',
 		                       '<Send>',
@@ -1253,7 +1257,7 @@ Messages.prototype = {
 			if(guid == 0) {
 				var xml =
 		       		['<?xml version="1.0" encoding="UTF-8"?>',
-		               '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:heal="http://schemas.datacontract.org/2004/07/HealthCareAssistant" xmlns:hsim="http://schemas.datacontract.org/2004/07/HSIMessageExchange" xmlns:hsi="http://schemas.datacontract.org/2004/07/HSIAccess">',
+		               '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:heal="http://schemas.datacontract.org/2004/07/HealthCareAssistant.Core" xmlns:hsim="http://schemas.datacontract.org/2004/07/HSIMessageExchange.Core" xmlns:arr="http://schemas.microsoft.com/2003/10/Serialization/Arrays" xmlns:hsi="http://schemas.datacontract.org/2004/07/HSIAccess.Core">',
 		               '<soapenv:Header/>',
 		                   '<soapenv:Body>',
 		                       '<Draft>',
@@ -1314,7 +1318,7 @@ Messages.prototype = {
 			} else {
 				var xml =
 		       		['<?xml version="1.0" encoding="UTF-8"?>',
-		               '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:heal="http://schemas.datacontract.org/2004/07/HealthCareAssistant" xmlns:hsim="http://schemas.datacontract.org/2004/07/HSIMessageExchange" xmlns:hsi="http://schemas.datacontract.org/2004/07/HSIAccess">',
+		               '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:heal="http://schemas.datacontract.org/2004/07/HealthCareAssistant.Core" xmlns:hsim="http://schemas.datacontract.org/2004/07/HSIMessageExchange.Core" xmlns:arr="http://schemas.microsoft.com/2003/10/Serialization/Arrays" xmlns:hsi="http://schemas.datacontract.org/2004/07/HSIAccess.Core">',
 		               '<soapenv:Header/>',
 		                   '<soapenv:Body>',
 		                       '<Draft>',
@@ -1860,13 +1864,6 @@ Messages.prototype = {
 		$('#loading-ajax #text').html('Deleting Message');
 		$('#loading-ajax').popup('open');
 		
-
-		//	$('#'+guid).css("-webkit-transition-duration", 1 + "s");
-		//	$('#'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
-		
-		//$('#delete_'+guid).css("-webkit-transition-duration", 1 + "s");
-		//$('#delete_'+guid).css("-webkit-transform", "translate3d(1000px,0px,0px)");
-		//return false;
 		//get Token
 		window.user.getToken(window.username, window.password, function(soapResponse){
 			
@@ -1876,7 +1873,7 @@ Messages.prototype = {
 		 	var token 		= response['a:Token'];
 		
 			var xml = 
-			['<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:heal="http://schemas.datacontract.org/2004/07/HealthCareAssistant" xmlns:hsim="http://schemas.datacontract.org/2004/07/HSIMessageExchange">',
+			['<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:heal="http://schemas.datacontract.org/2004/07/HealthCareAssistant.Core" xmlns:arr="http://schemas.microsoft.com/2003/10/Serialization/Arrays" xmlns:hsim="http://schemas.datacontract.org/2004/07/HSIMessageExchange.Core">',
 				'<soapenv:Header/>',
 				   '<soapenv:Body>',
 				      '<DeleteMessage>',
@@ -1913,9 +1910,6 @@ Messages.prototype = {
 						setBadge(plus);						
 					}
 	        	}    
-	           
-	            //throw message that the message is deleted
-	           //	notification('Message deleted');
 	           	
          		//get local Storage data
 	           	var data 	= _string.unlock(type);
@@ -1941,12 +1935,21 @@ Messages.prototype = {
          		_string.lock(newData, type);
          		
 	           	var currentPage = $('.current-page').attr('id');
+
+	           	//do timeout on hiding loading popup
+	        	setTimeout(function() {
+					$('#loading-ajax').popup('close');
+				}, 1000);
 	        	
-	        	if(currentPage == 'home') {
+	        	//if not in detail page
+	        	if(currentPage != 'page') {
 					$('#'+guid).hide();
 					$('#delete_'+guid).hide();
-					addOne()
+					//add one to the list
+					addOne();
+				//else it is in detail page	
 				} else {
+					//get the next message and show it
 					var next = $('#'+guid).next().attr('id');
 					//if end of the list
 					if(typeof next === 'undefined') {
@@ -1955,7 +1958,6 @@ Messages.prototype = {
 						window.messages.get(type,15,1);	
 					//go to the next message detail				
 					} else {
-						
 						var unread 	= $('#'+next).attr('unread');
 
 						//check if message is unread
@@ -1975,21 +1977,11 @@ Messages.prototype = {
 							}
 							$('#'+next).css('background-color', '#E4E4E4');
 							$('#'+next).css('font-weight', 'none');
-							
 						}
-
 						window.messages.getDetail(next, type, unread);	
 					}	
 				}
 
-				setTimeout(function() {
-
-					$('#loading-ajax').popup('close');
-					//$('#message-list').css('pointer-events', 'all');
-				
-				}, 1000);
-
-			
 			});
 		});
 
@@ -2075,7 +2067,7 @@ Messages.prototype = {
 			var end 		= $.format.date(new Date().getTime(), "yyyy-MM-ddThh:mm:ss");
 			
 			var xml 	=
-	        ['<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:heal="http://schemas.datacontract.org/2004/07/HealthCareAssistant" xmlns:hsim="http://schemas.datacontract.org/2004/07/HSIMessageExchange">',
+	        ['<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:heal="http://schemas.datacontract.org/2004/07/HealthCareAssistant.Core" xmlns:hsim="http://schemas.datacontract.org/2004/07/HSIMessageExchange.Core" xmlns:arr="http://schemas.microsoft.com/2003/10/Serialization/Arrays" xmlns:hsi="http://schemas.datacontract.org/2004/07/HSIAccess.Core">',
 	            '<soapenv:Header/>',
 	            '<soapenv:Body>',
 	                '<RetrieveMessages>',

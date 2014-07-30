@@ -63,8 +63,43 @@
         <button id="setting-button" data-theme="d" class="ui-btn-hidden btn-100" data-disabled="false">Save</button>
       </div>
 
-      <a id="setting-page" class="pull-right"> Settings</a>
-      <a id="login-page" class="pull-right display-none"> Login page</a>
+      <!-- help screen -->
+      <div id="help-content" class="display-none form-horizontal">
+                
+        <div class="control-group">
+          <label class="control-label" for="inputEmail">Email :</label>
+          <div class="controls">
+            <a href="mailto:support@healthcaresynergy.com">support@healthcaresynergy.com</a>
+            
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="inputEmail">Toll-Free :</label>
+          <div class="controls">
+            <p>(800) 4-SYNERG</p>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="inputEmail">Phone No :</label>
+          <div class="controls">
+            <p>(714) 229-8700</p>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="inputEmail">Website :</label>
+          <div class="controls">
+            <a onclick="navigator.app.loadUrl('http://www.healthcaresynergy.com/', { openExternal:true });">
+            http://www.healthcaresynergy.com/</a>
+          </div>
+        </div>
+      </div>
+
+      <a id="help-page" class="pull-right">&nbsp&nbspHelp</a>
+      <a id="setting-page" class="pull-right">&nbsp&nbspSettings</a>
+      <a id="login-page" class="pull-right display-none">&nbsp&nbspLogin page</a>
     </div>
   </div>
   <!-- END : LOGIN -->
@@ -143,6 +178,10 @@
               <a href="#" class="left-navigation"  id="Settings">
                 <i class="fa fa-cog"></i> &nbsp&nbspSettings <span class="badge"></span></a>
           </li>
+          <li class="border-bottom">
+              <a href="#" class="left-navigation"  id="Help">
+                <i class="fa fa-question"></i> &nbsp&nbspHelp <span class="badge"></span></a>
+          </li> 
           <li class="border-bottom">
               <a href="#" class="left-navigation"  id="logout">
                 <i class="fa fa-sign-out"></i> &nbsp&nbspLogout</a>
@@ -299,6 +338,42 @@
           
       </div>
       
+    </div>  
+
+    <!-- MESSAGE HELP -->
+    <div id="message-help" class="display-none message-elem">
+      <div class="form-horizontal" role="form">
+        <div class="control-group">
+          <label class="control-label" for="inputEmail">Email :</label>
+          <div class="controls">
+            <a href="mailto:support@healthcaresynergy.com">support@healthcaresynergy.com</a>
+            
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="inputEmail">Toll-Free :</label>
+          <div class="controls">
+            <p>(800) 4-SYNERG</p>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="inputEmail">Phone No :</label>
+          <div class="controls">
+            <p>(714) 229-8700</p>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="inputEmail">Website :</label>
+          <div class="controls">
+            <a onclick="navigator.app.loadUrl('http://www.healthcaresynergy.com/', { openExternal:true });">
+            http://www.healthcaresynergy.com/</a>
+          </div>
+        </div>
+
+      </div>  
     </div>  
 
     <!-- MESSAGE SETTINGS -->

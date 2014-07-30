@@ -1622,7 +1622,16 @@ a.button-red:hover {color: white}
     background-color: #324A61; 
 }
 
-
+#message-help {
+    margin-left: 20px;
+    margin-right: 20px; 
+    padding-top: 30px;
+    margin-top: 50px;
+}
+#help-content {
+    text-align: center;
+    margin-bottom: 35px;
+}
 
 
 
