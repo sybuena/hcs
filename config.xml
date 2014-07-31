@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.healthcaresynergy.mobile" version="3.1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+<widget id="com.healthcaresynergy.mobile" version="1" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
     <name>Synergy Messenger</name>
     <name>Synergy Messenger</name>
     <description>
@@ -41,7 +41,7 @@
     <icon src="res/icon.png"   gap:platform="android"    gap:qualifier="mdpi" />
     <icon src="res/icon.png"   gap:platform="android"    gap:qualifier="hdpi" />
     <icon src="res/icon.png"  gap:platform="android"    gap:qualifier="xhdpi" />
-    <icon src="res/icon/ios/icon-72.png"            gap:platform="ios"        width="57" height="57" />
+    <icon src="res/icon/ios/icon.png"               gap:platform="ios"        width="57" height="57" />
     <icon src="res/icon/ios/icon-76.png"            gap:platform="ios"        width="72" height="72" />
     <icon src="res/icon/ios/icon-120.png"           gap:platform="ios"        width="114" height="114" />
     <icon src="res/icon/ios/icon-152.png"           gap:platform="ios"        width="144" height="144" />
