@@ -193,6 +193,37 @@ Messages.prototype = {
 
 	            //get the saved local storage and show it
 	            window.messages.displayDetail(data, type, guid, unread);
+		    },function(SOAPResponse) {
+
+		    	if(SOAPResponse['status'] == 'parsererror') {
+		    		
+		    		var res = '<?xml version="1.0" encoding="utf-8" ?>'+SOAPResponse['content'];
+		    		
+		    		res = res.replace(/\&#x1A;/g, ' ');
+		    		res = res.toString();
+		    		
+		    		json = $.xml2json(res);
+
+		    		if(json['s:Envelope']['s:Body']['RetrieveMessageResponse']['RetrieveMessageResult']['a:HasError'] == 'true') {
+	            		$('.notification-ajax').show();
+						$('.notification-ajax #notification-here').html('<i class="fa fa-warning"></i>'+json['s:Envelope']['s:Body']['RetrieveMessageResponse']['RetrieveMessageResult']['a:Error']);
+						mainLoader('stop');
+					
+	            		return false;
+	            	}
+
+		            //dig to the main result of the response
+		            var data = json['s:Envelope']['s:Body']['RetrieveMessageResponse']['RetrieveMessageResult']['a:MessageResult'];
+		            
+		            //lock and save
+		            _string.lock(data, guid);
+
+		            //get the saved local storage and show it
+		            window.messages.displayDetail(data, type, guid, unread);
+		    		
+		    		return false;
+		    	}
+
 		    });  
 		}); 	
 	},
@@ -421,6 +452,7 @@ Messages.prototype = {
 	            }
 
 	            var data 	= json['s:Envelope']['s:Body']['RetrieveMessagesResponse']['RetrieveMessagesResult']['a:MessagesResult']['b:MessageLabel'];
+         		var page 	= $('ul.nav-stacked li.active a.left-navigation').attr('id');
          		var raw = [];
          		
          		if(typeof data === 'object' && typeof data[0] === 'undefined') { 
@@ -442,8 +474,15 @@ Messages.prototype = {
          				return false;
          		}*/
 
+         		//only show if current page is equal with the request type
+         		if(page == type) {
+         			setTimeout(function() {
+         				//now display it
+	            		window.messages.displayMessage(raw, type, start, end, 1);	
+         			}, 200)
+         		}
 	            //now display it
-	            window.messages.displayMessage(raw, type, start, end, 1);
+	            //window.messages.displayMessage(raw, type, start, end, 1);
 			});    
 		});
 	},
@@ -536,14 +575,13 @@ Messages.prototype = {
 	            window.messages.displayMessage(raw, type, start, end, 1);
 			});    
 		});
-
 	},
 	displayDetail : function(data, type, guid, unread) { 
 
 		$('.no-connection').hide();
 
 		$('.current-page').attr('id', 'page');
-
+		$('#detail-guid').val(guid);
 		//sometimes the SOAP call getting detail message
 		//throw empty data
 		if(typeof data['_'] !== 'undefined') {
@@ -643,7 +681,6 @@ Messages.prototype = {
 	 		
 	 		//put back together to the local storage
 	 		_string.lock(newData, type);
-	 		console.log(type);
 
 	 		window.messageList[type] = _string.unlock(type);
 		}
@@ -797,11 +834,18 @@ Messages.prototype = {
 					if(typeof messageList[i]['b:Recipients'] == 'object') {
 						//if has mutiple recipient
 						if(typeof messageList[i]['b:Recipients']['b:Recipient'][0] !== 'undefined') {
-							//loop to get all recipient
+							/*//loop to get all recipient
 							for(x in messageList[i]['b:Recipients']['b:Recipient']) {
 								//and make HTML format
 								toName = messageList[i]['b:Recipients']['b:Recipient'][x]['b:m_Receiver']['c:Name']['d:m_firstName']+' '+messageList[i]['b:Recipients']['b:Recipient'][x]['b:m_Receiver']['c:Name']['d:m_lastName'];	
 								toUser += ' <span class="gray m-l-25">'+toName+'</span><br />';
+							}*/
+							//loop to get all recipient
+							for(x in messageList[i]['b:Recipients']['b:Recipient']) {
+								//and make HTML format
+								toName = messageList[i]['b:Recipients']['b:Recipient'][x]['b:m_Receiver']['c:Name']['d:m_firstName']+' '+messageList[i]['b:Recipients']['b:Recipient'][x]['b:m_Receiver']['c:Name']['d:m_lastName'];	
+								toUser += ' <span class="gray m-l-25">'+toName+'</span> ...';
+								break;
 							}
 						//otherwise if only one recipient	
 						} else {
@@ -884,8 +928,7 @@ Messages.prototype = {
 
 		$('#wrapper').show();
 
-		populateArchive2(ids);
-		
+		populateArchive2(ids);		
 	},
 	pullDown : function(messageList,type, start, end) {
 		
@@ -2118,14 +2161,21 @@ Messages.prototype = {
 									
 					window.messageList[type] = [];
 				}
-
+				$('#'+type+' span.badge').html(plus);
+				$('#folder-name').html($('#'+type).html());
+				setBadge(0);
          		//if there is a new message
          		if(typeof data !== 'undefined') { 
          			//if there is multiple data
          			if(typeof data === 'object' && typeof data[0] !== 'undefined') { 
-         				
+         						
          				var count = 0;
-         				
+         						
+						//do the Math in the Message unread Count and display
+	 					$('#'+type+' span.badge').html(plus);
+	 					$('#folder-name').html($('#'+type).html());
+	 					setBadge(data.length);
+		 				
          				//now loop array in display data
 		         		for(i in data) {
 		         			var inListing = false;
@@ -2144,29 +2194,7 @@ Messages.prototype = {
 		         				//push everything
 		         				window.messageList[type].splice(0, 0, data[i]);
 		         				
-		         				//get unread count	
-		         				var count = $('#'+type+' span.badge').html();
-								
-								//do the Math in the Message unread Count
-				 				if(count != 0) {
-
-				 					//do the math
-				 					var plus = parseInt(count) + 1;
-				 					//and display
-				 					$('#'+type+' span.badge').html(plus);
-				 					$('#folder-name').html($('#'+type).html());
-				 					setBadge(plus);
-				 					
-				 				//else if count is zero
-				 				} else {
-				 					//just add one
-				 					$('#'+type+' span.badge').html('1');
-				 					//and display
-				 					$('#folder-name').html($('#'+type).html());
-				 					setBadge(1)
-				 				
-				 				}
-
+		         				
 				 				//lock and save
 				 				_string.lock(window.messageList[type], type);
 				 				
@@ -2193,7 +2221,10 @@ Messages.prototype = {
 		         		}	
 		         			
          			} else {
-         				
+         				$('#'+type+' span.badge').html(plus);
+	 					$('#folder-name').html($('#'+type).html());
+	 					setBadge(1);
+
          				var inListing = false;
          				//check if unread message is already in the listing
 	         			for(x in window.messageList[type]) { 

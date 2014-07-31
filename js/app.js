@@ -831,7 +831,9 @@ function hideKeyboard() {
 function compose() {
 	//disable left sidebar if in compose page
 	window.snapper.disable();
-	
+
+	$('.loading-messages').show();
+
 	//flag page as COMPOSE
 	$('.current-page').attr('id', 'compose');
 	
@@ -862,7 +864,8 @@ function compose() {
 
 	//to Normal as defailt	
     $('#compose-important-button span').html('Normal')     
-
+    
+	
 	$('.loading-messages').hide();
 	$('.message-elem').hide();
 	$('#message-compose').show();
@@ -963,8 +966,9 @@ function compose() {
 		}
 
 		//refresh page
-		setTimeout(function(){window.composePage.refresh();
-		console.log('xxx');}, 1000)
+		setTimeout(function(){
+			window.composePage.refresh();
+		}, 1000)
 		
 
 		return false;
@@ -979,7 +983,7 @@ function compose() {
  * @param object compose data
  * @param string message type
  */
-function composeWith(data, type) {
+function composeWith(data, type) { 
 	//disable left sidebar if in compose page
 	window.snapper.disable();
 
@@ -1140,8 +1144,9 @@ function composeWith(data, type) {
 		}
 
 		//refresh page
-		setTimeout(function(){window.composePage.refresh();
-		console.log('xxx');}, 1000)
+		setTimeout(function(){
+			window.composePage.refresh();
+		}, 1000)
 
 
 	});
@@ -1563,6 +1568,38 @@ function checkConnection() {
 	}
 }
 
+function fromDetailPage() {
+	//get the parent page from the LI active to the left swipe
+	var parentPage 	= $('ul.nav-stacked li.active a.left-navigation').attr('id');
+
+	var clicked = false;
+
+	//check if it it from message detail
+	$('.detail-button-group').each(function() {
+		
+		if($(this).attr('isClick') == 'true') {
+			clicked = true;
+		}
+	});
+	
+	//if it comes from message detail
+	if(clicked) {
+
+		var guid = $('#detail-guid').val();
+		//gi back to detail page
+		window.messages.getDetail(guid, parentPage, false);
+		
+		//makr button as false
+		$('.detail-button-group').each(function() {
+			$(this).attr('isClick', false);
+		});
+
+		return true;
+	}
+
+	return false;
+}
+
 /**
  * Back event happen whenever user click the back button 
  * on the app or the hitting the back button of the phone
@@ -1589,7 +1626,7 @@ function backEvent() {
 		var content 	= $('#compose-content').val();
 		var priority 	= $('#compose-important option:selected').html();
 		var guid 		= $('#detail-guid').val();
-		var empty 		= true;
+		var empty 		= true; 
 		//if no GUID found
 		if($.isEmptyObject(guid)) {
 			guid = 0;
@@ -1636,6 +1673,11 @@ function backEvent() {
 
 		  		return false;
 	  		}	
+	  		
+	  		//check if previous page is detail page
+	  		if(fromDetailPage()) {
+	  			return false;
+	  		}
 
 			//unset pagination whenevery changing to another
 			//message listing
@@ -1688,6 +1730,33 @@ function backEvent() {
 			e.stopPropagation();
 			$('#draft-modal').modal('hide');
 			$('#process-send').hide();	
+			//if  page is from settings
+			if(parentPage == 'Settings') {
+				
+				//show message settings page 
+				settings();
+
+				return false;
+			}
+			
+			if(parentPage == 'Outbox') {
+				
+				outbox();
+
+		  		return false;
+	  		}
+
+	  		if(parentPage == 'Help') {
+				
+				help();
+
+		  		return false;
+	  		}	
+
+	  		//check if previous page is detail page
+	  		if(fromDetailPage()) {
+	  			return false;
+	  		}
 
 			//unset pagination whenevery changing to another
 			//message listing

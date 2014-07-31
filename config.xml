@@ -5,8 +5,8 @@
     <description>
         HealthCare Synergy Messenger
     </description>
-    <author email="sy@fusionpl.us" href="http://fusionpl.us">
-        Symon Buenavista
+    <author email="support@healthcaresynergy.com" href="http://www.healthcaresynergy.com/">
+        Healthcare Synergy Inc.
     </author>
     <feature name="http://api.phonegap.com/1.0/device" />
     <preference name="permissions" value="none" />
