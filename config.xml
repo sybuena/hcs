@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.fusionplus.hcs" version="3.1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>HCS Messenger</name>
-    <name>HCS Messenger</name>
+<widget id="com.healthcaresynergy.mobile" version="3.1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+    <name>Synergy Messenger</name>
+    <name>Synergy Messenger</name>
     <description>
         HealthCare Synergy Messenger
     </description>
