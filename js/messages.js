@@ -56,9 +56,10 @@ Messages.prototype = {
 		$('#folder-name').html($('a#'+type).html());
 		//console.log(window.messageList[type]);
 		//get json data
-		//if(typeof window.messageList[type] === 'undefined') {
-			window.messageList[type] = _string.unlock(type);
-		//}
+		if(typeof window.messageList[type] == 'undefined') {
+            //check local storage
+            window.messageList[type] = _string.unlock(type);
+        } 
 		
 		//if empty or null
 		if(window.messageList[type] == null || window.messageList[type] == '' || force == 1) { 
@@ -1249,6 +1250,29 @@ Messages.prototype = {
 					} else {
 						var parentPage 	= $('ul.nav-stacked li.active a.left-navigation').attr('id');
 
+						//if  page is from settings
+						if(parentPage == 'Settings') {
+							
+							//show message settings page 
+							settings();
+
+							return false;
+						}
+						
+						if(parentPage == 'Outbox') {
+							
+							outbox();
+
+					  		return false;
+				  		}
+
+				  		if(parentPage == 'Help') {
+							
+							help();
+
+					  		return false;
+				  		}	
+
 						window.messages.get(parentPage, 15, 1);
 					}
          		} else {
@@ -1970,13 +1994,17 @@ Messages.prototype = {
          				if(data2 !== null) {
          					//push to the beginning of the listing
          					data2.splice(0, 0, data[i]);
-         					_string.lock(data2, 'Deleted');
+         					
          				}
          			}
          		}
+
+         		window.messageList[type] 	= newData;
+         		window.messageList[Deleted] = data2;
          		
          		_string.lock(newData, type);
-         		
+         		_string.lock(data2, 'Deleted');
+
 	           	var currentPage = $('.current-page').attr('id');
 
 	           	//do timeout on hiding loading popup
@@ -2068,22 +2096,24 @@ Messages.prototype = {
 
 	           	newData = [];
 				 		
-         		//now remove the message to the local storage
-         		for(i in  data) {
-         			if(data[i]['b:MessageGUID'] != guid){
-         				newData.push(data[i])
-	         		}
-         		}
+         		
          		
          		//lock and save
          		_string.lock(newData, type)
 
          		//put it back
-	            window.messages.get(type,15,1);
+	            
+	            window.messageList['Inbox'] = [];
+	            window.messageList['Draft'] = [];
+	            window.messageList['Sent'] = [];
+	            window.messageList['Deleted'] = [];
+	            localStorage.setItem('Deleted', '');
 	            //unset all
 	            localStorage.setItem('Inbox', '');
 	            localStorage.setItem('Draft', '');
 	            localStorage.setItem('Sent', '');
+
+	            window.messages.get(type,15,1);
 	            
 			});
 			

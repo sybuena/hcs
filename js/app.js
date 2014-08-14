@@ -43,6 +43,7 @@ window.start 			= false;
 window.username 		= localStorage.getItem('username');
 window.password 		= localStorage.getItem('password');
 window.snapper;
+window.storageLimit 	= 100;
 //scroll message listing up/dowm parameters
 window.startCount		= 20;		
 window.iscroll;
@@ -54,6 +55,7 @@ var defaultWidth 		= 500;
 var	currentImg 			= 0;
 var	maxImages 			= 3;
 var	speed				= 500;
+
 window.font 			= [];
 
 function populateArchive(ids) { 
@@ -694,7 +696,8 @@ function checkInbox() {
 	timer = Math.floor(Number(window.interval))*60000;
 
 	//start loop 
-	window.setInterval(function(){ 
+	window.setInterval(function(){
+
 		//we 1st load os done
 		if(window.start) {
 			//then check inbox for new message
@@ -1877,11 +1880,12 @@ var _string = (function() {
 
 		//convert array to string, encryp string then save to local storage
 		lock : function(object, key) {
-			//convert object to string format
-			var string = JSON.stringify(object);
+			
 			
 			if(key != 'Inbox' && key != 'Sent' && key != 'Draft' && key != 'Deleted' && key != 'Outbox') {
 				
+				//convert object to string format
+				var string = JSON.stringify(object);
 				//now encrypt it
 				var encrypted = CryptoJS.AES.encrypt(string, SECRET);
 				
@@ -1889,14 +1893,30 @@ var _string = (function() {
 				localStorage.setItem(key, encrypted.toString());
 				return encrypted.toString();
 			} else {
-				localStorage.setItem(key, string);
-				return string;
+				var list = [];
+				if(object != null) {
+					//save only 100 message in local storage
+		            for(i = 0; i < object.length; i++) {
+		            	if(i > window.storageLimit) {
+		            		break;
+		            	}
+
+		                list.push(object[i]);
+		            }
+		            
+					//convert object to string format
+					var string = JSON.stringify(list);
+					localStorage.setItem(key, LZString.compress(string));
+					//localStorage.setItem(key, string);
+					return string;
+				}
 			}
 			
 			
 		},
 		//get local storage, decryp string
 		unlock : function(key) {
+			
 			
 			var string = localStorage.getItem(key);
 			
@@ -1911,7 +1931,11 @@ var _string = (function() {
 				var json = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
 			} else { 
 				
-				var json = JSON.parse(string);
+				
+				var json = JSON.parse(LZString.decompress(string));
+				console.log(json.length);
+				//console.log(json.length);
+				//var json = JSON.parse(string);
 			}
 
 			return json;
@@ -1947,23 +1971,45 @@ var _SOAP = (function() {
 	}
 }());
 
+
 document.addEventListener('deviceready', function() {	
+
 	if(typeof window.plugin !== 'undefined') {
 		//Enables the background mode. The app will not pause while in background.
 		window.plugin.backgroundMode.enable();
+
 		//unset badge
 		window.plugin.notification.badge.set(0);
 	}
-	navigator.geolocation.getCurrentPosition(
-		//do nothing
-		function() {
 
+	
+
+	navigator.geolocation.getCurrentPosition(
+		
+		function(position) {
+
+			var position = {
+				'Latitude'          : position.coords.latitude,          
+		        'Longitude'         : position.coords.longitude,       
+		        'Altitude'          : position.coords.altitude,        
+		        'Accuracy'          : position.coords.accuracy,        
+		        'Altitude Accuracy' : position.coords.altitudeAccuracy,
+		        'Heading'           : position.coords.heading,           
+		        'Speed'             : position.coords.speed
+			}
+			
+			var string = JSON.stringify(position);
+
+			localStorage.setItem('current-location', LZString.compress(string));
+
+			return false;
 		}, 
-		//do nothing
+		
 		function() {
 
 		}
 	);
+
 	
     //check internet on load
 	window.connection = window.navigator.onLine;
