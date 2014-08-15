@@ -2001,7 +2001,7 @@ Messages.prototype = {
 
          		window.messageList[type] 	= newData;
          		window.messageList[Deleted] = data2;
-         		
+
          		_string.lock(newData, type);
          		_string.lock(data2, 'Deleted');
 
@@ -2193,7 +2193,9 @@ Messages.prototype = {
 				}
 				$('#'+type+' span.badge').html(plus);
 				$('#folder-name').html($('#'+type).html());
+				
 				setBadge(0);
+         		
          		//if there is a new message
          		if(typeof data !== 'undefined') { 
          			//if there is multiple data
